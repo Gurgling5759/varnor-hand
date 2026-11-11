@@ -19,7 +19,7 @@
           font-weight:700;letter-spacing:.15em;text-transform:uppercase}
 
   /* the light box: the bench's illuminated surface, brightest in the middle */
-  .box{position:relative;height:594px;
+  .box{position:relative;height:420px;
        background:radial-gradient(120% 100% at 50% 40%,#ffffff 0%,var(--box) 46%,var(--box-warm) 100%);
        box-shadow:inset 0 -30px 60px rgba(11,13,16,.18)}
   .box::before{content:"";position:absolute;inset:0;opacity:.5;
@@ -43,10 +43,11 @@
     background:repeating-linear-gradient(90deg,transparent 0 7px,rgba(236,239,240,.82) 7px 15px)}
   .frame::before{top:5px} .frame::after{bottom:5px}
   .frame i{font-style:normal;font-family:Arial,Helvetica,sans-serif;font-size:12px;
-           letter-spacing:.16em;text-transform:uppercase;color:#96a2aa}
+           letter-spacing:.16em;text-transform:uppercase;color:#96a2aa;display:block;
+           padding-right:46px}
   .frame h3{font-family:"Courier New",monospace;font-size:19px;font-weight:700;line-height:1.2;
-            margin-top:7px}
-  .frame p{font-family:"Courier New",monospace;font-size:12.5px;color:#c6d0d5;margin-top:9px;
+            margin-top:7px;padding-right:46px}
+  .frame p{font-family:"Courier New",monospace;font-size:12.5px;color:#c6d0d5;
            line-height:1.55;word-break:break-all}
   .frame .mark{position:absolute;right:12px;top:32px;width:38px;height:38px}
   /* the chinagraph marks: a circle is checked, a cross is dead, a bracket is held */
@@ -61,13 +62,13 @@
   .frame.held{border-bottom:4px solid var(--yellow)}
 
   /* the trim bin: the frames that gave nothing, hung on a pin, still reachable */
-  .bin{position:relative;height:242px;background:var(--tray);color:#d7dee1;padding:20px 44px 0}
+  .bin{position:relative;height:210px;background:var(--tray);color:#d7dee1;padding:20px 44px 0}
   .bin h2{font-size:15px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#fff;
           display:flex;align-items:baseline;gap:16px}
   .bin h2 span{font-family:"Courier New",monospace;font-size:13px;font-weight:400;color:#8fa0a8;
                letter-spacing:0;text-transform:none}
-  .pin{position:absolute;left:44px;right:44px;top:62px;height:2px;background:#4b545a}
-  .trims{position:relative;margin-top:26px;display:flex;gap:22px}
+  .pin{position:absolute;left:44px;right:44px;top:58px;height:2px;background:#4b545a}
+  .trims{position:relative;margin-top:48px;display:flex;gap:22px}
   .trim{position:relative;background:#2e3439;padding:14px 16px 16px;flex:1;
         box-shadow:0 8px 18px rgba(0,0,0,.4)}
   /* the tape flag that hangs it on the pin */
@@ -80,7 +81,7 @@
   .trim i{font-style:normal;display:block;margin-top:9px;font-size:12.5px;letter-spacing:.13em;
           text-transform:uppercase;color:#9dafb7}
 
-  .foot{height:242px;background:var(--box-warm);padding:30px 44px;display:flex;align-items:center;
+  .foot{height:206px;background:var(--box-warm);padding:26px 44px;display:flex;align-items:center;
         gap:44px}
   .foot h3{font-size:30px;font-weight:700;line-height:1.12;max-width:24ch}
   .foot p{font-family:Georgia,serif;font-size:15px;color:#3d464b;margin-top:11px;max-width:52ch;
@@ -109,28 +110,28 @@
     <div class="rail">
       <div class="frame">
         <div class="mark circle"></div>
-        <div><i>Read at source</i><h3>Apex Roofing Co.</h3>
-          <p>apexroofingaz.com/contact<br>+1 602 555 0148</p></div>
+        <div><i>Read at source</i><h3>Apex Roofing Co.</h3></div>
+        <p>apexroofingaz.com/contact<br>+1 602 555 0148</p>
       </div>
       <div class="frame">
         <div class="mark circle"></div>
-        <div><i>Read at source</i><h3>Pinnacle Flat Roofing</h3>
-          <p>pinnacleflat.com/about<br>office@pinnacleflat.com</p></div>
+        <div><i>Read at source</i><h3>Pinnacle Flat Roofing</h3></div>
+        <p>pinnacleflat.com/about<br>office@pinnacleflat.com</p>
       </div>
       <div class="frame held">
         <div class="mark hold"></div>
-        <div><i>Held &mdash; server refused</i><h3>Sonoran Roof Works</h3>
-          <p>sonoranroofworks.com<br>retry queued</p></div>
+        <div><i>Held &mdash; server refused</i><h3>Sonoran Roof Works</h3></div>
+        <p>sonoranroofworks.com<br>retry queued</p>
       </div>
       <div class="frame">
         <div class="mark circle"></div>
-        <div><i>Read at source</i><h3>Valley Rain Gutters</h3>
-          <p>valleyrain.co/team<br>R. Delgado, estimator</p></div>
+        <div><i>Read at source</i><h3>Valley Rain Gutters</h3></div>
+        <p>valleyrain.co/team<br>R. Delgado, estimator</p>
       </div>
       <div class="frame">
         <div class="mark cross"></div>
-        <div><i>No contact anywhere</i><h3>Cactus Coat Roofing</h3>
-          <p>twelve sources read<br>name only</p></div>
+        <div><i>No contact anywhere</i><h3>Cactus Coat Roofing</h3></div>
+        <p>twelve sources read<br>name only</p>
       </div>
     </div>
   </div>
