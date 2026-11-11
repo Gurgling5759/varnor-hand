@@ -87,7 +87,11 @@ body{background:#1d3a2e}
 .cr-nav { margin-left: auto; display: flex; align-items: center; gap: 28px; }
 .cr-nav a { color: var(--cr-baize-muted); font-size: 14px; text-decoration: none; }
 .cr-nav a:hover { color: var(--cr-white); }
-.cr-signup {
+/* Scoped to `.cr-nav .cr-signup`, not `.cr-signup`. The button is an <a> inside
+   nav.cr-nav, so `.cr-nav a` (0,1,1) outranked `.cr-signup` (0,1,0) and won on
+   both colour and size: the CTA rendered pale green at 14px, and the 11.5px
+   mobile shrink never applied. Same bug, both breakpoints. */
+.cr-nav .cr-signup {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -102,7 +106,7 @@ body{background:#1d3a2e}
   text-decoration: none;
   box-shadow: 0 8px 20px rgba(0,0,0,.45);
 }
-.cr-signup:hover { background: var(--cr-red-deep); }
+.cr-nav .cr-signup:hover { background: var(--cr-red-deep); }
 
 .cr-desk {
   flex: 1 1 auto;
@@ -322,7 +326,10 @@ body{background:#1d3a2e}
   padding: 8px 10px;
   margin: -8px -10px;
 }
-.cr-src-hit .cr-src-url { color: var(--cr-red); }
+/* Red Deep, not Red. The wash composites to rgb(226,200,168), and at 15px bold
+   the URL must clear 4.5 — plain Red scored 4.05 there (it scores 4.54 on the
+   bare card, which is why the plain blocks can keep it). Red Deep is 4.81. */
+.cr-src-hit .cr-src-url { color: var(--cr-red-deep); }
 .cr-src-hit .cr-src-kind { color: var(--cr-red-deep); }
 
 .cr-facts { margin-top: 7px; }
@@ -506,7 +513,7 @@ body{background:#1d3a2e}
     white-space: nowrap;
   }
   .cr-nav .cr-nav-hide { display: none; }
-  .cr-signup {
+  .cr-nav .cr-signup {
     min-height: 44px;
     padding: 9px 13px;
     font-size: 11.5px;
