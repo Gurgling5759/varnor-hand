@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Varnor Index | The file on every business in your market</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Tailwind's preflight, which the real page gets from `@import "tailwindcss"` */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:#1d3a2e}
+/* The Credit Reference File — landing world.
+   A green baize desk with a woven nap; one buff file card face up; the rest of
+   the run visible only as its stacked edge; a struck docket set off-square; a
+   five-tab index down the right edge. Depth from real shadow and paper edges. */
+.cr-page {
+  --cr-baize: #1d3a2e;
+  --cr-card: #e6d6b4;
+  --cr-card-edge: #cdb98d;
+  --cr-ink: #1a1712;
+  --cr-ink-soft: #4a4229;
+  --cr-ink-body: #413a29;
+  --cr-ink-src: #2c2a1c;
+  /* 4.68:1 on the card. Was #6b6044 at 4.33 — the source line is 11px, so it
+     needs the full 4.5, and it is the line the whole page argues from. */
+  --cr-ink-note: #655b41;
+  --cr-red: #b3271e;
+  --cr-red-deep: #a0201a;
+  --cr-amber: #9c6410;
+  --cr-green: #2f6b45;
+  --cr-blue: #2b5c86;
+  --cr-grey: #4a4a46;
+  --cr-stamp: #7d2c37;
+  --cr-white: #f4f6f2;
+  --cr-baize-muted: #cfe0d4;
+  --cr-baize-dim: #a9c2b2;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  overflow: hidden;
+  background-color: var(--cr-baize);
+  color: var(--cr-white);
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.cr-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .34;
+  background:
+    repeating-linear-gradient(45deg, rgba(255,255,255,.05) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(-45deg, rgba(0,0,0,.16) 0 1px, transparent 1px 3px);
+}
+.cr-page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 90% at 30% 0%, rgba(255,255,255,.13), transparent 62%);
+}
+.cr-page > * { position: relative; z-index: 1; }
+
+.cr-band {
+  flex: 0 0 66px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 44px;
+  border-bottom: 1px solid rgba(244,246,242,.16);
+}
+.cr-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--cr-white);
+  text-decoration: none;
+}
+.cr-brand img { display: block; width: 30px; height: 30px; border-radius: 6px; }
+.cr-brand span { font-family: "Instrument Serif", Georgia, serif; font-size: 25px; line-height: 1; }
+.cr-nav { margin-left: auto; display: flex; align-items: center; gap: 28px; }
+.cr-nav a { color: var(--cr-baize-muted); font-size: 14px; text-decoration: none; }
+.cr-nav a:hover { color: var(--cr-white); }
+.cr-signup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cr-red);
+  color: var(--cr-white);
+  padding: 13px 26px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(0,0,0,.45);
+}
+.cr-signup:hover { background: var(--cr-red-deep); }
+
+.cr-desk {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 392px;
+  align-items: start;
+  gap: 34px;
+  min-height: 674px;
+  padding: 34px 44px 0;
+}
+
+.cr-cardwrap { position: relative; min-width: 0; }
+.cr-stack { position: absolute; inset: 0; pointer-events: none; }
+.cr-stack i {
+  position: absolute;
+  display: block;
+  background: var(--cr-card-edge);
+  box-shadow: 0 12px 26px rgba(0,0,0,.4);
+}
+.cr-stack i:nth-child(1) { left: 22px; top: -14px; right: -22px; bottom: 22px; transform: rotate(-.5deg); }
+.cr-stack i:nth-child(2) { left: 11px; top: -7px; right: -11px; bottom: 11px; transform: rotate(-.25deg); }
+
+.cr-file {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 640px;
+  background: var(--cr-card);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(26,23,18,.022) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 1px, transparent 1px 5px);
+  color: var(--cr-ink);
+  box-shadow: 0 26px 54px rgba(0,0,0,.5);
+  padding: 26px 32px 22px;
+}
+.cr-file::after {
+  content: "";
+  position: absolute;
+  inset: 11px;
+  border: 1px solid rgba(26,23,18,.16);
+  pointer-events: none;
+}
+
+.cr-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding-bottom: 14px;
+  border-bottom: 3px double var(--cr-ink);
+}
+.cr-head h1 {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  line-height: 1.25;
+}
+.cr-run {
+  margin-top: 7px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 12.5px;
+  color: var(--cr-ink-soft);
+}
+.cr-docket {
+  margin-left: auto;
+  flex: 0 0 auto;
+  padding: 9px 14px;
+  border: 2.5px solid var(--cr-stamp);
+  color: var(--cr-stamp);
+  text-align: center;
+  transform: rotate(-3.5deg);
+  opacity: .86;
+}
+.cr-docket b {
+  display: block;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 15px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.cr-docket span {
+  display: block;
+  margin-top: 3px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 11.5px;
+}
+
+/* The subject line. The label sits on the same baseline as the name rather
+   than stacked above it — a label above a heading is the habit this page is
+   built to break. */
+.cr-subject { margin-top: 15px; }
+.cr-subject h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.cr-inline-label {
+  flex: 0 0 auto;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 13px;
+  letter-spacing: .02em;
+  color: var(--cr-ink-soft);
+}
+.cr-subject-name {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.03em;
+  overflow-wrap: anywhere;
+}
+.cr-subject-line {
+  margin-top: 9px;
+  max-width: 68ch;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--cr-ink-body);
+}
+/* PRODUCT.md: a guest sees sample data and is told it is sample data. */
+.cr-sample {
+  margin-top: 8px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  letter-spacing: .03em;
+  color: var(--cr-ink-note);
+}
+.cr-sample b {
+  font-weight: 700;
+  color: var(--cr-ink-soft);
+}
+
+/* The contact hunt, drawn: one page in twelve answered. This is the whole
+   argument of the page as a single line of marks, so it is not described. */
+.cr-ledger {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 14px;
+}
+.cr-marks { display: flex; gap: 5px; flex: 0 0 auto; }
+.cr-mark {
+  display: block;
+  width: 30px;
+  height: 24px;
+  background: rgba(26,23,18,.09);
+  box-shadow: inset 0 0 0 1px rgba(26,23,18,.24);
+}
+.cr-mark::after {
+  content: "";
+  display: block;
+  height: 100%;
+  background: linear-gradient(
+    to bottom right,
+    transparent 46.5%,
+    rgba(26,23,18,.42) 46.5%,
+    rgba(26,23,18,.42) 53.5%,
+    transparent 53.5%
+  );
+}
+.cr-mark.on {
+  background: var(--cr-red);
+  box-shadow: 0 6px 14px rgba(179,39,30,.35);
+}
+.cr-mark.on::after { display: none; }
+.cr-ledger-cap {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.35;
+  letter-spacing: .02em;
+  color: var(--cr-ink-note);
+}
+.cr-ledger-cap b { font-weight: 700; color: var(--cr-ink-src); }
+
+/* The sources are the structure, not a footnote under the facts. Each block
+   is a page the run opened; each fact hangs off the page it was read from. */
+.cr-sources {
+  flex: 1;
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-content: start;
+  gap: 22px 30px;
+}
+.cr-src:only-child { grid-column: 1 / -1; }
+.cr-src-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(26,23,18,.2);
+}
+.cr-src-url {
+  min-width: 0;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  overflow-wrap: anywhere;
+}
+.cr-src-kind {
+  margin-left: auto;
+  flex: 0 0 auto;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  letter-spacing: .02em;
+  color: var(--cr-ink-note);
+}
+/* The page that answered, marked by wash and ink — never by a colored rule.
+   Padding and negative margin rather than a spread-shadow: the wash then takes
+   part in layout, so it cannot paint over the block next to it. */
+.cr-src-hit {
+  background: rgba(179,39,30,.08);
+  padding: 8px 10px;
+  margin: -8px -10px;
+}
+.cr-src-hit .cr-src-url { color: var(--cr-red); }
+.cr-src-hit .cr-src-kind { color: var(--cr-red-deep); }
+
+.cr-facts { margin-top: 7px; }
+/* Label and value share a line. There is no label stacked above a value
+   anywhere in this card, and no rule between rows. */
+.cr-fact {
+  display: grid;
+  grid-template-columns: 118px minmax(0, 1fr);
+  gap: 10px;
+  padding: 2px 0;
+}
+.cr-fact dt {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.35;
+  letter-spacing: .015em;
+  color: var(--cr-ink-soft);
+}
+.cr-fact dd {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.cr-fact dd.cr-none { font-weight: 400; color: var(--cr-ink-note); }
+.cr-hint {
+  display: block;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--cr-ink-note);
+}
+.cr-blank {
+  margin-top: auto;
+  padding-top: 11px;
+  border-top: 1px solid rgba(26,23,18,.14);
+  text-align: center;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  letter-spacing: .03em;
+  color: rgba(74,66,41,.9);
+}
+
+.cr-index {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding-top: 96px;
+}
+/* These are real controls now, not links: pressing one opens that face of the
+   file. Buttons, so the reset has to be undone by hand. */
+.cr-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  height: 66px;
+  padding: 0 20px;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  color: var(--cr-white);
+  box-shadow: 0 10px 22px rgba(0,0,0,.4);
+  transition: filter .15s ease;
+}
+.cr-tab > span { min-width: 0; }
+.cr-tab:hover { filter: brightness(1.07); }
+.cr-tab .cr-tab-label {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.cr-tab small {
+  display: block;
+  margin-top: 2px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 13px;
+  letter-spacing: .05em;
+  /* .95, not .88: on the amber tab .88 scored 4.22 against white's 4.5 floor. */
+  color: rgba(255,255,255,.95);
+}
+.cr-tab b {
+  margin-left: auto;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+  font-weight: 700;
+}
+.cr-tab.on {
+  margin-left: -16px;
+  box-shadow: 0 0 0 3px rgba(244,246,242,.5), 0 10px 22px rgba(0,0,0,.45);
+}
+.cr-tab-red { background: var(--cr-red); }
+.cr-tab-amber { background: var(--cr-amber); }
+.cr-tab-green { background: var(--cr-green); }
+.cr-tab-blue { background: var(--cr-blue); }
+.cr-tab-grey { background: var(--cr-grey); }
+
+.cr-foot {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 392px;
+  align-items: center;
+  gap: 34px;
+  min-height: 160px;
+  padding: 24px 44px;
+}
+.cr-offer h3 {
+  max-width: 32ch;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 1.14;
+  letter-spacing: -.01em;
+}
+.cr-offer p {
+  margin-top: 10px;
+  max-width: 62ch;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--cr-baize-muted);
+}
+.cr-act { display: flex; flex-direction: column; gap: 12px; }
+.cr-act a {
+  display: block;
+  padding: 20px;
+  background: var(--cr-red);
+  color: var(--cr-white);
+  text-align: center;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 10px 24px rgba(0,0,0,.45);
+}
+.cr-act a:hover { background: var(--cr-red-deep); }
+.cr-act span {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  letter-spacing: .04em;
+  text-align: center;
+  color: var(--cr-baize-dim);
+}
+
+.cr-band :is(a, button):focus-visible,
+.cr-act a:focus-visible,
+.cr-tab:focus-visible {
+  outline: 2px solid var(--cr-white);
+  outline-offset: 3px;
+}
+.cr-file:focus-visible { outline: 2px solid var(--cr-red); outline-offset: 4px; }
+
+/* The browser's own surfaces belong to the world too: the caret on the card,
+   the selection, the scrollbar under the index on a phone. */
+.cr-page { caret-color: var(--cr-red); font-variant-numeric: tabular-nums; }
+.cr-page ::selection { background: rgba(179,39,30,.9); color: var(--cr-white); }
+.cr-file ::selection { background: rgba(179,39,30,.2); color: var(--cr-ink); }
+.cr-index { scrollbar-color: rgba(244,246,242,.4) transparent; }
+
+@media (max-width: 980px) {
+  .cr-band { flex-basis: 62px; padding: 0 16px; gap: 10px; }
+  /* Every band control clears a 44px touch target. At these type sizes the
+     natural heights were 25–32px, which is a miss on a phone. */
+  .cr-brand { gap: 9px; min-height: 44px; }
+  .cr-brand span { font-size: 19px; white-space: nowrap; }
+  .cr-brand img { width: 25px; height: 25px; }
+  .cr-nav { gap: 14px; }
+  .cr-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .cr-nav .cr-nav-hide { display: none; }
+  .cr-signup {
+    min-height: 44px;
+    padding: 9px 13px;
+    font-size: 11.5px;
+    letter-spacing: .1em;
+    white-space: nowrap;
+  }
+  .cr-desk {
+    grid-template-columns: 1fr;
+    gap: 0;
+    min-height: 0;
+    padding: 18px 16px 0;
+  }
+  /* the index turns into the run's face, scrolled sideways, active tab in view */
+  .cr-index {
+    order: -1;
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 0 0 16px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+  }
+  .cr-tab { flex: 0 0 auto; width: 172px; height: 56px; padding: 0 14px; scroll-snap-align: start; }
+  .cr-tab .cr-tab-label { font-size: 14px; letter-spacing: .12em; }
+  .cr-tab small { font-size: 11.5px; }
+  .cr-tab.on { margin-left: 0; }
+  .cr-file { min-height: 0; padding: 20px 20px 18px; }
+  .cr-head { flex-wrap: wrap; gap: 10px; }
+  .cr-head > div:first-child { flex: 1 1 100%; }
+  .cr-head h1 { font-size: 13px; letter-spacing: .16em; }
+  .cr-run { font-size: 11.5px; }
+  .cr-docket { margin-left: 0; padding: 7px 11px; }
+  .cr-docket b { font-size: 12px; }
+  .cr-subject { margin-top: 14px; }
+  .cr-subject h2 { gap: 10px; }
+  .cr-subject-name { font-size: 26px; letter-spacing: -.02em; }
+  .cr-subject-line { font-size: 14px; }
+  .cr-ledger { flex-direction: column; align-items: flex-start; gap: 9px; }
+  /* 26px marks would need 356px and wrap on a 358px column, so the drawn
+     ledger steps down rather than breaking into two ragged rows. */
+  .cr-mark { width: 21px; height: 17px; }
+  .cr-sources { grid-template-columns: 1fr; gap: 15px; }
+  .cr-fact { grid-template-columns: 104px minmax(0, 1fr); gap: 8px; }
+  /* 14.5px mono needed 209px for "office@apexroofingaz.com" in a 206px column,
+     so the address broke mid-word. A step down and it holds, unbroken, which
+     is the one thing an address has to do. */
+  .cr-fact dd { font-size: 13.5px; }
+  /* At 390 the kind ("the page that answered") took half the line and broke
+     the URL mid-word. The URL gets the row to itself and the kind falls under
+     it, flush left where it reads as the source's own descriptor. */
+  .cr-src-head { flex-wrap: wrap; row-gap: 1px; }
+  .cr-src-url { flex: 1 1 100%; }
+  .cr-src-kind { margin-left: 0; }
+  /* The desktop bleed is 10px; in an 18px card margin that read as a mistake,
+     so on a phone the wash is drawn in tighter. */
+  .cr-src-hit { padding: 7px 8px; margin: -7px -8px; }
+  .cr-foot {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    min-height: 0;
+    padding: 24px 16px 28px;
+  }
+  .cr-offer h3 { font-size: 21px; max-width: 30ch; }
+}
+
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; } }
+
+</style></head>
+<body>
+<div class="cr-page">
+  <header class="cr-band">
+    <a href="./" class="cr-brand"><img src="logo.svg" alt="" aria-hidden="true" width="30" height="30"><span>Varnor Index</span></a>
+    <nav class="cr-nav" aria-label="Primary">
+      <a href="#read" class="cr-nav-hide">How it reads</a>
+      <a href="#read">Sign in</a>
+      <a href="#read" class="cr-signup">Open an account</a>
+    </nav>
+  </header>
+
+  <main class="cr-desk">
+    <div class="cr-cardwrap">
+      <div class="cr-stack" aria-hidden="true"><i></i><i></i></div>
+          <section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-identity" tabindex="-1" data-face="identity" hidden>
+            <header class="cr-head">
+              <div>
+                <h1>Business reference — filed from the source</h1>
+                <p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p>
+              </div>
+              <div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div>
+            </header>
+            <div class="cr-subject">
+            <h2 id="cr-subject">
+            <span class="cr-inline-label">Subject</span>
+            <span class="cr-subject-name">APEX ROOFING CO.</span>
+            </h2>
+            <p class="cr-subject-line">The register is the spine of the file. Every later fact hangs off this record, and nothing here is guessed at.</p>
+            <p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer’s data</p>
+            </div>
+            <div class="cr-sources">
+            <article class="cr-src">
+            <header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">state register</span></header>
+            <dl class="cr-facts">
+            <div class="cr-fact"><dt>Registered address</dt><dd>4120 W Buckeye Rd, Phoenix AZ 85009</dd></div>
+            <div class="cr-fact"><dt>Trading status</dt><dd>Active</dd></div>
+            <div class="cr-fact"><dt>Register number</dt><dd>14823017<span class="cr-hint">the entity id the state issues</span></dd></div>
+            <div class="cr-fact"><dt>Registered agent</dt><dd>R. Delgado</dd></div>
+            </dl></article>
+            </div>
+            <p class="cr-blank">Nothing else on file for this subject</p>
+          </section>
+    
+          <section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-contact" tabindex="-1" data-face="contact">
+            <header class="cr-head">
+              <div>
+                <h1>Business reference — filed from the source</h1>
+                <p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p>
+              </div>
+              <div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div>
+            </header>
+            <div class="cr-subject">
+            <h2 id="cr-subject">
+            <span class="cr-inline-label">Subject</span>
+            <span class="cr-subject-name">APEX ROOFING CO.</span>
+            </h2>
+            <p class="cr-subject-line">Twelve pages read looking for a way in. Eleven had no public address. The twelfth did, and that is the only reason this file has a number to call.</p>
+            <p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer’s data</p>
+            </div>
+            <div class="cr-ledger"><div class="cr-marks" aria-hidden="true"><i class="cr-mark on"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i></div><p class="cr-ledger-cap"><b>12 pages read</b> for a way in · 11 came back with nothing · <b>the last one did</b></p></div>
+            <div class="cr-sources">
+            <article class="cr-src cr-src-hit">
+            <header class="cr-src-head"><h3 class="cr-src-url">apexroofingaz.com/contact</h3><span class="cr-src-kind">the page that answered</span></header>
+            <dl class="cr-facts">
+            <div class="cr-fact"><dt>Telephone</dt><dd>+1 602 555 0148<span class="cr-hint">one dialable format, E.164</span></dd></div>
+            <div class="cr-fact"><dt>Mailbox</dt><dd>office@apexroofingaz.com<span class="cr-hint">first address on the page</span></dd></div>
+            </dl></article>
+            <article class="cr-src">
+            <header class="cr-src-head"><h3 class="cr-src-url">mx1.apexroofingaz.com</h3><span class="cr-src-kind">mail server</span></header>
+            <dl class="cr-facts">
+            <div class="cr-fact"><dt>Mailbox checked</dt><dd>Accepts mail<span class="cr-hint">the server answered for this address</span></dd></div>
+            <div class="cr-fact"><dt>Checked</dt><dd>2026-11-11</dd></div>
+            </dl></article>
+            <article class="cr-src">
+            <header class="cr-src-head"><h3 class="cr-src-url">apexroofingaz.com/about</h3><span class="cr-src-kind">team page</span></header>
+            <dl class="cr-facts">
+            <div class="cr-fact"><dt>Named person</dt><dd>R. Delgado · estimator</dd></div>
+            </dl></article>
+            <article class="cr-src">
+            <header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">state register</span></header>
+            <dl class="cr-facts">
+            <div class="cr-fact"><dt>Started from</dt><dd>4120 W Buckeye Rd, Phoenix AZ 85009</dd></div>
+            </dl></article>
+            </div>
+            <p class="cr-blank">Nothing else on file for this subject</p>
+          </section>
+          <section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-verified" tabindex="-1" data-face="verified" hidden>
+            <header class="cr-head">
+              <div>
+                <h1>Business reference — filed from the source</h1>
+                <p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p>
+              </div>
+              <div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div>
+            </header>
+            <div class="cr-subject">
+            <h2 id="cr-subject">
+            <span class="cr-inline-label">Subject</span>
+            <span class="cr-subject-name">APEX ROOFING CO.</span>
+            </h2>
+            <p class="cr-subject-line">Verified means the mailbox answered. A server that accepts anything and everything is filed as risky, never as verified — not knowing is a result, not a pass.</p>
+            <p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer’s data</p>
+            </div>
+            <div class="cr-sources">
+            <article class="cr-src">
+            <header class="cr-src-head"><h3 class="cr-src-url">mx1.apexroofingaz.com</h3><span class="cr-src-kind">mail server</span></header>
+            <dl class="cr-facts">
+            <div class="cr-fact"><dt>MX record</dt><dd>Live<span class="cr-hint">a named server is ready to take the mail</span></dd></div>
+            <div class="cr-fact"><dt>Probe address</dt><dd>Rejected<span class="cr-hint">a made-up address was refused, so this is not a catch-all</span></dd></div>
+            </dl></article>
+            <article class="cr-src">
+            <header class="cr-src-head"><h3 class="cr-src-url">smtp.mx1.apexroofingaz.com</h3><span class="cr-src-kind">live check</span></header>
+            <dl class="cr-facts">
+            <div class="cr-fact"><dt>office@apexroofingaz.com</dt><dd>Accepted</dd></div>
+            <div class="cr-fact"><dt>Checked</dt><dd>2026-11-11</dd></div>
+            </dl></article>
+            <article class="cr-src">
+            <header class="cr-src-head"><h3 class="cr-src-url">libphonenumber</h3><span class="cr-src-kind">number check</span></header>
+            <dl class="cr-facts">
+            <div class="cr-fact"><dt>+1 602 555 0148</dt><dd>Valid<span class="cr-hint">a real number, in a real range</span></dd></div>
+            <div class="cr-fact"><dt>Kind</dt><dd>Landline</dd></div>
+            </dl></article>
+            </div>
+            <p class="cr-blank">Every claim above was checked on the date shown</p>
+          </section>
+          <section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-history" tabindex="-1" data-face="history" hidden>
+            <header class="cr-head">
+              <div>
+                <h1>Business reference — filed from the source</h1>
+                <p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p>
+              </div>
+              <div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div>
+            </header>
+            <div class="cr-subject">
+            <h2 id="cr-subject">
+            <span class="cr-inline-label">Subject</span>
+            <span class="cr-subject-name">APEX ROOFING CO.</span>
+            </h2>
+            <p class="cr-subject-line">Fifteen years of filings, newest first. A year with nothing in it is shown as a year with nothing in it.</p>
+            <p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer’s data</p>
+            </div>
+            <div class="cr-sources">
+            <article class="cr-src">
+            <header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">filings</span></header>
+            <dl class="cr-facts">
+            <div class="cr-fact"><dt>Renewed</dt><dd>2024</dd></div>
+            <div class="cr-fact"><dt>Filed</dt><dd>2011</dd></div>
+            </dl></article>
+            <article class="cr-src">
+            <header class="cr-src-head"><h3 class="cr-src-url">city of phoenix</h3><span class="cr-src-kind">permits</span></header>
+            <dl class="cr-facts">
+            <div class="cr-fact"><dt>Roofing permit</dt><dd>2019</dd></div>
+            <div class="cr-fact"><dt>Between 2012 and 2018</dt><dd class="cr-none">Nothing filed</dd></div>
+            </dl></article>
+            </div>
+            <p class="cr-blank">Nothing else on file for this subject</p>
+          </section>
+          <section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-empty" tabindex="-1" data-face="empty" hidden>
+            <header class="cr-head">
+              <div>
+                <h1>Business reference — filed from the source</h1>
+                <p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p>
+              </div>
+              <div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div>
+            </header>
+            <div class="cr-subject">
+            <h2 id="cr-subject">
+            <span class="cr-inline-label">Subject</span>
+            <span class="cr-subject-name">SUN VALLEY GUTTERS LLC.</span>
+            </h2>
+            <p class="cr-subject-line">Twelve pages read. Not one of them returned a way to make contact. The record is still here, still counted, and the reason it is empty is written down.</p>
+            <p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer’s data</p>
+            </div>
+            <div class="cr-ledger"><div class="cr-marks" aria-hidden="true"><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i></div><p class="cr-ledger-cap"><b>12 pages read</b> for a way in · not one of them returned a contact</p></div>
+            <div class="cr-sources">
+            <article class="cr-src">
+            <header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">state register</span></header>
+            <dl class="cr-facts">
+            <div class="cr-fact"><dt>Registered address</dt><dd class="cr-none">No street address filed</dd></div>
+            <div class="cr-fact"><dt>Trading status</dt><dd>Active</dd></div>
+            </dl></article>
+            <article class="cr-src">
+            <header class="cr-src-head"><h3 class="cr-src-url">sunvalleygutters.com</h3><span class="cr-src-kind">company site</span></header>
+            <dl class="cr-facts">
+            <div class="cr-fact"><dt>Contact page</dt><dd class="cr-none">Returned no address</dd></div>
+            <div class="cr-fact"><dt>Telephone</dt><dd class="cr-none">Not on the page</dd></div>
+            </dl></article>
+            <article class="cr-src">
+            <header class="cr-src-head"><h3 class="cr-src-url">three directory listings</h3><span class="cr-src-kind">directories</span></header>
+            <dl class="cr-facts">
+            <div class="cr-fact"><dt>Contact details</dt><dd class="cr-none">Placeholder numbers only</dd></div>
+            </dl></article>
+            <article class="cr-src">
+            <header class="cr-src-head"><h3 class="cr-src-url">the other seven pages</h3><span class="cr-src-kind">read, empty</span></header>
+            <dl class="cr-facts">
+            <div class="cr-fact"><dt>Anything usable</dt><dd class="cr-none">Nothing</dd></div>
+            </dl></article>
+            </div>
+            <p class="cr-blank">No contact on file · kept and counted, not dropped</p>
+          </section>
+    </div>
+
+    <nav class="cr-index" role="tablist" aria-label="The run, by face" aria-orientation="vertical">
+          <button type="button" role="tab" id="cr-tab-identity" data-face="identity" aria-selected="false" aria-controls="read" tabindex="-1" class="cr-tab cr-tab-red"><span><span class="cr-tab-label">Identity</span><small>Who they are, on the register</small></span><b>148</b></button>
+          <button type="button" role="tab" id="cr-tab-contact" data-face="contact" aria-selected="true" aria-controls="read" tabindex="0" class="cr-tab cr-tab-amber on"><span><span class="cr-tab-label">Contact</span><small>Read at the source, with the page</small></span><b>91</b></button>
+          <button type="button" role="tab" id="cr-tab-verified" data-face="verified" aria-selected="false" aria-controls="read" tabindex="-1" class="cr-tab cr-tab-green"><span><span class="cr-tab-label">Verified</span><small>Mailbox answers, number is real</small></span><b>63</b></button>
+          <button type="button" role="tab" id="cr-tab-history" data-face="history" aria-selected="false" aria-controls="read" tabindex="-1" class="cr-tab cr-tab-blue"><span><span class="cr-tab-label">History</span><small>What they filed, and when</small></span><b>44</b></button>
+          <button type="button" role="tab" id="cr-tab-empty" data-face="empty" aria-selected="false" aria-controls="read" tabindex="-1" class="cr-tab cr-tab-grey"><span><span class="cr-tab-label">Not on file</span><small>No source could reach them</small></span><b>57</b></button>
+    </nav>
+  </main>
+
+  <footer class="cr-foot">
+    <div class="cr-offer">
+      <h3>Name a trade and a market. Get the file on every business in it.</h3>
+      <p>Every fact carries the page it came from, and every record that came back empty is still filed — labelled, counted, and kept. Nothing is quietly dropped.</p>
+    </div>
+    <div class="cr-act">
+      <a href="#read">Open an account</a>
+      <span>Free to start · no card · confirm your address once</span>
+    </div>
+  </footer>
+</div>
+<script>
+(function () {
+  var tabs = [].slice.call(document.querySelectorAll('.cr-tab'));
+  var panels = [].slice.call(document.querySelectorAll('.cr-file'));
+  function open(key, focus) {
+    tabs.forEach(function (t) {
+      var on = t.dataset.face === key;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.setAttribute('tabindex', on ? '0' : '-1');
+      t.classList.toggle('on', on);
+      if (on && focus) t.focus();
+    });
+    panels.forEach(function (p) { p.hidden = p.dataset.face !== key; });
+    document.querySelector('.cr-cardwrap').scrollTop = 0;
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { open(t.dataset.face, false); });
+    t.addEventListener('keydown', function (e) {
+      var step = e.key === 'ArrowDown' ? 1 : e.key === 'ArrowUp' ? -1
+        : e.key === 'Home' ? -1000 : e.key === 'End' ? 1000 : 0;
+      if (!step) return;
+      e.preventDefault();
+      var n = step === -1000 ? 0 : step === 1000 ? tabs.length - 1
+        : (i + step + tabs.length) % tabs.length;
+      open(tabs[n].dataset.face, true);
+    });
+  });
+})();
+</script>
+
+</body></html>
