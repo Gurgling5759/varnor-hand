@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>The Coiled Tower</title>
+<style>
+  :root{ --earth:#7d2f13; --earth-2:#93401d; --earth-3:#a84c24; --slip:#f6ece0; --damp:#4a1c0b;
+         --thrown:#c25f2c; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1440px;height:900px;overflow:hidden;background:var(--earth);color:var(--slip);
+       font-family:"Arial Narrow",Arial,Helvetica,sans-serif;display:flex;position:relative}
+
+  .left{width:800px;padding:44px 0 38px 70px;display:flex;flex-direction:column;position:relative;z-index:2}
+  header{display:flex;align-items:baseline;justify-content:space-between;width:658px}
+  .wordmark{font-size:20px;font-weight:700;letter-spacing:.24em;text-transform:uppercase}
+  nav{display:flex;gap:26px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#f0d9c9}
+  nav a{color:inherit;text-decoration:none}
+
+  h1{font-size:76px;line-height:.93;letter-spacing:-.035em;font-weight:700;text-transform:uppercase;
+     margin-top:36px;max-width:13ch}
+  h1 em{font-style:normal;color:#ffc98a}
+  .lede{font-family:Arial,Helvetica,sans-serif;font-size:16.5px;line-height:1.6;color:#f7e2d2;
+        max-width:52ch;margin-top:24px}
+
+  /* the course box: the working search, banded like the first course of a tower */
+  .course{margin-top:auto;width:658px}
+  .band{display:flex;align-items:stretch;background:var(--damp);
+        box-shadow:0 16px 34px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.10)}
+  .band label{padding:19px 26px;border-right:1px solid rgba(246,236,224,.20)}
+  .band i{display:block;font-style:normal;font-family:Arial,Helvetica,sans-serif;font-size:11.5px;
+          letter-spacing:.18em;text-transform:uppercase;color:#e0bda4}
+  .band b{display:block;font-size:24px;font-weight:700;margin-top:6px}
+  .band button{margin-left:auto;background:#ffc98a;color:#3a1607;border:0;padding:0 34px;
+               font-family:inherit;font-size:16px;font-weight:700;letter-spacing:.18em;
+               text-transform:uppercase}
+  .figures{display:flex;gap:38px;margin-top:24px}
+  .figures div{font-family:Arial,Helvetica,sans-serif;font-size:12.5px;letter-spacing:.14em;
+               text-transform:uppercase;color:#f0d9c9}
+  .figures b{display:block;font-family:"Arial Narrow",Arial,sans-serif;font-size:42px;font-weight:700;
+             letter-spacing:-.02em;color:var(--slip);font-variant-numeric:tabular-nums;margin-bottom:2px}
+  .figures .hi b{color:#ffc98a}
+
+  /* the tower: one course per pass over the market, seams left visible where a course came back hollow */
+  .tower{position:absolute;right:64px;bottom:0;width:544px;display:flex;flex-direction:column;
+         align-items:center}
+  .c{width:100%;border-radius:26px 26px 4px 4px;margin-top:-16px;
+     box-shadow:0 10px 22px rgba(0,0,0,.34), inset 0 2px 0 rgba(255,255,255,.16);
+     animation:settle .7s cubic-bezier(.16,.84,.3,1) both;transform-origin:bottom}
+  @keyframes settle{from{transform:scaleY(1.07) translateY(14px);opacity:0}
+                    to{transform:scaleY(1) translateY(0);opacity:1}}
+  .c .seam{height:9px;background:rgba(246,236,224,.32);border-radius:5px;margin:0 auto}
+  /* a hollow course keeps its crack: the gap is the record */
+  .crack{position:absolute;width:5px;background:rgba(20,7,2,.66);border-radius:3px}
+  .c.hold{background:linear-gradient(180deg,var(--thrown),var(--earth-3))}
+  .c.hold .seam{width:96%}
+  .c.part{background:linear-gradient(180deg,var(--earth-3),var(--earth-2))}
+  .c.part .seam{width:64%}
+  .c.hollow{background:linear-gradient(180deg,var(--earth-2),var(--earth))}
+  .c.hollow .seam{width:34%}
+  /* damp clay is read from its colour and its seam, never from a halo */
+  .c.damp{background:linear-gradient(180deg,#6a2a11,var(--damp));
+          box-shadow:0 10px 22px rgba(0,0,0,.42), inset 0 2px 0 rgba(255,255,255,.10)}
+  .c.damp .seam{width:12%;height:11px;background:rgba(246,236,224,.5)}
+</style></head>
+<body>
+  <div class="left">
+    <header>
+      <div class="wordmark">Varnor Index</div>
+      <nav><a href="#">Product</a><a href="#">Pricing</a><a href="#">Sign in</a></nav>
+    </header>
+
+    <h1>A market is built in courses. We leave the <em>cracks</em> in.</h1>
+    <p class="lede">Every pass reads the trade and raises one course. Where a course came back
+      solid it is bedded tight; where it came back hollow the seam stays short and the crack stays
+      open, because a tower that hides its cracks is a tower you cannot trust your weight to.</p>
+
+    <div class="course">
+      <div class="band">
+        <label><i>Trade</i><b>Roofing contractors</b></label>
+        <label><i>Market</i><b>Phoenix, Arizona</b></label>
+        <button type="button">Raise a course</button>
+      </div>
+      <div class="figures">
+        <div class="hi"><b>31</b>Bedded tight</div>
+        <div><b>117</b>Left cracked</div>
+        <div><b>148</b>Courses raised</div>
+        <div><b>0</b>Sanded over</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tower">
+    <div class="c damp" style="height:74px"></div>
+    <div class="c hollow" style="height:96px;animation-delay:.06s">
+      <span class="crack" style="height:52px;left:118px;top:16px"></span>
+      <span class="crack" style="height:34px;left:392px;top:24px"></span></div>
+    <div class="c hollow" style="height:104px;animation-delay:.12s">
+      <span class="crack" style="height:66px;left:206px;top:14px"></span></div>
+    <div class="c part" style="height:100px;animation-delay:.18s">
+      <span class="crack" style="height:38px;left:330px;top:28px"></span></div>
+    <div class="c hollow" style="height:110px;animation-delay:.24s">
+      <span class="crack" style="height:74px;left:88px;top:12px"></span>
+      <span class="crack" style="height:42px;left:270px;top:30px"></span></div>
+    <div class="c hold" style="height:104px;animation-delay:.30s"></div>
+    <div class="c part" style="height:112px;animation-delay:.36s">
+      <span class="crack" style="height:30px;left:412px;top:34px"></span></div>
+    <div class="c hold" style="height:108px;animation-delay:.42s"></div>
+    <div class="c hold" style="height:116px;animation-delay:.48s"></div>
+    <div class="c hollow" style="height:112px;animation-delay:.54s">
+      <span class="crack" style="height:58px;left:154px;top:20px"></span></div>
+    <div class="c hold" style="height:120px;animation-delay:.60s"></div>
+  </div>
+</body></html>

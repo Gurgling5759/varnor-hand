@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>The Provenance Ribbon — leads the hand</title>
+<style>
+  :root{ --linen:#c9c1ac; --linen-deep:#b0a894; --ink:#15130e; --ribbon:#bc1d19;
+         --ribbon-lit:#f04a3c; --thread:#5e594a; --quiet:#443f33; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1440px;height:900px;overflow:hidden;background:var(--linen);color:var(--ink);
+       font-family:Georgia,"Times New Roman",serif;position:relative}
+  /* the ground is woven, not flat: the page is cloth before it is anything else */
+  body::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+    background:repeating-linear-gradient(90deg,rgba(21,19,14,.05) 0 1px,transparent 1px 3px),
+               repeating-linear-gradient(0deg,rgba(21,19,14,.04) 0 1px,transparent 1px 3px)}
+
+  /* the ribbon: one continuous custody line, nose to tail, and the page's whole composition */
+  .ribbon{position:absolute;left:846px;top:-40px;bottom:-40px;width:164px;
+          background:linear-gradient(180deg,#8e1512 0%,var(--ribbon) 12%,#d3281f 46%,
+                     var(--ribbon) 74%,#8e1512 100%);
+          box-shadow:0 30px 60px rgba(21,19,14,.34), inset 0 0 0 1px rgba(255,255,255,.10);
+          overflow:hidden}
+  /* the sheen: the only thing on the page that moves, and it moves like silk */
+  .ribbon::after{content:"";position:absolute;inset:-20% -60%;
+    background:linear-gradient(104deg,transparent 40%,rgba(255,226,214,.24) 50%,transparent 60%);
+    animation:sheen 7s cubic-bezier(.4,0,.2,1) infinite}
+  @keyframes sheen{0%{transform:translateX(-70%)}55%{transform:translateX(70%)}100%{transform:translateX(70%)}}
+
+  .fold{position:absolute;left:0;right:0;background:rgba(0,0,0,.16);
+        border-top:1px solid rgba(255,255,255,.22);border-bottom:1px solid rgba(0,0,0,.30)}
+  .gap{position:absolute;left:0;right:0;height:34px;
+       background:repeating-linear-gradient(0deg,#7d7767 0 2px,transparent 2px 6px);opacity:.5}
+
+  .page{position:relative;height:100%;padding:40px 0 34px 68px;display:flex;flex-direction:column;width:790px}
+  header{display:flex;align-items:baseline;justify-content:space-between;width:742px}
+  .wordmark{font-family:"Arial Narrow",Arial,sans-serif;font-size:19px;font-weight:700;
+            letter-spacing:.2em;text-transform:uppercase}
+  nav{display:flex;gap:26px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:var(--quiet)}
+  nav a{color:inherit;text-decoration:none}
+
+  h1{font-family:"Arial Narrow",Arial,sans-serif;font-size:82px;line-height:.93;letter-spacing:-.03em;
+     font-weight:700;text-transform:uppercase;margin-top:34px;max-width:12ch}
+  h1 em{font-family:Georgia,serif;font-style:italic;font-weight:400;text-transform:none;
+        letter-spacing:-.02em;font-size:76px;color:var(--ribbon)}
+  .lede{font-family:Arial,Helvetica,sans-serif;font-size:16.5px;line-height:1.6;color:#2c2a22;
+        max-width:50ch;margin-top:22px}
+
+  .acq{margin-top:36px;width:742px;background:var(--ink);color:var(--linen);
+       display:flex;align-items:stretch;box-shadow:0 20px 40px rgba(21,19,14,.30)}
+  .acq label{padding:20px 26px;border-right:1px solid rgba(201,193,172,.22)}
+  .acq i{display:block;font-family:Arial,Helvetica,sans-serif;font-style:normal;font-size:11.5px;
+         letter-spacing:.16em;text-transform:uppercase;color:#a49a83}
+  .acq b{display:block;font-family:Georgia,serif;font-size:20px;margin-top:7px}
+  .acq button{margin-left:auto;background:var(--ribbon-lit);color:#2a0705;border:0;padding:0 34px;
+              font-family:"Arial Narrow",Arial,sans-serif;font-size:16px;font-weight:700;
+              letter-spacing:.16em;text-transform:uppercase}
+
+  .folds{margin-top:auto;width:742px;display:flex;gap:30px;align-items:flex-end}
+  .folds div{font-family:Arial,Helvetica,sans-serif;font-size:12.5px;letter-spacing:.1em;
+             text-transform:uppercase;color:var(--quiet)}
+  .folds b{display:block;font-family:"Arial Narrow",Arial,sans-serif;font-size:40px;letter-spacing:-.02em;
+           color:var(--ink);font-variant-numeric:tabular-nums;margin-bottom:3px}
+  .folds .red b{color:var(--ribbon)}
+
+  /* the ribbon's own ledger, set into the ribbon itself so it reverses cleanly against the silk */
+  .marks{position:absolute;left:20px;top:0;bottom:0;width:124px;z-index:2}
+  .mark{position:absolute;left:0;right:0}
+  /* every mark reverses to full white: the ribbon is saturated enough that anything dimmer fails */
+  .mark .d{font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:.14em;color:#fff;
+           opacity:.92}
+  .mark .t{font-family:"Arial Narrow",Arial,sans-serif;font-size:15px;font-weight:700;
+           text-transform:uppercase;color:#fff;line-height:1.14;margin-top:4px}
+  .mark .s{font-family:Georgia,serif;font-size:13px;color:#fff;margin-top:3px}
+  /* a gap is marked by the weave, never by a dimmer white */
+  .mark.gone .t{font-style:italic;border-bottom:1px dashed rgba(255,255,255,.6);display:inline-block}
+  .mark.gone .s{font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:.08em}
+  /* the raise: a fold's weight is its scale, so the eye ranks the custody line without reading it */
+  .mark.big .t{font-size:21px}
+  .mark.big .s{font-size:14.5px}
+  .mark.big .d{font-size:13px}
+</style></head>
+<body>
+  <div class="ribbon">
+    <span class="fold" style="top:150px;height:14px"></span>
+    <span class="fold" style="top:326px;height:14px"></span>
+    <span class="gap" style="top:396px"></span>
+    <span class="fold" style="top:470px;height:14px"></span>
+    <span class="fold" style="top:646px;height:14px"></span>
+    <span class="gap" style="top:716px"></span>
+    <span class="fold" style="top:790px;height:14px"></span>
+
+    <div class="marks">
+      <div class="mark" style="top:136px"><div class="d">11 Nov 2026</div>
+        <div class="t">Directory listing read</div><div class="s">six sources, all returned</div></div>
+      <div class="mark" style="top:312px"><div class="d">11 Nov 2026</div>
+        <div class="t">Their own server read</div><div class="s">/contact, /about, /team</div></div>
+      <div class="mark gone" style="top:440px"><div class="t">Silent</div>
+        <div class="s">no contact page returned anything</div></div>
+      <div class="mark big" style="top:552px"><div class="d">11 Nov 2026</div>
+        <div class="t">Mailbox confirmed</div><div class="s">read at the source that publishes it</div></div>
+      <div class="mark gone" style="top:760px"><div class="t">Nothing held</div>
+        <div class="s">telephone: never found</div></div>
+      <div class="mark big" style="top:858px"><div class="d">Today</div>
+        <div class="t">Three claims</div><div class="s">display · return · unresolved</div></div>
+    </div>
+  </div>
+
+  <div class="page">
+    <header>
+      <div class="wordmark">Varnor Index</div>
+      <nav><a href="#">Product</a><a href="#">Pricing</a><a href="#">Sign in</a></nav>
+    </header>
+
+    <h1>Every fact we hand you has a <em>ribbon</em> behind it.</h1>
+    <p class="lede">Not a score, not a confidence badge &mdash; the actual custody line. Where a
+      detail was read, which server published it, where it went silent for years, and what is still
+      unresolved today. The gaps are woven in grey, because a gap is evidence too.</p>
+
+    <div class="acq">
+      <label><i>Trade</i><b>Roofing contractors</b></label>
+      <label><i>Market</i><b>Phoenix, Arizona</b></label>
+      <button type="button">Trace the run</button>
+    </div>
+
+    <div class="folds">
+      <div class="red"><b>148</b>On the ribbon</div>
+      <div><b>31</b>Passages solid</div>
+      <div><b>117</b>Woven in grey</div>
+      <div><b>0</b>Inferred</div>
+    </div>
+  </div>
+</body></html>

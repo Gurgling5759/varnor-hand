@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>The Step Row</title>
+<style>
+  :root{ --panel:#16161a; --panel-2:#1e1e24; --silk:#e8e6e1; --dim:#9c9aa3;
+         --red:#e2432f; --orange:#e88a2b; --yellow:#e8c93a; --white:#f2f0ea; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1440px;height:900px;overflow:hidden;background:var(--panel);color:var(--silk);
+       font-family:"Arial Narrow",Arial,Helvetica,sans-serif;display:flex;flex-direction:column}
+  .page{padding:34px 64px 30px;display:flex;flex-direction:column;height:100%}
+
+  header{display:flex;align-items:baseline;justify-content:space-between}
+  .wordmark{font-size:20px;font-weight:700;letter-spacing:.22em;text-transform:uppercase}
+  nav{display:flex;gap:28px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:var(--dim)}
+  nav a{color:inherit;text-decoration:none}
+
+  .top{display:grid;grid-template-columns:1fr 356px;gap:48px;align-items:end;margin-top:30px}
+  h1{font-size:74px;line-height:.92;letter-spacing:-.035em;font-weight:700;text-transform:uppercase;
+     max-width:14ch}
+  .lede{font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:#c3c1c8;
+        max-width:52ch;margin-top:18px}
+
+  /* the tempo readout: the run's figures, in a segmented display, above the row they belong to */
+  .tempo{background:#0d0d10;border:2px solid #2b2b33;padding:16px 20px 14px}
+  .tempo i{display:block;font-family:Arial,Helvetica,sans-serif;font-style:normal;font-size:11.5px;
+           letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+  .tempo .big{display:flex;align-items:baseline;gap:14px;margin-top:9px}
+  .tempo .big b{font-size:54px;letter-spacing:-.02em;color:var(--red);font-variant-numeric:tabular-nums;
+                line-height:1;text-shadow:0 0 18px rgba(226,67,47,.55)}
+  .tempo .big span{font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#c3c1c8;line-height:1.4}
+  .tempo .sub{margin-top:14px;padding-top:12px;border-top:1px solid #2b2b33;font-size:13px;
+              color:#c3c1c8;font-family:Arial,Helvetica,sans-serif}
+  .tempo .sub b{color:var(--yellow)}
+
+  /* the step row: sixteen keys, quartered, the page's one unbroken line and its whole instrument */
+  .row{margin-top:auto;background:var(--panel-2);border:2px solid #2b2b33;padding:26px 28px 22px;
+       box-shadow:0 28px 60px rgba(0,0,0,.55)}
+  .rowhead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px}
+  .rowhead span{font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:.2em;
+                text-transform:uppercase;color:var(--dim)}
+  .rowhead b{font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:.2em;
+             text-transform:uppercase;color:var(--silk);font-weight:700}
+  .steps{display:grid;grid-template-columns:repeat(16,1fr);gap:9px;position:relative}
+  .s{position:relative;height:88px;border-radius:5px;background:#232329;border:1px solid #33333c;
+     box-shadow:inset 0 -3px 0 rgba(0,0,0,.5)}
+  /* the numbering runs under the row, on the panel's own dark: no text ever sits on a lit key */
+  .idx{display:grid;grid-template-columns:repeat(16,1fr);gap:9px;margin-top:11px}
+  .idx span{text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:var(--dim)}
+  .s.on{background:var(--red);border-color:#ff7a68;box-shadow:inset 0 -3px 0 rgba(0,0,0,.35),
+        0 0 22px rgba(226,67,47,.5)}
+  .s.on2{background:var(--orange);border-color:#ffb563;box-shadow:inset 0 -3px 0 rgba(0,0,0,.35),
+        0 0 22px rgba(232,138,43,.5)}
+  .s.acc{background:var(--yellow);border-color:#ffe98a;transform:scaleY(1.12);transform-origin:bottom;
+         box-shadow:inset 0 -3px 0 rgba(0,0,0,.28),0 0 30px rgba(232,201,58,.6)}
+  .s.hit{background:var(--white);border-color:#fff;box-shadow:inset 0 -3px 0 rgba(0,0,0,.2),
+        0 0 34px rgba(242,240,234,.65)}
+  /* the chase light: it comes around in tempo, and it is where now is */
+  .chase{position:absolute;left:0;top:-16px;width:6.25%;height:6px;border-radius:3px;z-index:3;
+         background:linear-gradient(90deg,transparent,#fff,transparent);
+         animation:chase 3.2s linear infinite;opacity:.9}
+  @keyframes chase{0%{left:0}100%{left:93.75%}}
+
+  .legend{margin-top:30px;display:flex;gap:40px;align-items:center}
+  .legend div{font-family:Arial,Helvetica,sans-serif;font-size:12.5px;color:var(--dim);
+              display:flex;align-items:center;gap:9px}
+  .legend em{width:14px;height:14px;border-radius:3px;display:block}
+  .legend .rt{margin-left:auto;color:#c3c1c8}
+  .legend .rt b{color:var(--silk)}
+
+  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px}
+  .foot p{font-family:Arial,Helvetica,sans-serif;font-size:13px;color:var(--dim);max-width:74ch}
+  .foot p b{color:var(--silk)}
+  .foot button{background:var(--yellow);color:#1a1602;border:0;padding:16px 32px;font-family:inherit;
+               font-size:16px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+</style></head>
+<body>
+  <div class="page">
+    <header>
+      <div class="wordmark">Varnor Index</div>
+      <nav><a href="#">Product</a><a href="#">Pricing</a><a href="#">Sign in</a></nav>
+    </header>
+
+    <div class="top">
+      <div>
+        <h1>Sixteen steps. Every one of them lit or dark, and you can see which.</h1>
+        <p class="lede">The run reads sixteen sources for an entry and lights a key for each one:
+          dark means it returned nothing. Armed means something came back. Accented means we
+          confirmed it at the server that published it. An empty entry is sixteen dark keys &mdash;
+          still on the row, still counted.</p>
+      </div>
+      <div class="tempo">
+        <i>Run VI&ndash;0083</i>
+        <div class="big"><b>31</b><span>keys accented<br>of 148 entries</span></div>
+        <div class="sub"><b>117</b> entries ran dark end to end</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="rowhead"><span>Roofing contractors &middot; Phoenix, Arizona</span>
+        <b>Cactus Coat Roofing &mdash; entry 050</b></div>
+      <div class="steps">
+        <span class="chase"></span>
+        <div class="s on"></div>
+        <div class="s on2"></div>
+        <div class="s on2"></div>
+        <div class="s acc"></div>
+        <div class="s on"></div>
+        <div class="s"></div>
+        <div class="s"></div>
+        <div class="s on2"></div>
+        <div class="s acc"></div>
+        <div class="s hit"></div>
+        <div class="s"></div>
+        <div class="s on"></div>
+        <div class="s"></div>
+        <div class="s"></div>
+        <div class="s on2"></div>
+        <div class="s acc"></div>
+      </div>
+      <div class="idx">
+        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
+        <span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span>
+        <span>13</span><span>14</span><span>15</span><span>16</span>
+      </div>
+      <div class="legend">
+        <div><em style="background:#232329;border:1px solid #33333c"></em>Dark &mdash; returned nothing</div>
+        <div><em style="background:#e2432f"></em>Armed</div>
+        <div><em style="background:#e88a2b"></em>Returned</div>
+        <div><em style="background:#e8c93a"></em>Accented</div>
+        <div><em style="background:#f2f0ea"></em>Confirmed at source</div>
+        <div class="rt"><b>6 of 16 sources</b> returned anything at all</div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <p><b>Free to run, no card.</b> Confirm your address once and the row lights for your market.
+        Every key stays a toggle you can read and check.</p>
+      <button type="button">Run the row</button>
+    </div>
+  </div>
+</body></html>

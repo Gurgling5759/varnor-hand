@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>The Category Standard — canon</title>
+<style>
+  :root{ --ground:#0a0c0f; --panel:#131820; --line:#232c37; --text:#eef2f6; --muted:#9fabb8;
+         --accent:#4c8dff; --ok:#3ecf8e; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1440px;height:900px;overflow:hidden;background:var(--ground);color:var(--text);
+       font-family:"Helvetica Neue",Arial,sans-serif;position:relative}
+  header{display:flex;align-items:center;justify-content:space-between;padding:22px 56px;
+         border-bottom:1px solid var(--line)}
+  .wordmark{font-size:19px;font-weight:700;letter-spacing:-.01em}
+  nav{display:flex;gap:30px;font-size:13px;color:var(--muted)}
+  nav a{color:inherit;text-decoration:none}
+  .cta{background:var(--accent);color:#04122c;font-size:13px;font-weight:700;padding:10px 18px;
+       border-radius:7px;text-decoration:none}
+
+  .hero{max-width:1040px;margin:0 auto;padding:70px 0 0;text-align:center}
+  .live{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:999px;
+        padding:7px 15px;font-size:12.5px;color:var(--muted)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);
+       animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.55}}
+  h1{font-size:66px;line-height:1.03;letter-spacing:-.034em;font-weight:700;margin-top:24px}
+  h1 span{color:var(--accent)}
+  .sub{font-size:18px;line-height:1.6;color:var(--muted);margin:20px auto 0;max-width:64ch}
+
+  .search{display:grid;grid-template-columns:1.35fr 1fr 132px;gap:10px;margin:32px auto 0;max-width:920px;
+          background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;
+          box-shadow:0 20px 40px rgba(0,0,0,.5)}
+  .field{text-align:left;padding:10px 14px;border-right:1px solid var(--line)}
+  .field:last-of-type{border-right:0}
+  .field label{display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
+               color:var(--muted)}
+  .field b{display:block;font-size:16px;margin-top:5px;font-weight:600}
+  .search button{background:var(--accent);color:#04122c;border:0;border-radius:8px;font-size:14px;
+                 font-weight:700;padding:0 18px}
+  .gate{font-size:12.5px;color:var(--muted);margin-top:13px}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
+         border:1px solid var(--line);border-radius:12px;overflow:hidden;max-width:1040px;margin:46px auto 0}
+  .stat{background:var(--panel);padding:22px 24px}
+  .stat b{display:block;font-size:32px;font-weight:700;letter-spacing:-.02em;
+          font-variant-numeric:tabular-nums}
+  .stat span{display:block;font-size:12.5px;color:var(--muted);margin-top:7px;line-height:1.45}
+  .stat.ok b{color:var(--ok)}
+
+  .cat{max-width:1040px;margin:40px auto 0;border-top:1px solid var(--line);padding-top:22px}
+  .cat h2{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+          font-weight:600}
+  .cat .row{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:16px}
+  .cat .c{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  .cat .c b{font-size:14px;font-weight:700}
+  .cat .c p{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:7px}
+  .cat .note{font-size:12.5px;color:var(--muted);margin-top:16px;line-height:1.55}
+  .cat .note b{color:var(--text)}
+</style></head>
+<body>
+  <header>
+    <div class="wordmark">Varnor Index</div>
+    <nav><a href="#">Product</a><a href="#">Pricing</a><a href="#">Docs</a></nav>
+    <a class="cta" href="#">Sign in</a>
+  </header>
+
+  <div class="hero">
+    <span class="live"><span class="dot"></span>Read at the source, never inferred from it</span>
+    <h1>Search a trade and a market.<br><span>Keep every number you can prove.</span></h1>
+    <p class="sub">Every business in the market comes back with its details checked against the
+      server that published them &mdash; and the ones that came back empty written down rather
+      than left out.</p>
+
+    <div class="search">
+      <div class="field"><label>Trade</label><b>Roofing contractors</b></div>
+      <div class="field"><label>Market</label><b>Phoenix, AZ</b></div>
+      <button type="button">Search</button>
+    </div>
+    <p class="gate">Free to search &middot; no card &middot; confirm your email once before your first run</p>
+
+    <div class="stats">
+      <div class="stat"><b>148</b><span>Businesses returned for this search</span></div>
+      <div class="stat ok"><b>31</b><span>Details confirmed at source</span></div>
+      <div class="stat"><b>117</b><span>Returned empty &mdash; and still listed</span></div>
+      <div class="stat"><b>0</b><span>Estimated, inferred or filled forward</span></div>
+    </div>
+
+    <div class="cat">
+      <h2>The category standard, executed</h2>
+      <div class="row">
+        <div class="c"><b>Clay</b><p>Enrichment tables with dozens of providers stacked side by side,
+          dense enough that the eye gives up before the data does.</p></div>
+        <div class="c"><b>Apollo.io</b><p>Database-first search with enormous coverage, where contact
+          data is filtered and scored rather than individually confirmed.</p></div>
+        <div class="c"><b>Hunter</b><p>One job done with almost no ornament: find the address behind
+          a domain, and say so plainly.</p></div>
+      </div>
+      <p class="note">This page holds that standard and departs in one place only.
+        <b>The category hides its empty results; this page counts them.</b></p>
+    </div>
+  </div>
+</body></html>

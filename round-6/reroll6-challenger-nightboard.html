@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>The Nightboard</title>
+<style>
+  :root{ --term:#040506; --grid:#0d1014; --cyan:#22d3d3; --mag:#ff5cd7; --yell:#ffd400;
+         --blue:#3a5cff; --white:#f4f4f4; --green:#39d353; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1440px;height:900px;overflow:hidden;background:var(--term);color:var(--white);
+       font-family:"Consolas","DejaVu Sans Mono","Courier New",monospace;
+       font-size:15px;line-height:1.5}
+
+  .screen{width:1180px;margin:34px auto 0;background:var(--grid);border:1px solid #1d262e;
+          padding:22px 26px 24px;position:relative;height:832px;overflow:hidden;
+          box-shadow:0 0 0 6px #0a0c0f, 0 30px 70px rgba(0,0,0,.7)}
+  /* every line pours in the way a board pours at 2am: one line at a time */
+  .ln{opacity:0;animation:pour .01s linear forwards}
+  @keyframes pour{to{opacity:1}}
+
+  .cyan{color:var(--cyan)} .mag{color:var(--mag)} .yell{color:var(--yell)}
+  .blue{color:var(--blue)} .green{color:var(--green)}
+  .art{white-space:pre;color:var(--cyan);font-size:15px;line-height:1.06}
+  .bar{white-space:pre;color:#2b3a45}
+
+  h1{font-family:inherit;font-size:15px;font-weight:400;margin:0}
+  .rule{color:#243139;white-space:pre;overflow:hidden;display:block}
+
+  .menu{margin-top:14px}
+  .menu div{white-space:pre}
+  .key{color:var(--yell);font-weight:700}
+
+  /* the line that is actually working: the search, as a prompt you type into */
+  .prompt{margin-top:16px;background:#0a0e12;border:1px solid #24313a;padding:14px 16px}
+  .prompt .r{white-space:pre;color:var(--white)}
+  .prompt .r b{color:var(--cyan);font-weight:700}
+  .caret{display:inline-block;width:9px;height:17px;background:var(--green);vertical-align:-3px;
+         animation:blink 1.05s steps(1) infinite}
+  @keyframes blink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+
+  .board{margin-top:16px}
+  .board .hd{color:var(--mag);white-space:pre}
+  .board .row{white-space:pre}
+  .board .row i{font-style:normal;color:#7d8f9b}
+  .board .row .on{color:var(--green)}
+  .board .row .off{color:#c9564a}
+
+  .status{position:absolute;left:26px;right:26px;bottom:18px;border-top:1px solid #24313a;
+          padding-top:11px;display:flex;justify-content:space-between;color:#8a9aa5;font-size:13px}
+  .status b{color:var(--cyan);font-weight:700}
+  .status .live{color:var(--green)}
+</style></head>
+<body>
+  <div class="screen">
+    <div class="art ln" style="animation-delay:.05s">╔══════════════════════════════════════════════════════════════════╗
+║  ██╗   ██╗ █████╗ ██████╗ ███╗   ██╗ ██████╗ ██████╗            ║
+║  ██║   ██║██╔══██╗██╔══██╗████╗  ██║██╔═══██╗██╔══██╗           ║
+║  ██║   ██║███████║██████╔╝██╔██╗ ██║██║   ██║██████╔╝           ║
+║  ╚██╗ ██╔╝██╔══██║██╔══██╗██║╚██╗██║██║   ██║██╔══██╗           ║
+║   ╚████╔╝ ██║  ██║██║  ██║██║ ╚████║╚██████╔╝██║  ██║           ║
+║    ╚═══╝  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝           ║
+╚══════════════════════════════════════════════════════════════════╝</div>
+
+    <div class="ln cyan" style="animation-delay:.30s;margin-top:6px">
+      Varnor Index BBS &mdash; node 1 &mdash; 2400 baud &mdash; roofing contractors / phoenix, arizona</div>
+    <div class="ln" style="animation-delay:.42s;color:#243139">
+      ────────────────────────────────────────────────────────────────────────────</div>
+
+    <div class="menu ln" style="animation-delay:.52s">
+      <div><span class="key">[1]</span> <span class="cyan">read the board</span>      every business in this trade, as it was found</div>
+      <div><span class="key">[2]</span> <span class="cyan">who is on tonight</span>  <span class="green">3 contacts held</span>, 117 entries stayed silent</div>
+      <div><span class="key">[3]</span> <span class="cyan">new since last call</span>  nothing invented, nothing dropped</div>
+      <div><span class="key">[4]</span> <span class="cyan">page the sysop</span>      <span class="yell">free board, one email to confirm</span></div>
+    </div>
+
+    <div class="ln prompt" style="animation-delay:.70s">
+      <div class="r"><b>TRADE &gt;</b> roofing contractors        <b>AREA &gt;</b> phoenix, arizona</div>
+      <div class="r"><b>WANT &gt;</b> 50 entries <span class="caret"></span></div>
+    </div>
+
+    <div class="board">
+      <div class="hd ln" style="animation-delay:.86s">
+      ── TODAY'S POSTS ────────────────────────────────────────────────────────────</div>
+      <div class="row ln" style="animation-delay:.94s">
+        <span class="on">▪</span> <span class="yell">#014</span>  APEX ROOFING CO.     <i>mailbox verified at source</i>      <span class="green">CONNECTED</span></div>
+      <div class="row ln" style="animation-delay:1.00s">
+        <span class="on">▪</span> <span class="yell">#021</span>  PINNACLE FLAT ROOFING <i>mailbox + telephone verified</i>     <span class="green">CONNECTED</span></div>
+      <div class="row ln" style="animation-delay:1.06s">
+        <span class="on">▪</span> <span class="yell">#033</span>  SUN VALLEY ROOFING   <i>address seen, test unfinished</i>     <span class="green">CONNECTED</span></div>
+      <div class="row ln" style="animation-delay:1.12s">
+        <span class="off">▪</span> <span class="yell">#041</span>  DESERT RIDGE ROOFING <i>server declined, 4 sources read</i>    <span class="off">NO CARRIER</span></div>
+      <div class="row ln" style="animation-delay:1.18s">
+        <span class="off">▪</span> <span class="yell">#047</span>  SAGUARO SHINGLE      <i>8 sources read, none returned</i>      <span class="off">NO CARRIER</span></div>
+      <div class="row ln" style="animation-delay:1.24s">
+        <span class="off">▪</span> <span class="yell">#050</span>  CACTUS COAT ROOFING  <i>8 sources read, none returned</i>      <span class="off">NO CARRIER</span></div>
+      <div class="row ln" style="animation-delay:1.30s">
+        <i>…142 more posts, every one of them still on the board</i></div>
+    </div>
+
+    <div class="status ln" style="animation-delay:1.45s">
+      <span><b>148</b> POSTED &nbsp;·&nbsp; <b>31</b> CONNECTED &nbsp;·&nbsp; <b>117</b> NO CARRIER &nbsp;·&nbsp; <b>0</b> DELETED</span>
+      <span class="live">● only caller connected</span>
+    </div>
+  </div>
+</body></html>

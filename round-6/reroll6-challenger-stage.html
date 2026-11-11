@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>The Stage Page</title>
+<style>
+  :root{ --paper:#fbfaf7; --ink:#0b0b0b; --loud:#d81f0f; --quiet:#5d5d5d; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1440px;height:900px;overflow:hidden;background:var(--paper);color:var(--ink);
+       font-family:"Arial Narrow",Arial,Helvetica,sans-serif;position:relative}
+
+  header{position:absolute;top:34px;left:52px;right:52px;display:flex;align-items:baseline;
+         justify-content:space-between;z-index:3}
+  .wordmark{font-size:19px;font-weight:700;letter-spacing:.24em;text-transform:uppercase}
+  nav{display:flex;gap:26px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:var(--quiet)}
+  nav a{color:inherit;text-decoration:none}
+
+  /* two voices argue across the page. the query is loud and solid; the market answers at its own
+     volume, and the entries with nothing to say shrink into the margin instead of being cut. */
+  .voice-a{position:absolute;left:52px;top:150px;width:660px}
+  .voice-a .q{font-size:108px;line-height:.86;letter-spacing:-.045em;font-weight:700;
+              text-transform:uppercase}
+  .voice-a .q em{font-style:normal;color:var(--loud)}
+  .voice-a .q .shrink{display:block;font-family:Georgia,serif;font-style:italic;font-weight:400;
+                      text-transform:none;font-size:34px;letter-spacing:-.02em;color:var(--quiet);
+                      margin-top:10px}
+  .voice-a p{font-family:Georgia,serif;font-size:17px;line-height:1.62;color:#232323;
+             max-width:52ch;margin-top:26px}
+
+  .voice-b{position:absolute;right:52px;top:186px;width:560px;text-align:right}
+  .voice-b .l{font-family:Georgia,serif;font-size:30px;line-height:1.24;color:#1a1a1a}
+  .voice-b .l b{font-family:"Arial Narrow",Arial,sans-serif;font-size:40px;font-weight:700;
+                letter-spacing:-.03em}
+  /* the fading voice: type that loses its footing as it runs out of things to say */
+  .dissolve{margin-top:22px}
+  .dissolve span{display:block;font-family:"Arial Narrow",Arial,sans-serif;font-weight:700;
+                 text-transform:uppercase;line-height:1.02;letter-spacing:-.03em;
+                 animation:swell .8s cubic-bezier(.16,.84,.3,1) both}
+  @keyframes swell{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
+  /* the fade is carried by scale and weight alone: every voice stays readable, none is greyed out */
+  .dissolve .d1{font-size:46px;color:var(--loud)}
+  .dissolve .d2{font-size:34px;color:#242424}
+  .dissolve .d3{font-size:24px;color:#333}
+  .dissolve .d4{font-size:17px;color:#414141}
+  .dissolve .d5{font-size:12.5px;color:#4e4e4e;letter-spacing:.04em}
+  .dissolve .d6{font-size:11.5px;color:#5d5d5d;letter-spacing:.12em}
+  .dissolve .note{margin-top:16px;font-family:Georgia,serif;font-size:16px;line-height:1.55;
+                  color:#232323;text-align:right}
+
+  /* the exchange is the working search, set into the page as dialogue */
+  .exchange{position:absolute;left:52px;right:52px;bottom:44px;display:flex;align-items:stretch;
+            border-top:4px solid var(--ink);padding-top:0}
+  .exchange label{padding:22px 30px 20px 0;margin-right:30px;border-right:1px solid #d9d9d9}
+  .exchange i{display:block;font-style:normal;font-family:Arial,Helvetica,sans-serif;font-size:11.5px;
+              letter-spacing:.2em;text-transform:uppercase;color:var(--quiet)}
+  .exchange b{display:block;font-size:26px;font-weight:700;margin-top:6px;letter-spacing:-.01em}
+  .exchange .mx{margin-left:auto;display:flex;align-items:center;gap:30px;border-right:0;
+                margin-right:0;padding-right:0}
+  .exchange button{background:var(--loud);color:#fff;border:0;padding:20px 40px;font-family:inherit;
+                   font-size:18px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+  .exchange .mx p{font-family:Georgia,serif;font-size:14px;line-height:1.5;color:#3a3a3a;width:240px}
+</style></head>
+<body>
+  <header>
+    <div class="wordmark">Varnor Index</div>
+    <nav><a href="#">Product</a><a href="#">Pricing</a><a href="#">Sign in</a></nav>
+  </header>
+
+  <div class="voice-a">
+    <div class="q">Roofing<br>contractors<br><em>in Phoenix.</em>
+      <span class="shrink">and every one of them, including the silent ones</span></div>
+    <p>A market asked as a question and answered at full volume. The businesses we could read
+      speak up in solid type. The ones that gave us nothing do not get cut from the page &mdash;
+      they get quieter, and they stay in the cast.</p>
+  </div>
+
+  <div class="voice-b">
+    <div class="l">One hundred and forty-eight<br>answered. <b>Thirty-one</b><br>could be confirmed<br>
+      at the source that spoke.</div>
+    <div class="dissolve">
+      <span class="d1" style="animation-delay:.10s">Apex Roofing Co.</span>
+      <span class="d2" style="animation-delay:.18s">Pinnacle Flat Roofing</span>
+      <span class="d3" style="animation-delay:.26s">Sun Valley Roofing</span>
+      <span class="d4" style="animation-delay:.34s">Desert Ridge Roofing</span>
+      <span class="d5" style="animation-delay:.42s">Saguaro Shingle</span>
+      <span class="d6" style="animation-delay:.50s">cactus coat roofing &mdash; nothing held</span>
+      <div class="note">The quiet ones are printed small, not deleted.<br>Shrinking is how this
+        page says <i>no answer</i>.</div>
+    </div>
+  </div>
+
+  <div class="exchange">
+    <label><i>Trade</i><b>Roofing contractors</b></label>
+    <label><i>Market</i><b>Phoenix, Arizona</b></label>
+    <label><i>Entries</i><b>50</b></label>
+    <div class="mx">
+      <p>Free to ask. Confirm your address once and the market answers at full volume.</p>
+      <button type="button">Put the question</button>
+    </div>
+  </div>
+</body></html>
