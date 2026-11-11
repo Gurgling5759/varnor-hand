@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>The Survey — Varnor Index</title>
+<style>
+  :root{--night:#07131a;--deep:#0c232c;--teal:#1a4a52;--brass:#e0b85f;--paper:#ece4d2;--ink:#0f1a1e;--red:#b3271e;--white:#f3efe4}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1440px;height:900px;overflow:hidden;background:radial-gradient(120% 100% at 50% -10%,#1b4a52 0%,#0c232c 48%,#07131a 100%);color:var(--white);font-family:"Helvetica Neue",Helvetica,system-ui,sans-serif;position:relative}
+  .contour{position:absolute;inset:0;pointer-events:none;opacity:.55}
+  .vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 60% at 50% 45%,transparent 0%,rgba(7,19,26,.78) 100%)}
+  .bar{position:relative;z-index:3;height:72px;display:flex;align-items:center;padding:0 42px 8px;border-bottom:1px solid rgba(201,162,74,.28)}
+  .wm{font-size:18px;font-weight:700;letter-spacing:.22em;text-transform:uppercase}
+  .nav{margin-left:auto;display:flex;gap:26px;align-items:center}
+  .nav a{color:#cfe0d4;text-decoration:none;font-family:Helvetica Neue,Helvetica,system-ui,sans-serif;font-size:13px}
+  .nav a.on{color:var(--brass)}
+  .cta{background:var(--red);color:var(--white);border:0;padding:12px 22px;font-family:"Helvetica Neue",Helvetica,system-ui,sans-serif;font-size:14px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;box-shadow:0 10px 22px rgba(0,0,0,.4)}
+  .stage{position:relative;z-index:2;height:600px;padding:0 42px;display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center}
+  .kicker{font-family:Helvetica Neue,Helvetica,system-ui,sans-serif;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--brass)}
+  h1{font-size:58px;line-height:.95;letter-spacing:-.02em;margin-top:14px;font-weight:700}
+  h1 em{font-style:normal;color:var(--brass)}
+  .lead{font-family:Georgia,serif;font-size:18px;line-height:1.55;color:#cfe0d4;margin-top:22px;max-width:34ch}
+  .action{margin-top:28px;display:flex;gap:14px;align-items:center}
+  .action button{background:var(--brass);color:var(--ink);border:0;padding:16px 28px;font-family:"Helvetica Neue",Helvetica,system-ui,sans-serif;font-size:15px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;box-shadow:0 10px 22px rgba(0,0,0,.4)}
+  .action span{font-family:Helvetica Neue,Helvetica,system-ui,sans-serif;font-size:12.5px;color:#a9c2b2}
+  .map{position:relative;height:520px;border-radius:2px;background:#0c2a32;box-shadow:0 40px 80px rgba(0,0,0,.55),inset 0 0 0 1px rgba(201,162,74,.35);overflow:hidden;transform:perspective(1200px) rotateY(-7deg) rotateX(2deg)}
+  .map svg{position:absolute;inset:0;width:100%;height:100%}
+  .plot{position:absolute;left:32px;top:32px;right:32px;bottom:32px;border:1px solid rgba(201,162,74,.5)}
+  .pin{position:absolute;width:9px;height:9px;border-radius:50%;background:var(--brass);box-shadow:0 0 0 3px rgba(201,162,74,.25)}
+  .pin::after{content:"";position:absolute;left:50%;top:50%;width:26px;height:26px;border:1px solid rgba(201,162,74,.4);border-radius:50%;transform:translate(-50%,-50%)}
+  .card{position:absolute;right:24px;bottom:24px;width:320px;background:var(--paper);color:var(--ink);padding:20px 22px;box-shadow:0 24px 48px rgba(0,0,0,.55);transform:rotate(-1.2deg)}
+  .card h2{font-size:12px;letter-spacing:.18em;text-transform:uppercase;border-bottom:2px solid var(--ink);padding-bottom:8px}
+  .card .row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid rgba(15,26,30,.2);font-family:"Courier New",monospace;font-size:12.5px}
+  .card .row:last-child{border-bottom:0}
+  .card .row b{font-weight:700}
+  .foot{position:relative;z-index:2;height:228px;padding:20px 42px;display:flex;align-items:center;gap:36px;border-top:1px solid rgba(201,162,74,.2)}
+  .tally{display:flex;gap:40px}
+  .tally div{display:flex;flex-direction:column;gap:4px}
+  .tally b{font-family:"Courier New",monospace;font-size:34px;color:var(--brass)}
+  .tally span{font-family:Helvetica Neue,Helvetica,system-ui,sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#c6d6c9}
+  .note{margin-left:auto;font-family:Georgia,serif;font-size:15px;line-height:1.5;color:#cfe0d4;max-width:34ch}
+</style></head>
+<body>
+  <div class="contour">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="none">
+      <g fill="none" stroke="#c9a24a" stroke-width=".8" opacity=".45">
+        <path d="M-20 120 C 180 90, 320 160, 520 130 S 860 60, 1060 120 S 1320 180, 1460 140"/>
+        <path d="M-20 200 C 200 170, 340 240, 560 210 S 900 140, 1100 200 S 1340 260, 1460 220"/>
+        <path d="M-20 300 C 220 270, 360 340, 580 310 S 920 240, 1120 300 S 1360 360, 1460 320"/>
+        <path d="M-20 400 C 240 370, 380 440, 600 410 S 940 340, 1140 400 S 1380 460, 1460 420"/>
+        <path d="M-20 500 C 260 470, 400 540, 620 510 S 960 440, 1160 500 S 1400 560, 1460 520"/>
+        <path d="M-20 600 C 280 570, 420 640, 640 610 S 980 540, 1180 600 S 1420 660, 1460 620"/>
+        <path d="M-20 700 C 300 670, 440 740, 660 710 S 1000 640, 1200 700 S 1440 760, 1460 720"/>
+      </g>
+    </svg>
+  </div>
+  <div class="vignette"></div>
+  <div class="bar">
+    <div class="wm">Varnor Index</div>
+    <div class="nav"><a class="on" href="#">The map</a><a href="#">The survey</a><a href="#">The report</a><button class="cta" type="button">Open an account</button></div>
+  </div>
+  <div class="stage">
+    <div>
+      <h1>The survey of the market.<br><em>Every business, plotted.</em></h1>
+      <p class="lead">Name a trade and a market. Varnor Index reads the register, the directories, the servers and the press, and plots every business on it &mdash; with the page each fact came from.</p>
+      <div class="action"><button type="button">Open an account</button><span>Free to start &middot; no card</span></div>
+    </div>
+    <div class="map">
+      <svg viewBox="0 0 520 520" preserveAspectRatio="none">
+        <g fill="none" stroke="#c9a24a" stroke-width="1" opacity=".5">
+          <path d="M-20 120 C 120 90, 220 160, 360 130 S 520 60, 560 120"/>
+          <path d="M-20 200 C 140 170, 240 240, 380 210 S 540 140, 560 200"/>
+          <path d="M-20 300 C 160 270, 260 340, 400 310 S 560 240, 560 300"/>
+          <path d="M-20 400 C 180 370, 280 440, 420 410 S 560 340, 560 400"/>
+        </g>
+      </svg>
+      <div class="plot">
+        <div class="pin" style="left:120px;top:120px"></div>
+        <div class="pin" style="left:260px;top:210px"></div>
+        <div class="pin" style="left:340px;top:300px"></div>
+        <div class="pin" style="left:180px;top:330px"></div>
+      </div>
+      <div class="card">
+        <h2>Survey 0083 &middot; Phoenix</h3>
+        <div class="row"><span>Businesses found</span><b>148</b></div>
+        <div class="row"><span>With a contact</span><b>91</b></div>
+        <div class="row"><span>Verified</span><b>63</b></div>
+        <div class="row"><span>Not on file</span><b>57</b></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <div class="tally">
+      <div><b>148</b><span>Found in this market</span></div>
+      <div><b>91</b><span>With a contact</span></div>
+      <div><b>63</b><span>Verified</span></div>
+    </div>
+    <div class="note">The ones that came back empty keep their place on the map. Nothing is quietly dropped.</div>
+  </div>
+</body></html>

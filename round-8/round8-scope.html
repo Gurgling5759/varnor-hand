@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>The Signal Bench — Varnor Index</title>
+<style>
+  :root{--glass:#040705;--phos:#3dff8a;--phos-dim:#3aa96a;--grid:#1d3a2b;--amber:#ffb020;--white:#dff5e6;--red:#ff4b3a}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1440px;height:900px;overflow:hidden;background:var(--glass);color:var(--white);font-family:"Helvetica Neue",Helvetica,system-ui,sans-serif;position:relative}
+  /* the etched graticule: ten divisions, every one meaning something */
+  .grat{position:absolute;inset:74px 44px 150px;border:1px solid var(--grid);background:
+    repeating-linear-gradient(0deg,rgba(61,255,138,.10) 0 1px,transparent 1px 63px),
+    repeating-linear-gradient(90deg,rgba(61,255,138,.10) 0 1px,transparent 1px 67px),
+    radial-gradient(78% 70% at 50% 50%,rgba(61,255,138,.05),transparent 74%)}
+  .grat::after{content:"";position:absolute;inset:0;background:
+    repeating-linear-gradient(0deg,transparent 0 62px,rgba(61,255,138,.20) 62px 63px),
+    repeating-linear-gradient(90deg,transparent 0 66px,rgba(61,255,138,.20) 66px 67px);
+    opacity:.5}
+  .divs{position:absolute;left:50px;top:80px;font-family:"Courier New",monospace;font-size:11px;letter-spacing:.14em;color:var(--phos-dim);display:flex;gap:67px}
+  .bar{position:relative;z-index:3;height:74px;display:flex;align-items:center;gap:20px;padding:0 44px 8px;border-bottom:1px solid var(--grid)}
+  .wm{font-size:17px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--white)}
+  .bar .nav{margin-left:auto;display:flex;gap:8px;align-items:center}
+  .bar .nav a{color:var(--phos-dim);text-decoration:none;font-size:12px;letter-spacing:.16em;text-transform:uppercase;padding:6px 12px;border:1px solid var(--grid)}
+  .bar .nav a.on{color:var(--phos);border-color:var(--phos-dim)}
+  .cta{background:var(--red);color:#0b0402;border:0;padding:11px 20px;font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+  .trace{position:absolute;left:44px;right:44px;top:74px;height:676px;z-index:2}
+  .trace svg{width:100%;height:100%}
+  .readout{position:absolute;right:64px;top:104px;text-align:right;font-family:"Courier New",monospace;z-index:4}
+  .readout b{display:block;font-size:38px;letter-spacing:-.02em;color:var(--phos)}
+  .readout span{display:block;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--phos-dim);margin-top:4px}
+  .readout .amber{color:var(--amber)}
+  .hero{position:absolute;left:64px;top:230px;z-index:4;max-width:620px}
+  .hero h1{font-family:Georgia,"Times New Roman",serif;font-size:56px;line-height:1.03;letter-spacing:-.02em;font-weight:400}
+  .hero h1 em{font-style:normal;color:var(--phos)}
+  .hero p{font-size:16px;line-height:1.6;color:#b6c9bd;margin-top:20px;max-width:44ch}
+  .hero .act{margin-top:26px;display:flex;gap:16px;align-items:center}
+  .hero .act button{background:var(--phos);color:#04150b;border:0;padding:15px 28px;font-family:inherit;font-size:14px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+  .hero .act span{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--phos-dim)}
+  .bench{position:absolute;left:0;right:0;bottom:0;height:150px;border-top:1px solid var(--grid);display:flex;align-items:center;gap:34px;padding:0 44px;z-index:3}
+  .knob{width:78px;height:78px;border-radius:50%;background:radial-gradient(circle at 40% 34%,#1a2a20,#070c09);border:2px solid #24402f;position:relative}
+  .knob::before{content:"";position:absolute;left:50%;top:11px;width:3px;height:22px;background:var(--phos);transform:translateX(-50%)}
+  .knob.k2::before{transform:translateX(-50%) rotate(46deg);transform-origin:50% 28px;background:var(--amber)}
+  .knob.k3::before{transform:translateX(-50%) rotate(-64deg);transform-origin:50% 28px}
+  .legend{margin-left:auto;display:flex;gap:44px;font-family:"Courier New",monospace;font-size:12px;line-height:1.7;color:#8fae9b}
+  .legend b{color:var(--phos);font-weight:700}
+  .legend .a{color:var(--amber)}
+</style></head>
+<body>
+  <div class="grat"></div>
+  <div class="divs"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+
+  <div class="bar">
+    <div class="wm">Varnor Index</div>
+    <div class="nav"><a class="on" href="#">Trace</a><a href="#">Channels</a><a href="#">Report</a><button class="cta" type="button">Open an account</button></div>
+  </div>
+
+  <div class="trace">
+    <svg viewBox="0 0 1352 676" preserveAspectRatio="none">
+      <path d="M0 470 C 90 470, 130 300, 210 300 S 320 470, 400 420 S 500 180, 600 220 S 700 500, 800 440 S 900 150, 1000 210 S 1100 520, 1200 430 S 1300 260, 1352 300"
+            fill="none" stroke="#3dff8a" stroke-width="2.6" opacity=".95"/>
+      <path d="M0 470 C 90 470, 130 300, 210 300 S 320 470, 400 420 S 500 180, 600 220 S 700 500, 800 440 S 900 150, 1000 210 S 1100 520, 1200 430 S 1300 260, 1352 300"
+            fill="none" stroke="#3dff8a" stroke-width="9" opacity=".14"/>
+      <path d="M0 540 C 140 540, 200 470, 320 500 S 520 560, 660 520 S 900 470, 1040 520 S 1240 560, 1352 520"
+            fill="none" stroke="#1c7a44" stroke-width="2" opacity=".9"/>
+    </svg>
+  </div>
+
+  <div class="readout">
+    <b>148</b><span>signals found</span>
+    <b style="margin-top:18px">91</b><span>locked &middot; with a contact</span>
+    <b class="amber" style="margin-top:18px">57</b><span>untraceable &middot; still held</span>
+  </div>
+
+  <div class="hero">
+    <h1>Every signal in the market,<br><em>triggered and held.</em></h1>
+    <p>Name a trade and a market. Varnor Index reads the register, the directories, the servers and the press, and holds every business on the trace &mdash; with the page each fact came from.</p>
+    <div class="act"><button type="button">Open an account</button><span>Free &middot; no card</span></div>
+  </div>
+
+  <div class="bench">
+    <div class="knob"></div><div class="knob k2"></div><div class="knob k3"></div>
+    <div class="legend">
+      <div>TIMEBASE <b>2.0 ms</b><br>CH 1 <b>FOUND 148</b></div>
+      <div>TRIGGER <b class="a">ARMED</b><br>CH 2 <b>CHARTED 91</b></div>
+      <div>HOLD <b>57</b><br>NOTHING DELETED</div>
+    </div>
+  </div>
+</body></html>

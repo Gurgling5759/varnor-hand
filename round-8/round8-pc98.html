@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>PC-98 — Varnor Index</title>
+<style>
+  :root{--black:#000000;--navy:#0000a0;--blue:#0000ff;--green:#00a000;--cyan:#00a0a0;--red:#a00000;--mag:#a000a0;--yellow:#a0a000;--gray:#a0a0a0;--white:#ffffff;--lime:#00ff00;--cyan2:#00ffff;--red2:#ff0000;--mag2:#ff00ff;--yellow2:#ffff00}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1440px;height:900px;overflow:hidden;background:#000;color:#fff;font-family:"Courier New",monospace;position:relative;image-rendering:pixelated}
+  /* the sixteen-colour field: every intermediate tone is an ordered dither of two of them */
+  .field{position:absolute;inset:0;background:
+    repeating-linear-gradient(0deg,rgba(255,0,0,.5) 0 2px,transparent 2px 4px),
+    repeating-linear-gradient(90deg,rgba(0,0,255,.5) 0 2px,transparent 2px 4px),
+    linear-gradient(180deg,#000000 0%,#a00000 34%,#ff0000 52%,#ffff00 66%,#a000a0 82%,#000000 100%)}
+  .scan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.35) 0 1px,transparent 1px 3px);opacity:.7}
+  /* the fixed regions never move; navigation swaps their contents */
+  .frame{position:absolute;inset:0;display:grid;grid-template-columns:1fr 300px;grid-template-rows:56px 1fr 132px}
+  .top{grid-column:1/-1;display:flex;align-items:center;gap:18px;padding:0 22px;background:#0000a0;border-bottom:2px solid #00ffff}
+  .wm{font-size:15px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#ffffff}
+  .top .menu{margin-left:auto;display:flex;gap:16px}
+  .top .menu a{color:#00ffff;text-decoration:none;font-size:13px;border:1px solid #00ffff;padding:4px 9px}
+  .top .menu a.on{background:#00ffff;color:#000}
+  .art{position:relative;border-right:2px solid #00a0a0;overflow:hidden}
+  .art .sun{position:absolute;left:18%;top:22%;width:260px;height:260px;border-radius:50%;
+    background:repeating-linear-gradient(0deg,#ffff00 0 6px,#a0a000 6px 12px);
+    box-shadow:0 0 0 2px #000}
+  .art .ridge{position:absolute;left:0;right:0;bottom:0;height:34%;
+    background:repeating-linear-gradient(0deg,#000 0 3px,#a00000 3px 7px);
+    clip-path:polygon(0 100%,0 62%,12% 70%,24% 48%,38% 66%,52% 40%,66% 58%,80% 34%,100% 56%,100% 100%)}
+  .art .hint{position:absolute;left:20px;bottom:18px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#ffffff;background:#000;padding:4px 7px}
+  .portrait{position:relative;background:#000;border-left:2px solid #ff00ff;display:flex;flex-direction:column}
+  .portrait .face{position:absolute;left:22px;top:22px;width:112px;height:140px;background:repeating-linear-gradient(45deg,#00a0a0 0 4px,#0000a0 4px 8px);box-shadow:0 0 0 2px #00ffff}
+  .portrait .name{position:absolute;left:22px;top:178px;right:18px;font-size:13px;line-height:1.5;color:#00ffff}
+  .portrait .facts{position:absolute;left:22px;top:238px;right:18px;font-size:12px;line-height:1.7;color:#ffffff}
+  .portrait .facts b{color:#ffff00}
+  .window{grid-column:1/-1;background:#000;border-top:2px solid #00a0a0;padding:14px 22px 12px;display:flex;flex-direction:column;gap:8px}
+  .window .title{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#00ffff;border-bottom:1px solid #00a0a0;padding-bottom:6px;display:flex;justify-content:space-between}
+  .window .row{display:flex;gap:20px;font-size:13px;line-height:1.5;color:#ffffff}
+  .window .row b{color:#ffff00}
+  .window .row span{color:#00a0a0}
+  .window .cta{margin-top:2px;align-self:flex-start;background:#ff0000;color:#000;border:0;padding:9px 18px;font-family:"Courier New",monospace;font-size:14px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 0 0 2px #ffff00}
+</style></head>
+<body>
+  <div class="field"></div>
+  <div class="scan"></div>
+  <div class="frame">
+    <div class="top">
+      <div class="wm">Varnor Index</div>
+      <div class="menu"><a class="on" href="#">Field</a><a href="#">Chart</a><a href="#">Report</a><a href="#">Account</a></div>
+    </div>
+    <div class="art">
+      <div class="sun"></div>
+      <div class="ridge"></div>
+      <div class="hint">Phoenix &middot; roofing &middot; 148 lights</div>
+    </div>
+    <div class="portrait">
+      <div class="face"></div>
+      <div class="name">APEX ROOFING CO.<br>4120 W Buckeye Rd</div>
+      <div class="facts">Contact <b>read at source</b><br>Mailbox <b>MX live</b><br>Number <b>E.164</b><br>Last read <b>09:41</b></div>
+    </div>
+    <div class="window">
+      <div class="title"><span>READ AT SOURCE &middot; RUN 0083</span><span>2026-11-11</span></div>
+      <div class="row"><span>Found</span><b>148</b><span>Charted</span><b>91</b><span>Confirmed</span><b>63</b><span>Not on file</span><b>57</b></div>
+      <div class="row" style="color:#a0a0a0">Every fact carries the page it came from. The ones that gave nothing keep their place.</div>
+      <button class="cta" type="button">Open an account</button>
+    </div>
+  </div>
+</body></html>

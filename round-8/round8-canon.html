@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Category Standard — Varnor Index</title>
+<style>
+  :root{--bg:#0d0f12;--panel:#14171c;--line:#232830;--text:#e8eaed;--dim:#9aa1ab;--accent:#2f5bd0;--white:#ffffff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1440px;height:900px;overflow:hidden;background:var(--bg);color:var(--text);font-family:"Helvetica Neue",Helvetica,system-ui,sans-serif;position:relative}
+  .nav{height:64px;display:flex;align-items:center;padding:0 48px;border-bottom:1px solid var(--line);gap:28px}
+  .wm{font-size:16px;font-weight:700;letter-spacing:.06em}
+  .nav a{color:var(--dim);text-decoration:none;font-size:14px}
+  .nav a:hover{color:var(--text)}
+  .nav .cta{margin-left:auto;background:var(--accent);color:var(--white);border:0;padding:10px 20px;border-radius:6px;font-family:inherit;font-size:14px;font-weight:600}
+  .hero{height:398px;padding:56px 48px 0;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:start}
+  .hero h1{font-size:52px;line-height:1.06;letter-spacing:-.025em;font-weight:600;max-width:15ch}
+  .hero p{font-size:17px;line-height:1.6;color:var(--dim);margin-top:20px;max-width:46ch}
+  .hero .act{margin-top:28px;display:flex;gap:12px;align-items:center}
+  .hero .act button{background:var(--accent);color:var(--white);border:0;padding:13px 24px;border-radius:6px;font-family:inherit;font-size:15px;font-weight:600}
+  .hero .act button.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+  .shot{height:322px;border:1px solid var(--line);border-radius:8px;background:linear-gradient(180deg,#171b21,#0f1216);overflow:hidden;position:relative;box-shadow:0 20px 40px rgba(0,0,0,.35)}
+  .shot .top{height:38px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:7px;padding:0 14px}
+  .shot .top i{width:9px;height:9px;border-radius:50%;background:#2b313a;display:block}
+  .shot .body{padding:20px 22px;display:grid;grid-template-columns:1fr;gap:12px}
+  .shot .row{min-height:32px;border:1px solid var(--line);border-radius:4px;background:#11151a;display:flex;align-items:center;gap:12px;padding:6px 12px;font-size:12px;color:var(--dim)}
+  .shot .row b{color:var(--text);font-weight:600}
+  .shot .row .pill{margin-left:auto;font-size:11px;padding:2px 8px;border-radius:99px;background:rgba(79,124,255,.15);color:#9bb4ff}
+  .logo{height:88px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:42px;padding:12px 48px;color:#7a828c;font-size:15px;font-weight:600;letter-spacing:.08em}
+  .logo span{margin-left:auto;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#808894;font-weight:400}
+  .feat{height:286px;padding:34px 48px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .card{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:26px 24px;display:flex;flex-direction:column;gap:12px}
+  .card .ic{width:34px;height:34px;border-radius:7px;background:rgba(79,124,255,.16);border:1px solid rgba(79,124,255,.3)}
+  .card h2{font-size:18px;font-weight:600;letter-spacing:-.01em}
+  .card p{font-size:14px;line-height:1.55;color:var(--dim)}
+</style></head>
+<body>
+  <div class="nav">
+    <div class="wm">Varnor Index</div>
+    <a href="#">Product</a><a href="#">Pricing</a><a href="#">Docs</a>
+    <button class="cta" type="button">Open an account</button>
+  </div>
+  <div class="hero">
+    <div>
+      <h1>Find every business in your market.</h1>
+      <p>Varnor Index reads the sources for you and returns a clean list of businesses &mdash; with contacts and the page each fact came from.</p>
+      <div class="act"><button type="button">Open an account</button><button class="ghost" type="button">See a sample</button></div>
+    </div>
+    <div class="shot">
+      <div class="top"><i></i><i></i><i></i></div>
+      <div class="body">
+        <div class="row"><b>Apex Roofing Co.</b><span>Phoenix, AZ</span><span class="pill">Verified</span></div>
+        <div class="row"><b>Pinnacle Flat Roofing</b><span>Mesa, AZ</span><span class="pill">Verified</span></div>
+        <div class="row"><b>Sun Valley Roofing</b><span>Tempe, AZ</span><span class="pill">Risky</span></div>
+        <div class="row"><b>Desert Ridge Roofing</b><span>Glendale, AZ</span><span class="pill">Verified</span></div>
+        <div class="row"><b>Cactus Coat Roofing</b><span>Scottsdale, AZ</span><span class="pill">No contact</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="logo">
+    <span>Trusted by</span>
+    <div style="display:flex;gap:42px;margin-left:20px;color:#7a828c">RoofCo</div>
+    <div style="color:#7a828c">SummitBuild</div>
+    <div style="color:#7a828c">NorthPeak</div>
+    <div style="color:#7a828c">Apex</div>
+    <span>No customers yet &mdash; this row is drawn empty on purpose</span>
+  </div>
+  <div class="feat">
+    <div class="card"><div class="ic"></div><h2>Reads the sources</h2><p>Registers, directories, servers and the press, read in one pass for the market you name.</p></div>
+    <div class="card"><div class="ic"></div><h2>Carries the page</h2><p>Every contact and fact arrives with the URL it was read from, so you can check it before you call.</p></div>
+    <div class="card"><div class="ic"></div><h2>Keeps the empty ones</h2><p>Businesses that gave nothing back are still listed, labelled and counted. Nothing is dropped.</p></div>
+  </div>
+</body></html>
