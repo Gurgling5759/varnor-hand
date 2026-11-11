@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>The Cutting Bench — challenger</title>
+<style>
+  /* a cutting bench. the light box is the ground; every lead is a frame on the rail.
+     state is a chinagraph mark, never a colour. */
+  :root{--box:#eceff0;--box-warm:#dfe4e3;--film:#15181c;--film-lit:#242a30;--edge:#0b0d10;
+        --white:#f4f6f7;--red:#cc3a28;--yellow:#f0c040;--tape:#3a7bd5;--green:#3fae7a;
+        --tray:#23272c;--ink:#15181c}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1440px;height:900px;overflow:hidden;background:var(--box);color:var(--ink);
+       font-family:"Arial Narrow",Arial,Helvetica,sans-serif;position:relative}
+
+  .band{height:64px;background:var(--edge);display:flex;align-items:center;padding:0 44px}
+  .wordmark{color:var(--white);font-size:19px;font-weight:700;letter-spacing:.22em;
+            text-transform:uppercase}
+  nav{margin-left:auto;display:flex;gap:30px;align-items:center}
+  nav a{color:#c9d2d6;text-decoration:none;font-family:Arial,Helvetica,sans-serif;font-size:13.5px}
+  .signup{background:var(--red);color:#fff;border:0;padding:13px 26px;font-size:15px;
+          font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+
+  /* the light box: the bench's illuminated surface, brightest in the middle */
+  .box{position:relative;height:594px;
+       background:radial-gradient(120% 100% at 50% 40%,#ffffff 0%,var(--box) 46%,var(--box-warm) 100%);
+       box-shadow:inset 0 -30px 60px rgba(11,13,16,.18)}
+  .box::before{content:"";position:absolute;inset:0;opacity:.5;
+    background:repeating-linear-gradient(90deg,rgba(11,13,16,.045) 0 1px,transparent 1px 22px)}
+
+  .lede{position:relative;padding:26px 44px 0;display:flex;align-items:flex-end;gap:28px}
+  .lede h1{font-size:34px;font-weight:700;letter-spacing:-.01em;line-height:1.1;max-width:26ch}
+  .lede .count{margin-left:auto;text-align:right;font-family:"Courier New",monospace;
+               font-size:13.5px;line-height:1.7;color:#3d464b}
+  .lede .count b{font-size:16px;color:var(--ink)}
+
+  /* the rail */
+  .rail{position:relative;margin:22px 44px 0;display:flex;gap:16px;align-items:flex-start}
+  .rail::before{content:"";position:absolute;left:-16px;right:-16px;top:-11px;height:7px;
+                background:linear-gradient(180deg,#4a5259,#20262b);box-shadow:0 4px 10px rgba(11,13,16,.35)}
+  .frame{position:relative;flex:1;background:var(--film);color:var(--white);
+         box-shadow:0 16px 32px rgba(11,13,16,.45);padding:26px 14px 22px;
+         display:flex;flex-direction:column;justify-content:space-between;min-height:246px}
+  /* sprocket holes, top and bottom — it is film */
+  .frame::before,.frame::after{content:"";position:absolute;left:0;right:0;height:13px;
+    background:repeating-linear-gradient(90deg,transparent 0 7px,rgba(236,239,240,.82) 7px 15px)}
+  .frame::before{top:5px} .frame::after{bottom:5px}
+  .frame i{font-style:normal;font-family:Arial,Helvetica,sans-serif;font-size:12px;
+           letter-spacing:.16em;text-transform:uppercase;color:#96a2aa}
+  .frame h3{font-family:"Courier New",monospace;font-size:19px;font-weight:700;line-height:1.2;
+            margin-top:7px}
+  .frame p{font-family:"Courier New",monospace;font-size:12.5px;color:#c6d0d5;margin-top:9px;
+           line-height:1.55;word-break:break-all}
+  .frame .mark{position:absolute;right:12px;top:32px;width:38px;height:38px}
+  /* the chinagraph marks: a circle is checked, a cross is dead, a bracket is held */
+  .mark.circle{border:3.5px solid var(--green);border-radius:50%}
+  .mark.cross::before,.mark.cross::after{content:"";position:absolute;left:4px;right:4px;top:17px;
+    height:3.5px;background:var(--red)}
+  .mark.cross::before{transform:rotate(45deg)} .mark.cross::after{transform:rotate(-45deg)}
+  .mark.hold::before{content:"";position:absolute;left:6px;top:2px;bottom:2px;width:3.5px;
+    background:var(--yellow)}
+  .mark.hold::after{content:"";position:absolute;left:6px;top:2px;width:16px;height:3.5px;
+    background:var(--yellow)}
+  .frame.held{border-bottom:4px solid var(--yellow)}
+
+  /* the trim bin: the frames that gave nothing, hung on a pin, still reachable */
+  .bin{position:relative;height:242px;background:var(--tray);color:#d7dee1;padding:20px 44px 0}
+  .bin h2{font-size:15px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#fff;
+          display:flex;align-items:baseline;gap:16px}
+  .bin h2 span{font-family:"Courier New",monospace;font-size:13px;font-weight:400;color:#8fa0a8;
+               letter-spacing:0;text-transform:none}
+  .pin{position:absolute;left:44px;right:44px;top:62px;height:2px;background:#4b545a}
+  .trims{position:relative;margin-top:26px;display:flex;gap:22px}
+  .trim{position:relative;background:#2e3439;padding:14px 16px 16px;flex:1;
+        box-shadow:0 8px 18px rgba(0,0,0,.4)}
+  /* the tape flag that hangs it on the pin */
+  .trim::before{content:"";position:absolute;top:-24px;left:22px;width:3px;height:24px;background:#4b545a}
+  .trim::after{content:"";position:absolute;top:-30px;left:14px;width:19px;height:11px;
+               background:var(--tape);transform:rotate(-8deg)}
+  .trim b{display:block;font-family:"Courier New",monospace;font-size:14px;color:#fff}
+  .trim p{font-family:Arial,Helvetica,sans-serif;font-size:12.5px;line-height:1.5;color:#a9b6bc;
+          margin-top:7px}
+  .trim i{font-style:normal;display:block;margin-top:9px;font-size:12.5px;letter-spacing:.13em;
+          text-transform:uppercase;color:#9dafb7}
+
+  .foot{height:242px;background:var(--box-warm);padding:30px 44px;display:flex;align-items:center;
+        gap:44px}
+  .foot h3{font-size:30px;font-weight:700;line-height:1.12;max-width:24ch}
+  .foot p{font-family:Georgia,serif;font-size:15px;color:#3d464b;margin-top:11px;max-width:52ch;
+          line-height:1.55}
+  .foot .act{margin-left:auto;flex:0 0 360px}
+  .foot button{width:100%;background:var(--red);color:#fff;border:0;padding:20px;font-size:19px;
+               font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+  .foot .act span{display:block;text-align:center;margin-top:11px;font-family:Arial,Helvetica,
+                  sans-serif;font-size:12.5px;color:#5a646a}
+</style></head>
+<body>
+  <div class="band">
+    <div class="wordmark">Varnor Index</div>
+    <nav><a href="#">How it reads</a><a href="#">Pricing</a><a href="#">Sign in</a>
+      <button class="signup" type="button">Open an account</button></nav>
+  </div>
+
+  <div class="box">
+    <div class="lede">
+      <h1>Every roofer in Phoenix, cut to a frame &mdash; with the page we read it from.</h1>
+      <div class="count">
+        <b>148</b> on the rail<br><b>57</b> in the bin<br>50 asked for
+      </div>
+    </div>
+
+    <div class="rail">
+      <div class="frame">
+        <div class="mark circle"></div>
+        <div><i>Read at source</i><h3>Apex Roofing Co.</h3>
+          <p>apexroofingaz.com/contact<br>+1 602 555 0148</p></div>
+      </div>
+      <div class="frame">
+        <div class="mark circle"></div>
+        <div><i>Read at source</i><h3>Pinnacle Flat Roofing</h3>
+          <p>pinnacleflat.com/about<br>office@pinnacleflat.com</p></div>
+      </div>
+      <div class="frame held">
+        <div class="mark hold"></div>
+        <div><i>Held &mdash; server refused</i><h3>Sonoran Roof Works</h3>
+          <p>sonoranroofworks.com<br>retry queued</p></div>
+      </div>
+      <div class="frame">
+        <div class="mark circle"></div>
+        <div><i>Read at source</i><h3>Valley Rain Gutters</h3>
+          <p>valleyrain.co/team<br>R. Delgado, estimator</p></div>
+      </div>
+      <div class="frame">
+        <div class="mark cross"></div>
+        <div><i>No contact anywhere</i><h3>Cactus Coat Roofing</h3>
+          <p>twelve sources read<br>name only</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bin">
+    <h2>Trims &mdash; kept on the pin <span>57 frames that returned no contact. Nothing is swept up.</span></h2>
+    <div class="pin"></div>
+    <div class="trims">
+      <div class="trim"><b>Cactus Coat Roofing</b>
+        <p>Twelve sources read. Six returned the name, none returned a contact.</p>
+        <i>Entry 050 &middot; held</i></div>
+      <div class="trim"><b>Sonoran Roof Works</b>
+        <p>Server declined every request. Recorded, not discarded.</p>
+        <i>Entry 044 &middot; held</i></div>
+      <div class="trim"><b>Mesa Flat Roofing</b>
+        <p>Only a Wayback capture of an old contact page. Filed as history.</p>
+        <i>Entry 037 &middot; held</i></div>
+      <div class="trim"><b>&mdash; and 54 more</b>
+        <p>Every one still numbered, still on the run, still reachable from the bin.</p>
+        <i>Nothing deleted</i></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div>
+      <h3>Name a trade and a market. The rail fills in minutes.</h3>
+      <p>State is a mark, not a colour: circled is checked at the source, crossed is dead, bracketed
+        is held for another pass. You always know which is which.</p>
+    </div>
+    <div class="act">
+      <button type="button">Open an account</button>
+      <span>Free to start &middot; no card</span>
+    </div>
+  </div>
+</body></html>

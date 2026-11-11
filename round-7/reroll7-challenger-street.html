@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Street Typography — challenger</title>
+<style>
+  /* a painted hoarding. the loudest word is the thing you get; the door is the black bar.
+     wood type at architectural scale, set on a slant and cropped by the wall. */
+  :root{--yellow:#f5c518;--yellow-deep:#d9a90c;--black:#111111;--red:#c4171e;--white:#fffdf3}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1440px;height:900px;overflow:hidden;background:var(--yellow);color:var(--black);
+       font-family:"Arial Narrow",Arial,Helvetica,sans-serif;position:relative}
+  /* painted, not printed: uneven coverage and a little roller texture */
+  body::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.42;
+    background:radial-gradient(60% 50% at 18% 12%,rgba(255,255,255,.42),transparent 62%),
+               radial-gradient(50% 60% at 92% 88%,rgba(217,169,12,.5),transparent 64%)}
+  body::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.16;
+    background:repeating-linear-gradient(88deg,rgba(17,17,17,.5) 0 1px,transparent 1px 6px)}
+
+  .strip{position:relative;z-index:3;height:58px;display:flex;align-items:center;padding:0 38px;
+         border-bottom:4px solid var(--black)}
+  .wordmark{font-size:18px;font-weight:700;letter-spacing:.24em;text-transform:uppercase}
+  .strip nav{margin-left:auto;display:flex;gap:28px;align-items:center}
+  .strip a{color:var(--black);text-decoration:none;font-family:Arial,Helvetica,sans-serif;
+           font-size:13.5px;font-weight:700}
+
+  .wall{position:relative;z-index:2;height:842px;overflow:hidden}
+  .bill{position:absolute;left:0;right:0;top:34px;font-family:Impact,"Arial Black",Arial,sans-serif;
+        font-weight:900;text-transform:uppercase;line-height:.86;letter-spacing:-.028em}
+  .bill .l1{display:block;font-size:212px;transform:translateX(-26px) rotate(-2.2deg)}
+  .bill .l2{display:block;font-size:212px;transform:translateX(184px) rotate(-2.2deg);
+            white-space:nowrap}
+  .bill .l3{display:block;font-family:"Arial Narrow",Arial,Helvetica,sans-serif;font-weight:700;
+            font-size:41px;letter-spacing:-.005em;margin-top:26px;transform:translateX(2px);
+            text-transform:none;line-height:1.14;max-width:24ch}
+  .bill .l3 b{background:var(--black);color:var(--yellow);padding:0 8px}
+
+  /* the tally, painted on as a separate run */
+  .tally{position:absolute;left:0;right:0;top:472px;height:118px;background:var(--black);
+         color:var(--yellow);display:flex;align-items:center;padding:0 38px;gap:56px}
+  .tally div{display:flex;align-items:baseline;gap:14px}
+  .tally b{font-family:Impact,"Arial Black",Arial,sans-serif;font-size:62px;line-height:1;
+           font-weight:400}
+  .tally span{font-size:16px;letter-spacing:.1em;text-transform:uppercase;max-width:14ch;
+              line-height:1.2;color:var(--white)}
+  .tally .hot b{color:var(--red)}
+
+  .base{position:absolute;left:38px;right:38px;top:626px;display:flex;gap:52px;align-items:flex-start}
+  .base p{font-family:Georgia,serif;font-size:16.5px;line-height:1.6;max-width:56ch;
+          color:#1b1a15}
+  .base p b{font-family:"Arial Narrow",Arial,Helvetica,sans-serif;font-size:16px;
+            letter-spacing:.02em}
+  .door{margin-left:auto;flex:0 0 386px}
+  .door button{width:100%;background:var(--black);color:var(--yellow);border:0;padding:26px;
+               font-family:Impact,"Arial Black",Arial,sans-serif;font-size:30px;letter-spacing:.06em;
+               text-transform:uppercase;cursor:pointer}
+  .door span{display:block;margin-top:12px;font-family:Arial,Helvetica,sans-serif;font-size:13px;
+             color:#3a3520;text-align:center}
+</style></head>
+<body>
+  <div class="strip">
+    <div class="wordmark">Varnor Index</div>
+    <nav><a href="#">How it reads</a><a href="#">Pricing</a><a href="#">Sign in</a></nav>
+  </div>
+
+  <div class="wall">
+    <div class="bill">
+      <span class="l1">THE WHOLE</span>
+      <span class="l2">MARKET</span>
+      <span class="l3">every roofer in Phoenix, with the page we read each fact from.
+        <b>Nothing cut.</b></span>
+    </div>
+
+    <div class="tally">
+      <div><b>148</b><span>found in this market</span></div>
+      <div><b>91</b><span>with a contact, at the source</span></div>
+      <div class="hot"><b>57</b><span>gave nothing &mdash; still listed</span></div>
+    </div>
+
+    <div class="base">
+      <p>Name a trade and a market. Varnor Index reads the register, their own server, the directory
+        listings and the trade press, and hands you the list with <b>the page each fact came
+        from</b>. The ones that came back empty keep their place on it.</p>
+      <div class="door">
+        <button type="button">Open an account</button>
+        <span>Free to start &middot; no card &middot; confirm your address once</span>
+      </div>
+    </div>
+  </div>
+</body></html>

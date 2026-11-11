@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Canon — what the category ships</title>
+<style>
+  /* the category standard, done competently: dark hero, product screenshot, three features,
+     pricing. this is the baseline the hand has to beat, not a direction. */
+  :root{--ink:#0b0f14;--ink-2:#161d26;--bg:#ffffff;--muted:#5b6470;--line:#e3e7ec;
+        --brand:#2563eb;--brand-d:#1d4ed8;--ok:#0b7a44;--warn:#8a5d00;--bad:#c0392b}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1440px;height:900px;overflow:hidden;background:var(--bg);color:var(--ink);
+       font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+
+  nav{height:64px;display:flex;align-items:center;padding:0 56px;gap:36px;
+      border-bottom:1px solid var(--line)}
+  .logo{font-size:17px;font-weight:700;letter-spacing:-.01em}
+  nav .links{margin-left:auto;display:flex;gap:30px;align-items:center}
+  nav a{color:var(--muted);text-decoration:none;font-size:14.5px}
+  .btn{background:var(--brand);color:#fff;border:0;border-radius:8px;padding:11px 20px;
+       font-size:14.5px;font-weight:600;font-family:inherit}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+
+  .hero{background:var(--ink);color:#fff;padding:56px 56px 0;height:436px;position:relative;
+        overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-140px;top:-160px;width:620px;height:620px;
+    border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.5),transparent 66%)}
+  .hero .eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#8fa3bd}
+  .hero h1{margin-top:16px;font-size:52px;line-height:1.06;letter-spacing:-.025em;font-weight:700;
+           max-width:19ch}
+  .hero p{margin-top:18px;font-size:18px;line-height:1.55;color:#b9c4d2;max-width:56ch}
+  .hero .cta{margin-top:28px;display:flex;gap:14px;align-items:center}
+  .hero .btn{font-size:16px;padding:15px 26px}
+  .hero .btn.ghost{color:#fff;border-color:rgba(255,255,255,.3)}
+  .hero .fine{margin-top:14px;font-size:13px;color:#8fa3bd}
+
+  /* the product screenshot, overlapping the fold the way the category always does */
+  .shot{position:absolute;left:56px;right:56px;top:388px;background:#fff;border-radius:12px;
+        box-shadow:0 28px 60px rgba(11,15,20,.34);overflow:hidden;color:var(--ink)}
+  .chrome{height:38px;background:#f4f6f9;border-bottom:1px solid var(--line);display:flex;
+          align-items:center;gap:7px;padding:0 14px}
+  .chrome i{width:11px;height:11px;border-radius:50%;background:#d6dbe2}
+  .chrome span{margin-left:14px;font-size:12px;color:var(--muted)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{text-align:left;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;
+     color:var(--muted);padding:12px 20px;border-bottom:1px solid var(--line);font-weight:600}
+  td{padding:11px 20px;border-bottom:1px solid #f0f3f6;color:#2a3340}
+  td.name{font-weight:600}
+  .pill{display:inline-block;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:99px}
+  .pill.ok{background:#e7f6ee;color:var(--ok)} .pill.warn{background:#fdf3dd;color:var(--warn)}
+  .pill.bad{background:#fbeae8;color:var(--bad)}
+
+  .below{position:absolute;left:0;right:0;top:660px;height:240px;padding:0 56px}
+  .logos{display:flex;align-items:center;gap:14px;padding:22px 0 20px;border-bottom:1px solid var(--line)}
+  .logos em{font-style:normal;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+            color:var(--muted);margin-right:8px}
+  .logos i{flex:1;height:34px;border:1px dashed var(--line);border-radius:6px;display:flex;
+           align-items:center;justify-content:center;font-style:normal;font-size:12.5px;
+           color:var(--muted)}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:20px}
+  .card{border:1px solid var(--line);border-radius:10px;padding:20px}
+  .card b{font-size:16px}
+  .card p{margin-top:9px;font-size:14px;line-height:1.55;color:var(--muted)}
+  .card .ic{width:30px;height:30px;border-radius:7px;background:#eaf0fe;margin-bottom:12px}
+</style></head>
+<body>
+  <nav>
+    <div class="logo">Varnor Index</div>
+    <div class="links"><a href="#">Product</a><a href="#">Pricing</a><a href="#">Docs</a>
+      <a href="#">Sign in</a><button class="btn">Get started</button></div>
+  </nav>
+
+  <div class="hero">
+    <div class="eyebrow">Lead generation, automated</div>
+    <h1>Find and verify local business leads in seconds.</h1>
+    <p>Search any trade and market. We find the businesses, pull their contact details and verify
+      them &mdash; so your team spends its time selling instead of researching.</p>
+    <div class="cta">
+      <button class="btn">Start for free</button>
+      <button class="btn ghost">Book a demo</button>
+    </div>
+    <div class="fine">No credit card required.</div>
+  </div>
+
+  <div class="shot">
+    <div class="chrome"><i></i><i></i><i></i><span>app.varnorindex.com/leads</span></div>
+    <table>
+      <thead><tr><th>Company</th><th>Email</th><th>Phone</th><th>Status</th><th>Score</th></tr></thead>
+      <tbody>
+        <tr><td class="name">Apex Roofing Co.</td><td>office@apexroofingaz.com</td>
+          <td>+1 602 555 0148</td><td><span class="pill ok">Verified</span></td><td>92</td></tr>
+        <tr><td class="name">Pinnacle Flat Roofing</td><td>info@pinnacleflat.com</td>
+          <td>&mdash;</td><td><span class="pill warn">Risky</span></td><td>74</td></tr>
+        <tr><td class="name">Sonoran Roof Works</td><td>&mdash;</td><td>&mdash;</td>
+          <td><span class="pill bad">No contact</span></td><td>18</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="below">
+    <div class="logos"><em>Trusted by</em><i>logo</i><i>logo</i><i>logo</i><i>logo</i><i>logo</i></div>
+    <div class="cards">
+      <div class="card"><div class="ic"></div><b>Search any market</b>
+        <p>Type a trade and a city. Get a list of every business in it, ranked by how reachable
+          they are.</p></div>
+      <div class="card"><div class="ic"></div><b>Verified contacts</b>
+        <p>Emails checked against the mailbox, numbers normalised to a dialable format.</p></div>
+      <div class="card"><div class="ic"></div><b>Export anywhere</b>
+        <p>Send the list to your CRM, your dialler, or a spreadsheet in one click.</p></div>
+    </div>
+  </div>
+</body></html>

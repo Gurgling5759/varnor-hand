@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>The Lineup — challenger</title>
+<style>
+  /* a two-colour riso lineup sheet. billing is the only structure: one face at eight sizes,
+     no imagery, and the long tail justified into a dense block at the foot. */
+  :root{--pink:#ff4fa3;--pink-deep:#e0368a;--blue:#0d1f6e;--black:#0f0f0f;--white:#fff8fb}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1440px;height:900px;overflow:hidden;background:var(--pink);color:var(--black);
+       font-family:"Arial Narrow",Arial,Helvetica,sans-serif;position:relative}
+  /* riso: the flood is never perfectly even, and the ink sits on top of it */
+  body::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:multiply;
+    background:radial-gradient(70% 55% at 22% 18%,rgba(255,255,255,.5),transparent 60%),
+               radial-gradient(60% 60% at 88% 82%,rgba(224,54,138,.55),transparent 62%)}
+  body::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.22;
+    background-image:radial-gradient(rgba(15,15,15,.5) .5px,transparent .5px);
+    background-size:3px 3px}
+
+  .band{position:relative;z-index:3;height:60px;background:var(--black);display:flex;
+        align-items:center;padding:0 40px}
+  .wordmark{color:var(--white);font-size:18px;font-weight:700;letter-spacing:.24em;
+            text-transform:uppercase}
+  .band .act{margin-left:auto;display:flex;align-items:center;gap:26px}
+  .band a{color:#cfcfcf;text-decoration:none;font-family:Arial,Helvetica,sans-serif;font-size:13.5px}
+  .band .go{background:var(--pink);color:var(--black);border:0;padding:11px 22px;font-size:14.5px;
+            font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+
+  .sheet{position:relative;z-index:2;padding:30px 40px 0;height:600px}
+  .tier{border-bottom:3px solid var(--black);padding-bottom:12px;margin-bottom:14px;
+        display:flex;align-items:baseline;gap:22px}
+  .tier .no{font-family:"Courier New",monospace;font-size:13.5px;letter-spacing:.06em;flex:0 0 96px}
+  .tier .who{font-weight:700;text-transform:uppercase;letter-spacing:-.015em;line-height:.92}
+  .t1 .who{font-size:88px}
+  .t2 .who{font-size:47px;letter-spacing:-.01em}
+  .t3 .who{font-size:27px;font-weight:400;text-transform:none;letter-spacing:0}
+  .tier .num{margin-left:auto;font-family:"Courier New",monospace;font-size:22px;font-weight:700;
+             flex:0 0 auto}
+  .t2 .who,.t1 .who{color:var(--black)}
+  .t1 .num,.t2 .num{color:var(--blue)}
+
+  /* the long tail: every name billed, packed, including the ones that gave nothing */
+  .tail{margin-top:20px}
+  .tail h2{font-size:15px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+           display:flex;align-items:baseline;gap:16px;border-bottom:2px solid var(--black);
+           padding-bottom:8px}
+  .tail h2 span{font-family:"Courier New",monospace;font-size:13px;font-weight:400;
+                letter-spacing:0;text-transform:none}
+  .tail p{margin-top:12px;font-size:15px;line-height:1.42;text-align:justify;
+          text-transform:uppercase;letter-spacing:.005em;font-weight:700}
+  .tail p em{font-style:normal;background:var(--black);color:var(--pink);padding:1px 4px}
+  .tail p b{font-weight:700;color:var(--blue)}
+
+  .foot{position:relative;z-index:2;height:240px;background:var(--black);color:var(--white);
+        padding:30px 40px;display:flex;align-items:center;gap:40px}
+  .foot h3{font-size:34px;font-weight:700;text-transform:uppercase;line-height:1.06;
+           letter-spacing:-.015em;max-width:26ch}
+  .foot p{font-family:Georgia,serif;font-size:15px;color:#d8d3d5;margin-top:11px;max-width:54ch;
+          line-height:1.55}
+  .foot .act{margin-left:auto;flex:0 0 350px;text-align:center}
+  .foot button{width:100%;background:var(--pink);color:var(--black);border:0;padding:21px;
+               font-size:19px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+  .foot .act span{display:block;margin-top:11px;font-family:Arial,Helvetica,sans-serif;
+                  font-size:12.5px;color:#b9b3b5}
+</style></head>
+<body>
+  <div class="band">
+    <div class="wordmark">Varnor Index</div>
+    <div class="act"><a href="#">How it reads</a><a href="#">Pricing</a><a href="#">Sign in</a>
+      <button class="go" type="button">Open an account</button></div>
+  </div>
+
+  <div class="sheet">
+    <div class="tier t1"><span class="no">01 &middot; billed</span>
+      <span class="who">Every roofer in Phoenix</span><span class="num">148</span></div>
+    <div class="tier t2"><span class="no">02 &middot; billed</span>
+      <span class="who">With the page we read it from</span><span class="num">91</span></div>
+    <div class="tier t3"><span class="no">03 &middot; billed</span>
+      <span class="who">Mailbox answers &mdash; checked, not guessed</span><span class="num">63</span></div>
+    <div class="tier t3"><span class="no">04 &middot; billed</span>
+      <span class="who">No source could reach them, so they are still billed</span>
+      <span class="num">57</span></div>
+
+    <div class="tail">
+      <h2>Also on the bill <span>every name we found, in the order we found it &mdash; nothing cut</span></h2>
+      <p>Apex Roofing Co. &middot; Pinnacle Flat Roofing &middot; Sonoran Roof Works &middot;
+        <em>Cactus Coat Roofing</em> &middot; Valley Rain Gutters &middot; Desert Ridge Roofing &middot;
+        Saguaro Shingle &middot; Copper State Roofing &middot; Mesa Flat Roofing &middot;
+        <em>Cholla Peak Roofing</em> &middot; Gila Bend Roofing &middot; Tempe Tile &amp; Slate &middot;
+        Coronado Roofing &middot; <em>Buckeye Roof &amp; Gutter</em> &middot; Ahwatukee Roofing Co. &middot;
+        Scottsdale Copper Works &middot; Gilbert Roofing Group &middot;
+        <em>New River Roofing</em> &middot; Peoria Flat Roofs &middot; Anthem Roofing &middot;
+        Chandler Roof &amp; Repair &middot; <b>and 127 more, all billed</b></p>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div>
+      <h3>No pictures. Just who they are and how we know.</h3>
+      <p>The line above your market's name is the page it was read from. Names in the dark box came
+        back with nothing &mdash; they stay on the bill anyway, because you asked for the market,
+        not for the easy half of it.</p>
+    </div>
+    <div class="act">
+      <button type="button">Open an account</button>
+      <span>Free to start &middot; no card</span>
+    </div>
+  </div>
+</body></html>
