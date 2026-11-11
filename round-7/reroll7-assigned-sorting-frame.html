@@ -3,7 +3,7 @@
 <style>
   /* the mail room, straight on. the frame is the ground; the slots are the page's parts. */
   :root{ --steel:#5d6a61; --steel-deep:#3f4a43; --steel-lit:#77857a; --deal:#d6c6a4;
-         --deal-shade:#c2b18d; --brass:#c09040; --brass-deep:#8a6524; --red:#c8102e;
+         --deal-shade:#bfae89; --brass:#c09040; --brass-deep:#8a6524; --red:#c8102e;
          --manila:#cdb98f; --ink:#141815; --white:#f3f5f1; }
   *{box-sizing:border-box;margin:0;padding:0}
   body{width:1440px;height:900px;overflow:hidden;background:var(--steel);color:var(--white);
@@ -29,81 +29,91 @@
 
   .body{position:relative;height:838px;display:grid;grid-template-columns:392px 1fr;gap:0}
 
-  /* ── the routing slip: the search, clipped to the frame's left stile ───────────────── */
-  .stile{background:var(--steel-deep);padding:34px 34px 30px 40px;position:relative}
+  /* ── the left stile: the routing slip, and beneath it the run's own tally ───────────── */
+  .stile{background:var(--steel-deep);padding:30px 34px 26px 40px;position:relative;
+         display:flex;flex-direction:column;gap:20px}
   .stile::after{content:"";position:absolute;top:0;bottom:0;right:0;width:5px;
                 background:linear-gradient(90deg,rgba(0,0,0,.34),transparent)}
   .clip{position:absolute;top:-1px;left:52px;width:74px;height:26px;border-radius:0 0 7px 7px;
         background:linear-gradient(180deg,#9aa79c,#63706a);
         box-shadow:inset 0 -3px 0 rgba(0,0,0,.3), 0 4px 10px rgba(20,24,21,.45)}
 
-  .slip{background:var(--deal);color:var(--ink);padding:30px 28px 26px;
+  .slip{background:var(--deal);color:var(--ink);padding:26px 26px 24px;
         box-shadow:0 18px 40px rgba(20,24,21,.45), inset 0 0 0 1px rgba(255,255,255,.35)}
-  .slip h2{font-family:"Arial Narrow",Arial,Helvetica,sans-serif;font-size:13px;font-weight:700;
-           letter-spacing:.2em;text-transform:uppercase;color:#5a5137;
-           border-bottom:2px solid var(--ink);padding-bottom:9px}
-  .field{margin-top:16px}
+  .slip h2{font-size:13px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+           color:#4a4229;border-bottom:2px solid var(--ink);padding-bottom:9px}
+  .field{margin-top:15px}
   .field i{display:block;font-family:Arial,Helvetica,sans-serif;font-style:normal;font-size:12.5px;
            letter-spacing:.14em;text-transform:uppercase;color:#4a4229}
-  .field b{display:block;font-family:"Arial Narrow",Arial,Helvetica,sans-serif;font-size:27px;
-           font-weight:700;letter-spacing:-.01em;margin-top:4px;
+  .field b{display:block;font-size:26px;font-weight:700;letter-spacing:-.01em;margin-top:4px;
            border-bottom:1px dashed #9d9068;padding-bottom:6px}
-  .field.q b{font-family:"Courier New",monospace;font-size:23px;letter-spacing:0}
-  .route{margin-top:22px;width:100%;background:var(--red);color:var(--white);border:0;
+  .field.q b{font-family:"Courier New",monospace;font-size:22px;letter-spacing:0}
+  .route{margin-top:20px;width:100%;background:var(--red);color:var(--white);border:0;
          padding:17px 20px;font-family:"Arial Narrow",Arial,Helvetica,sans-serif;font-size:17px;
          font-weight:700;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;
          box-shadow:0 5px 0 var(--brass-deep)}
-  .slip p.note{margin-top:16px;font-family:Georgia,serif;font-size:14px;line-height:1.55;
-               color:#4a4430}
+
+  /* the tally: the run's real figures, as a bundle label */
+  .tally{flex:1;background:#8b9a8f;padding:22px 24px;display:flex;flex-direction:column;
+         box-shadow:inset 0 2px 8px rgba(20,24,21,.35)}
+  .tally h2{font-size:13px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+            color:#141815;border-bottom:2px solid rgba(20,24,21,.45);padding-bottom:9px}
+  .tally div{display:flex;align-items:baseline;gap:14px;padding:13px 0;
+             border-bottom:1px solid rgba(20,24,21,.18)}
+  .tally div:last-child{border-bottom:0}
+  .tally b{font-family:"Courier New",monospace;font-size:29px;font-weight:700;color:#141815;
+           flex:0 0 62px}
+  .tally span{font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:1.45;
+              color:#141815}
+  .tally p{margin-top:auto;font-family:Georgia,serif;font-size:14px;line-height:1.55;
+           color:#141815;padding-top:14px}
 
   /* ── the frame: the page's one dominant move ───────────────────────────────────────── */
-  .frame{position:relative;padding:30px 40px 0 34px;display:flex;flex-direction:column}
+  .frame{position:relative;padding:30px 40px 26px 34px;display:flex;flex-direction:column}
   .slots{flex:1;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);
-         gap:14px}
+         gap:13px}
   .slot{position:relative;background:var(--deal);box-shadow:inset 0 0 0 2px rgba(20,24,21,.16),
-         inset 0 14px 22px rgba(20,24,21,.20), 0 3px 0 var(--steel-lit);
-         padding:0;overflow:hidden}
+         inset 0 14px 22px rgba(20,24,21,.20), 0 3px 0 var(--steel-lit);overflow:hidden}
   /* the brass label holder on each slot's lip */
   .slot .lbl{position:absolute;left:0;right:0;top:0;height:27px;background:var(--brass);
              display:flex;align-items:center;justify-content:space-between;padding:0 9px;
              box-shadow:0 2px 4px rgba(20,24,21,.35)}
-  .slot .lbl span{font-family:"Arial Narrow",Arial,Helvetica,sans-serif;font-size:12.5px;
-                  font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#2a1f06}
+  .slot .lbl span{font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+                  color:#2a1f06}
   .slot .lbl b{font-family:"Courier New",monospace;font-size:12.5px;color:#3a2c0a;font-weight:700}
-  /* a bundle: entries tied with red string */
-  .bundle{position:absolute;left:10px;right:10px;top:37px;bottom:9px;background:var(--manila);
+  /* a bundle: entries tied with red string. the string sits in the margin, never on the words. */
+  .bundle{position:absolute;left:9px;right:9px;top:36px;bottom:9px;background:var(--manila);
           box-shadow:0 2px 5px rgba(20,24,21,.28), inset 0 0 0 1px rgba(255,255,255,.4)}
   .bundle::before,.bundle::after{content:"";position:absolute;top:0;bottom:0;width:3px;
-          background:var(--red);box-shadow:0 0 4px rgba(200,16,46,.5)}
-  .bundle::before{left:26px} .bundle::after{right:26px}
+          background:var(--red)}
+  .bundle::before{left:5px} .bundle::after{right:5px}
   .bundle p{font-family:"Courier New",monospace;font-size:12.5px;line-height:1.55;color:#241d0c;
-            padding:10px 12px;position:relative;z-index:2}
+            padding:9px 15px}
   .bundle p em{font-style:normal;background:rgba(20,24,21,.10)}
   /* an empty slot: nothing returned. it stays, visibly empty, and says so. */
   .slot.empty{background:var(--deal-shade)}
   .slot.empty .void{position:absolute;inset:27px 0 0;display:flex;align-items:center;
-        justify-content:center}
-  .slot.empty .void span{font-family:"Arial Narrow",Arial,Helvetica,sans-serif;font-size:13.5px;
-        letter-spacing:.18em;text-transform:uppercase;color:#453d24;text-align:center;line-height:1.5}
+        justify-content:center;padding:0 12px}
+  .slot.empty .void span{font-size:13.5px;letter-spacing:.16em;text-transform:uppercase;
+        color:#453d24;text-align:center;line-height:1.5}
 
   /* ── the dead-letter slot: the businesses no source could reach ────────────────────── */
-  .dead{margin-top:14px;height:186px;position:relative;background:#2f3a34;
+  .dead{margin-top:13px;height:182px;position:relative;background:#2f3a34;
         box-shadow:inset 0 0 0 2px rgba(20,24,21,.5), 0 4px 0 var(--steel-lit);overflow:hidden}
   .dead .lbl{position:absolute;left:0;right:0;top:0;height:30px;background:var(--red);
              display:flex;align-items:center;justify-content:space-between;padding:0 12px}
-  .dead .lbl span{font-family:"Arial Narrow",Arial,Helvetica,sans-serif;font-size:12.5px;
-                  font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--white)}
-  .dead .lbl b{font-family:"Courier New",monospace;font-size:12px;color:#ffd9df}
+  .dead .lbl span{font-size:12.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+                  color:var(--white)}
+  .dead .lbl b{font-family:"Courier New",monospace;font-size:12.5px;color:#ffd9df}
   .dead .rows{position:absolute;left:0;right:0;top:30px;bottom:0;display:grid;
-              grid-template-columns:repeat(3,1fr);gap:0}
-  .dead .rows div{padding:14px 18px;border-right:1px solid rgba(243,245,241,.14)}
+              grid-template-columns:repeat(3,1fr)}
+  .dead .rows div{padding:15px 18px;border-right:1px solid rgba(243,245,241,.14)}
   .dead .rows div:last-child{border-right:0}
-  .dead .rows b{display:block;font-family:"Courier New",monospace;font-size:13px;color:#f0b9c2}
+  .dead .rows b{display:block;font-family:"Courier New",monospace;font-size:13.5px;color:#f6c3cb}
   .dead .rows p{font-family:Arial,Helvetica,sans-serif;font-size:12.5px;line-height:1.5;
-                color:#c3d0c7;margin-top:6px}
-  .dead .rows i{font-style:normal;display:block;margin-top:9px;font-family:"Arial Narrow",Arial,
-                sans-serif;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
-                color:#8fa396}
+                color:#d3ded6;margin-top:6px}
+  .dead .rows i{font-style:normal;display:block;margin-top:9px;font-size:12.5px;letter-spacing:.13em;
+                text-transform:uppercase;color:#a3b8aa}
 </style></head>
 <body>
   <div class="rail">
@@ -122,9 +132,15 @@
         <div class="field"><i>Market</i><b>Phoenix, Arizona</b></div>
         <div class="field q"><i>Entries asked for</i><b>50</b></div>
         <button class="route" type="button">Route this market</button>
-        <p class="note">Free, no card. Confirm your address once and the frame fills for your
-          market. Nothing here is thrown away &mdash; the entries that gave us nothing keep their
-          slot.</p>
+      </div>
+
+      <div class="tally">
+        <h2>The run, counted</h2>
+        <div><b>148</b><span>businesses found in this market</span></div>
+        <div><b>91</b><span>with a contact read at the source</span></div>
+        <div><b>63</b><span>whose mailbox actually answers</span></div>
+        <div><b>57</b><span>no source could reach &mdash; still filed</span></div>
+        <p>Free, no card. Confirm your address once and the frame fills for your market.</p>
       </div>
     </div>
 
@@ -156,18 +172,27 @@
           <div class="void"><span>Read.<br>Nothing returned.</span></div></div>
         <div class="slot"><div class="lbl"><span>Their own server</span><b>n/088</b></div>
           <div class="bundle"><p>Valley Rain Gutters<br><em>/team, named person</em></p></div></div>
+
+        <div class="slot"><div class="lbl"><span>Licensing register</span><b>n/094</b></div>
+          <div class="bundle"><p>Gila Bend Roofing<br><em>licence, holder</em></p></div></div>
+        <div class="slot empty"><div class="lbl"><span>Procurement notices</span><b>n/101</b></div>
+          <div class="void"><span>Read.<br>Nothing returned.</span></div></div>
+        <div class="slot"><div class="lbl"><span>Review profiles</span><b>n/107</b></div>
+          <div class="bundle"><p>Tempe Tile &amp; Slate<br><em>telephone, E.164</em></p></div></div>
+        <div class="slot empty"><div class="lbl"><span>Site search</span><b>n/112</b></div>
+          <div class="void"><span>Read.<br>Nothing returned.</span></div></div>
       </div>
 
       <div class="dead">
-        <div class="lbl"><span>Dead letter &mdash; no source could reach them</span><b>117 held</b></div>
+        <div class="lbl"><span>Dead letter &mdash; no source could reach them</span><b>57 held</b></div>
         <div class="rows">
           <div><b>Cactus Coat Roofing</b>
-            <p>Twelve sources read. Six returned the name, none returned a contact.</p>
+            <p>Sixteen sources read. Six returned the name, none returned a contact.</p>
             <i>Kept &middot; entry 050</i></div>
           <div><b>Sonoran Roof Works</b>
             <p>Server declined every request. Recorded, not discarded.</p>
             <i>Kept &middot; entry 044</i></div>
-          <div><b>&mdash; and 115 more</b>
+          <div><b>&mdash; and 55 more</b>
             <p>Every one still numbered, still counted, still on the run.</p>
             <i>Nothing deleted</i></div>
         </div>
