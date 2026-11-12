@@ -1488,10 +1488,13 @@ a{text-decoration:none;color:inherit}
      own: a 42px numeral alone on a row costs a line and says nothing the
      heading below it does not. */
   .cr-columns { margin-top: 34px; }
+  /* The gutter stays 22px + the 3px tick = the 25px the row is pulled left by,
+     so the numerals keep sitting on the page's edge. A 16px gutter left the
+     tick hanging off the window. */
   .cr-column {
     grid-template-columns: 1fr;
     gap: 2px 0;
-    padding: 18px 0 20px 16px;
+    padding: 18px 0 20px 22px;
   }
   .cr-column-count { font-size: 30px; }
   .cr-column-name { margin-top: 2px; }
