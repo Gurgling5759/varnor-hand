@@ -503,7 +503,14 @@ a{text-decoration:none;color:inherit}
    anywhere in this card, and no rule between rows. */
 .cr-fact {
   display: grid;
-  grid-template-columns: 118px minmax(0, 1fr);
+  /* 118px is the floor, not the width. One fact in the whole file has an
+     address where its label goes — office@apexroofingaz.com, the mailbox the
+     live SMTP check was run against — and at a hard 118px it printed on top of
+     its own value ("office@apexroofingaz.comAccepted"). max-content lets a
+     block widen its label column to the longest label it actually holds; every
+     other block measures under 118 and is unchanged, which is why the card's
+     other rows still line up as they did. */
+  grid-template-columns: minmax(118px, max-content) minmax(0, 1fr);
   gap: 10px;
   padding: 2px 0;
 }
@@ -798,6 +805,236 @@ a{text-decoration:none;color:inherit}
 }
 /* The ledger inside an exhibit is the block, not a step under something. */
 .cr-station-ev .cr-ledger { margin-top: 0; }
+
+/* ── The five columns, opened ──────────────────────────────────────────────
+   The run band's five figures are counts you cannot press. This is the same
+   five as five real columns of the file, each with the sentence the card
+   prints when you open that face — so the figure and the column are the same
+   fact at two altitudes, and neither can be edited without the other. */
+.cr-columns {
+  margin-top: 52px;
+  border-top: 1px solid rgba(244,246,242,.22);
+}
+/* Each column is ticked in its face colour, the way its figure is. The tick is
+   a left border rather than a top one: five stacked rows with five top ticks
+   would read as five small cards, and these are rows of one register. */
+.cr-column {
+  display: grid;
+  grid-template-columns: 104px 300px minmax(0, 1fr);
+  gap: 0 30px;
+  padding: 24px 0 26px 22px;
+  border-bottom: 1px solid rgba(244,246,242,.22);
+  border-left: 3px solid transparent;
+  /* The tick and its gutter are pulled out of the column's own box, so the
+     numerals sit on the page's left edge with every other block on it. Left on
+     the inside they pushed the whole register 25px out of alignment. */
+  margin-left: -25px;
+}
+.cr-column-count {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: .9;
+  letter-spacing: -.045em;
+  color: var(--cr-white);
+}
+.cr-column-red { border-left-color: var(--cr-red); }
+.cr-column-amber { border-left-color: var(--cr-amber); }
+.cr-column-green { border-left-color: var(--cr-green); }
+.cr-column-blue { border-left-color: var(--cr-blue); }
+.cr-column-grey { border-left-color: #6f6a62; }
+.cr-column-name {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--cr-white);
+}
+.cr-column-name small {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: .02em;
+  text-transform: none;
+  color: var(--cr-on-ground-dim);
+}
+.cr-column-line {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 15.5px;
+  line-height: 1.62;
+  color: var(--cr-on-ground);
+}
+
+/* ── The chapter break ─────────────────────────────────────────────────────
+   /how-it-reads is one ground end to end, so the second half of it cannot be
+   separated by a change of paper the way the other pages are. It gets a rule
+   the width of the content column instead: aligned to the copy rather than to
+   the window, so it reads as a new chapter of the same log and not as the
+   boundary between two sections. */
+.cr-wrap-chapter {
+  margin-top: 72px;
+  padding-top: 72px;
+  border-top: 1px solid rgba(244,246,242,.22);
+}
+/* The three checks, side by side on paper. They are the same source blocks the
+   card draws — a second copy restyled for this page would fork the one
+   component the whole design leans on. */
+.cr-exhibits {
+  margin-top: 46px;
+  display: grid;
+  /* 390px, not 300. The source block inside needs 118px of label + 10px of gap
+     + 216px for office@apexroofingaz.com at 14.5px mono, and 22px of padding
+     each side: 388px. At 300 the third slip came out 347px wide and the address
+     printed on top of its own value. Three across cannot hold one at 1440, so
+     the check on the number drops to the second row rather than shattering. */
+  grid-template-columns: repeat(auto-fit, minmax(390px, 1fr));
+  gap: 26px;
+}
+.cr-exhibit {
+  background: var(--cr-sheet);
+  color: var(--cr-ink);
+  padding: 20px 22px 18px;
+  box-shadow: 0 14px 30px rgba(0,0,0,.4);
+}
+
+/* ── What silence looks like ───────────────────────────────────────────────
+   The five empty results on the sample empty record, each beside the page that
+   was silent. This is the record page's abstract claim made concrete, and it
+   is why the run is worth paying for: a no with a page number under it is a
+   fact, and a no on its own is a hole. */
+.cr-silence {
+  margin-top: 48px;
+  border-top: 1px solid rgba(244,246,242,.22);
+}
+.cr-silence-row {
+  display: grid;
+  grid-template-columns: 216px minmax(0, 1fr) 300px;
+  gap: 4px 30px;
+  align-items: baseline;
+  padding: 17px 0 18px;
+  border-bottom: 1px solid rgba(244,246,242,.22);
+}
+.cr-silence-row dt {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 14px;
+  letter-spacing: .04em;
+  color: var(--cr-on-ground-dim);
+}
+.cr-silence-none {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 15px;
+  color: var(--cr-on-ground);
+}
+.cr-silence-src {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 12.5px;
+  color: var(--cr-on-ground-dim);
+  overflow-wrap: anywhere;
+}
+.cr-silence-src small {
+  display: block;
+  margin-top: 3px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12px;
+  letter-spacing: .04em;
+}
+
+/* ── The run, as one bar ───────────────────────────────────────────────────
+   The two halves of the 148, at their real proportion: 91 with a contact and
+   57 without. The bar is where the reader finds out the 57 are not a footnote
+   — they are most of a third of the run — and it is drawn in the site's own
+   two materials, paper for what is on file and a hole for what is not. The
+   labels sit inside their own segment, so the chart explains itself and needs
+   no key and no aria-hidden equivalent. */
+.cr-split {
+  display: flex;
+  height: 50px;
+  margin-top: 52px;
+  box-shadow: inset 0 0 0 1px rgba(244,246,242,.26);
+}
+/* 91/148 is 61.49%. The empty segment takes the rest, so the two can never
+   drift out of proportion to the counts they are drawn from. */
+.cr-split-on {
+  flex: 0 0 61.49%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 18px;
+  background: var(--cr-sheet);
+  color: var(--cr-ink);
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 13.5px;
+  letter-spacing: .02em;
+}
+.cr-split-none {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 18px;
+  background: rgba(0,0,0,.34);
+  color: var(--cr-on-ground);
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 13.5px;
+  letter-spacing: .02em;
+}
+.cr-split b {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.03em;
+}
+
+/* ── The wall of the 57 ────────────────────────────────────────────────────
+   One mark per business that gave nothing back, and the last one struck in
+   paper because it is the record printed directly underneath. A count of
+   things you cannot see is not carried by a numeral: 57 read as a grid is
+   visibly just under two in five of the run, which is the fact the page is
+   about. The marks are aria-hidden and the caption carries the meaning. */
+.cr-wall {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 48px;
+  /* 19 marks to a row, by arithmetic: 19 × 22 + 18 × 6 = 526. At a wider
+     measure the 57 came out 27 + 27 + 3, so the three that spilled onto the
+     last row read as leftovers rather than as part of the same count. Three
+     even rows say "this is one block of 57" and the paper mark closes it. */
+  max-width: 526px;
+}
+.cr-wall .cr-mark {
+  flex: 0 0 22px;
+  max-width: 22px;
+  height: 22px;
+  background: rgba(244,246,242,.10);
+  box-shadow: inset 0 0 0 1px rgba(244,246,242,.26);
+}
+.cr-wall .cr-mark::after {
+  background: linear-gradient(
+    to bottom right,
+    transparent 46.5%,
+    rgba(244,246,242,.38) 46.5%,
+    rgba(244,246,242,.38) 53.5%,
+    transparent 53.5%
+  );
+}
+.cr-wall .cr-mark-here {
+  background: var(--cr-sheet);
+  box-shadow: 0 6px 14px rgba(0,0,0,.5);
+}
+.cr-wall .cr-mark-here::after { display: none; }
+.cr-wall-cap {
+  margin-top: 16px;
+  max-width: 68ch;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 13.5px;
+  line-height: 1.4;
+  letter-spacing: .02em;
+  color: var(--cr-on-ground-dim);
+}
 
 /* The empty band. This is the section the product is really about, so it gets
    the darkest ground on the page and its own oversized count. */
@@ -1247,6 +1484,43 @@ a{text-decoration:none;color:inherit}
   .cr-station-label { font-size: 19px; }
   .cr-station-body { font-size: 15px; }
   .cr-station-ev { grid-column: 1 / -1; padding: 16px 16px 14px; }
+  /* The five columns lie down too, and the count stops being a column of its
+     own: a 42px numeral alone on a row costs a line and says nothing the
+     heading below it does not. */
+  .cr-columns { margin-top: 34px; }
+  .cr-column {
+    grid-template-columns: 1fr;
+    gap: 2px 0;
+    padding: 18px 0 20px 16px;
+  }
+  .cr-column-count { font-size: 30px; }
+  .cr-column-name { margin-top: 2px; }
+  .cr-column-name small { margin-top: 4px; }
+  .cr-column-line { margin-top: 8px; font-size: 15px; }
+  .cr-wrap-chapter { margin-top: 48px; padding-top: 44px; }
+  .cr-exhibits { margin-top: 30px; grid-template-columns: 1fr; gap: 18px; }
+  .cr-exhibit { padding: 16px 16px 14px; }
+  /* Silent page and empty value stack; the page's own name goes under the
+     value it was silent about, which is the order the sentence reads in. */
+  .cr-silence { margin-top: 32px; }
+  .cr-silence-row { grid-template-columns: 1fr; gap: 3px 0; padding: 15px 0 16px; }
+  .cr-silence-src { margin-top: 4px; }
+  /* The bar stops being one bar and becomes two stacked rows: at 390px the
+     empty segment is 130px wide and "57 with none" does not fit in it. The
+     proportion is lost, and on a phone the two numbers read as a list, which
+     is the honest thing for them to do. */
+  .cr-split {
+    display: block;
+    height: auto;
+    margin-top: 34px;
+  }
+  .cr-split-on,
+  .cr-split-none {
+    padding: 12px 16px;
+  }
+  .cr-split-none { border-top: 1px solid rgba(244,246,242,.26); }
+  .cr-wall { margin-top: 32px; gap: 5px; max-width: none; }
+  .cr-wall .cr-mark { flex: 0 0 18px; max-width: 18px; height: 18px; }
   .cr-empty-grid { grid-template-columns: 1fr; gap: 22px; }
   .cr-empty-count { font-size: 84px; }
   .cr-empty-cap { max-width: none; }
@@ -1307,6 +1581,17 @@ a{text-decoration:none;color:inherit}
         <p class="cr-lede">We do not hand you a row of numbers and ask you to trust them. Every value is filed under the page it was read from, so you can go and look at it yourself. Below is the whole sequence, run once on one business &mdash; APEX ROOFING CO. in Phoenix, AZ &mdash; with what each move produced pinned beside it. Four moves, in order, four exhibits.</p>
         <ol class="cr-rail"><li class="cr-station"><span class="cr-station-n" aria-hidden="true">01</span><div class="cr-station-main"><h2 class="cr-station-label">Open the pages</h2><p class="cr-station-body">The register first, then the business's own site — contact, about, team, in that order. Six pages a site at most. A search result is never a source; a page is.</p></div><div class="cr-station-ev"><div class="cr-ledger"><div class="cr-marks" aria-hidden="true"><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark on"></i></div><p class="cr-ledger-cap"><b>12 pages read</b> for a way in · 11 came back with nothing · <b>the last one did</b></p></div></div></li><li class="cr-station"><span class="cr-station-n" aria-hidden="true">02</span><div class="cr-station-main"><h2 class="cr-station-label">Read the value, keep the page</h2><p class="cr-station-body">Addresses are taken from mailto and tel links before any pattern matching, because a link is a claim the page made about itself. Whatever is read is filed under the URL it was read from, not under the business.</p></div><div class="cr-station-ev"><article class="cr-src cr-src-hit"><header class="cr-src-head"><h3 class="cr-src-url">apexroofingaz.com/contact</h3><span class="cr-src-kind">the page that answered</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Telephone</dt><dd>+1 602 555 0148<span class="cr-hint">one dialable format, E.164</span></dd></div><div class="cr-fact"><dt>Mailbox</dt><dd>office@apexroofingaz.com<span class="cr-hint">first address on the page</span></dd></div></dl></article></div></li><li class="cr-station"><span class="cr-station-n" aria-hidden="true">03</span><div class="cr-station-main"><h2 class="cr-station-label">Test the claim</h2><p class="cr-station-body">The mailbox is checked against its mail server, and the number against a real dialling range. Before either, a made-up address is offered to the server. A server that accepts that one accepts anything, so it is filed as risky — never as verified.</p></div><div class="cr-station-ev"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">mx1.apexroofingaz.com</h3><span class="cr-src-kind">mail server</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Mailbox checked</dt><dd>Accepts mail<span class="cr-hint">the server answered for this address</span></dd></div><div class="cr-fact"><dt>Checked</dt><dd>2026-11-11</dd></div></dl></article></div></li><li class="cr-station"><span class="cr-station-n" aria-hidden="true">04</span><div class="cr-station-main"><h2 class="cr-station-label">Record what was not there</h2><p class="cr-station-body">A page with no phone number, a year with no filing, a team page naming nobody: each is written down as an empty result with the page that was silent. Silence is a finding, and it is kept.</p></div><div class="cr-station-ev"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">no page behind these</h3><span class="cr-src-kind">this record</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Socials</dt><dd class="cr-none">None linked from its own pages</dd></div><div class="cr-fact"><dt>Empty results</dt><dd>No second number, no socials</dd></div></dl></article></div></li></ol>
         <p class="cr-figure-foot">Move one opened twelve pages for this one business. Eleven had no public address on them at all, and the twelfth is the exhibit against move two &mdash; the only reason this record has a number to call. A run of 148 businesses is that sequence 148 times over, and nothing that came back empty is thrown away.</p>
+      </div>
+
+      <div class="cr-wrap cr-wrap-chapter">
+        <p class="cr-eyebrow">The test</p>
+        <h2 class="cr-h2">A page saying a mailbox exists<br>is not a mailbox answering.</h2>
+        <p class="cr-lede">Move three is the only move that asks a question rather than reading an answer. It runs three checks, and every one of them is built so that it can come back no. What they said about APEX ROOFING CO. is below, in full, as it was said.</p>
+        <div class="cr-exhibits"><div class="cr-exhibit"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">mx1.apexroofingaz.com</h3><span class="cr-src-kind">mail server</span></header><dl class="cr-facts"><div class="cr-fact"><dt>MX record</dt><dd>Live<span class="cr-hint">a named server is ready to take the mail</span></dd></div><div class="cr-fact"><dt>Probe address</dt><dd>Rejected<span class="cr-hint">a made-up address was refused, so this is not a catch-all</span></dd></div></dl></article></div><div class="cr-exhibit"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">smtp.mx1.apexroofingaz.com</h3><span class="cr-src-kind">live check</span></header><dl class="cr-facts"><div class="cr-fact"><dt>office@apexroofingaz.com</dt><dd>Accepted</dd></div><div class="cr-fact"><dt>Checked</dt><dd>2026-11-11</dd></div></dl></article></div><div class="cr-exhibit"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">libphonenumber</h3><span class="cr-src-kind">number check</span></header><dl class="cr-facts"><div class="cr-fact"><dt>+1 602 555 0148</dt><dd>Valid<span class="cr-hint">a real number, in a real range</span></dd></div><div class="cr-fact"><dt>Kind</dt><dd>Landline</dd></div></dl></article></div></div>
+        <p class="cr-figure-foot">The made-up address is the whole design in one line. It went to the same server first, and the server refused it &mdash; so the server is telling the truth about which addresses it holds, and the address that was accepted means something. A server that took both would have been filed as risky, and the record would say so. Not knowing is a result here, not a pass.</p>
+      </div>
+
+      <div class="cr-wrap">
         <nav class="cr-contents cr-contents-on" aria-label="Next page"><a class="cr-contents-row" href="what-is-on-file.html"><span class="cr-contents-name">What is on file</span><span class="cr-contents-kind">the record</span><span class="cr-contents-blurb">The twelve fields of a record — and the page standing behind every value on it.</span></a></nav>
       </div>
     </section>

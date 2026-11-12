@@ -503,7 +503,14 @@ a{text-decoration:none;color:inherit}
    anywhere in this card, and no rule between rows. */
 .cr-fact {
   display: grid;
-  grid-template-columns: 118px minmax(0, 1fr);
+  /* 118px is the floor, not the width. One fact in the whole file has an
+     address where its label goes — office@apexroofingaz.com, the mailbox the
+     live SMTP check was run against — and at a hard 118px it printed on top of
+     its own value ("office@apexroofingaz.comAccepted"). max-content lets a
+     block widen its label column to the longest label it actually holds; every
+     other block measures under 118 and is unchanged, which is why the card's
+     other rows still line up as they did. */
+  grid-template-columns: minmax(118px, max-content) minmax(0, 1fr);
   gap: 10px;
   padding: 2px 0;
 }
@@ -798,6 +805,236 @@ a{text-decoration:none;color:inherit}
 }
 /* The ledger inside an exhibit is the block, not a step under something. */
 .cr-station-ev .cr-ledger { margin-top: 0; }
+
+/* ── The five columns, opened ──────────────────────────────────────────────
+   The run band's five figures are counts you cannot press. This is the same
+   five as five real columns of the file, each with the sentence the card
+   prints when you open that face — so the figure and the column are the same
+   fact at two altitudes, and neither can be edited without the other. */
+.cr-columns {
+  margin-top: 52px;
+  border-top: 1px solid rgba(244,246,242,.22);
+}
+/* Each column is ticked in its face colour, the way its figure is. The tick is
+   a left border rather than a top one: five stacked rows with five top ticks
+   would read as five small cards, and these are rows of one register. */
+.cr-column {
+  display: grid;
+  grid-template-columns: 104px 300px minmax(0, 1fr);
+  gap: 0 30px;
+  padding: 24px 0 26px 22px;
+  border-bottom: 1px solid rgba(244,246,242,.22);
+  border-left: 3px solid transparent;
+  /* The tick and its gutter are pulled out of the column's own box, so the
+     numerals sit on the page's left edge with every other block on it. Left on
+     the inside they pushed the whole register 25px out of alignment. */
+  margin-left: -25px;
+}
+.cr-column-count {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: .9;
+  letter-spacing: -.045em;
+  color: var(--cr-white);
+}
+.cr-column-red { border-left-color: var(--cr-red); }
+.cr-column-amber { border-left-color: var(--cr-amber); }
+.cr-column-green { border-left-color: var(--cr-green); }
+.cr-column-blue { border-left-color: var(--cr-blue); }
+.cr-column-grey { border-left-color: #6f6a62; }
+.cr-column-name {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--cr-white);
+}
+.cr-column-name small {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: .02em;
+  text-transform: none;
+  color: var(--cr-on-ground-dim);
+}
+.cr-column-line {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 15.5px;
+  line-height: 1.62;
+  color: var(--cr-on-ground);
+}
+
+/* ── The chapter break ─────────────────────────────────────────────────────
+   /how-it-reads is one ground end to end, so the second half of it cannot be
+   separated by a change of paper the way the other pages are. It gets a rule
+   the width of the content column instead: aligned to the copy rather than to
+   the window, so it reads as a new chapter of the same log and not as the
+   boundary between two sections. */
+.cr-wrap-chapter {
+  margin-top: 72px;
+  padding-top: 72px;
+  border-top: 1px solid rgba(244,246,242,.22);
+}
+/* The three checks, side by side on paper. They are the same source blocks the
+   card draws — a second copy restyled for this page would fork the one
+   component the whole design leans on. */
+.cr-exhibits {
+  margin-top: 46px;
+  display: grid;
+  /* 390px, not 300. The source block inside needs 118px of label + 10px of gap
+     + 216px for office@apexroofingaz.com at 14.5px mono, and 22px of padding
+     each side: 388px. At 300 the third slip came out 347px wide and the address
+     printed on top of its own value. Three across cannot hold one at 1440, so
+     the check on the number drops to the second row rather than shattering. */
+  grid-template-columns: repeat(auto-fit, minmax(390px, 1fr));
+  gap: 26px;
+}
+.cr-exhibit {
+  background: var(--cr-sheet);
+  color: var(--cr-ink);
+  padding: 20px 22px 18px;
+  box-shadow: 0 14px 30px rgba(0,0,0,.4);
+}
+
+/* ── What silence looks like ───────────────────────────────────────────────
+   The five empty results on the sample empty record, each beside the page that
+   was silent. This is the record page's abstract claim made concrete, and it
+   is why the run is worth paying for: a no with a page number under it is a
+   fact, and a no on its own is a hole. */
+.cr-silence {
+  margin-top: 48px;
+  border-top: 1px solid rgba(244,246,242,.22);
+}
+.cr-silence-row {
+  display: grid;
+  grid-template-columns: 216px minmax(0, 1fr) 300px;
+  gap: 4px 30px;
+  align-items: baseline;
+  padding: 17px 0 18px;
+  border-bottom: 1px solid rgba(244,246,242,.22);
+}
+.cr-silence-row dt {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 14px;
+  letter-spacing: .04em;
+  color: var(--cr-on-ground-dim);
+}
+.cr-silence-none {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 15px;
+  color: var(--cr-on-ground);
+}
+.cr-silence-src {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 12.5px;
+  color: var(--cr-on-ground-dim);
+  overflow-wrap: anywhere;
+}
+.cr-silence-src small {
+  display: block;
+  margin-top: 3px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12px;
+  letter-spacing: .04em;
+}
+
+/* ── The run, as one bar ───────────────────────────────────────────────────
+   The two halves of the 148, at their real proportion: 91 with a contact and
+   57 without. The bar is where the reader finds out the 57 are not a footnote
+   — they are most of a third of the run — and it is drawn in the site's own
+   two materials, paper for what is on file and a hole for what is not. The
+   labels sit inside their own segment, so the chart explains itself and needs
+   no key and no aria-hidden equivalent. */
+.cr-split {
+  display: flex;
+  height: 50px;
+  margin-top: 52px;
+  box-shadow: inset 0 0 0 1px rgba(244,246,242,.26);
+}
+/* 91/148 is 61.49%. The empty segment takes the rest, so the two can never
+   drift out of proportion to the counts they are drawn from. */
+.cr-split-on {
+  flex: 0 0 61.49%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 18px;
+  background: var(--cr-sheet);
+  color: var(--cr-ink);
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 13.5px;
+  letter-spacing: .02em;
+}
+.cr-split-none {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 18px;
+  background: rgba(0,0,0,.34);
+  color: var(--cr-on-ground);
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 13.5px;
+  letter-spacing: .02em;
+}
+.cr-split b {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.03em;
+}
+
+/* ── The wall of the 57 ────────────────────────────────────────────────────
+   One mark per business that gave nothing back, and the last one struck in
+   paper because it is the record printed directly underneath. A count of
+   things you cannot see is not carried by a numeral: 57 read as a grid is
+   visibly just under two in five of the run, which is the fact the page is
+   about. The marks are aria-hidden and the caption carries the meaning. */
+.cr-wall {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 48px;
+  /* 19 marks to a row, by arithmetic: 19 × 22 + 18 × 6 = 526. At a wider
+     measure the 57 came out 27 + 27 + 3, so the three that spilled onto the
+     last row read as leftovers rather than as part of the same count. Three
+     even rows say "this is one block of 57" and the paper mark closes it. */
+  max-width: 526px;
+}
+.cr-wall .cr-mark {
+  flex: 0 0 22px;
+  max-width: 22px;
+  height: 22px;
+  background: rgba(244,246,242,.10);
+  box-shadow: inset 0 0 0 1px rgba(244,246,242,.26);
+}
+.cr-wall .cr-mark::after {
+  background: linear-gradient(
+    to bottom right,
+    transparent 46.5%,
+    rgba(244,246,242,.38) 46.5%,
+    rgba(244,246,242,.38) 53.5%,
+    transparent 53.5%
+  );
+}
+.cr-wall .cr-mark-here {
+  background: var(--cr-sheet);
+  box-shadow: 0 6px 14px rgba(0,0,0,.5);
+}
+.cr-wall .cr-mark-here::after { display: none; }
+.cr-wall-cap {
+  margin-top: 16px;
+  max-width: 68ch;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 13.5px;
+  line-height: 1.4;
+  letter-spacing: .02em;
+  color: var(--cr-on-ground-dim);
+}
 
 /* The empty band. This is the section the product is really about, so it gets
    the darkest ground on the page and its own oversized count. */
@@ -1247,6 +1484,43 @@ a{text-decoration:none;color:inherit}
   .cr-station-label { font-size: 19px; }
   .cr-station-body { font-size: 15px; }
   .cr-station-ev { grid-column: 1 / -1; padding: 16px 16px 14px; }
+  /* The five columns lie down too, and the count stops being a column of its
+     own: a 42px numeral alone on a row costs a line and says nothing the
+     heading below it does not. */
+  .cr-columns { margin-top: 34px; }
+  .cr-column {
+    grid-template-columns: 1fr;
+    gap: 2px 0;
+    padding: 18px 0 20px 16px;
+  }
+  .cr-column-count { font-size: 30px; }
+  .cr-column-name { margin-top: 2px; }
+  .cr-column-name small { margin-top: 4px; }
+  .cr-column-line { margin-top: 8px; font-size: 15px; }
+  .cr-wrap-chapter { margin-top: 48px; padding-top: 44px; }
+  .cr-exhibits { margin-top: 30px; grid-template-columns: 1fr; gap: 18px; }
+  .cr-exhibit { padding: 16px 16px 14px; }
+  /* Silent page and empty value stack; the page's own name goes under the
+     value it was silent about, which is the order the sentence reads in. */
+  .cr-silence { margin-top: 32px; }
+  .cr-silence-row { grid-template-columns: 1fr; gap: 3px 0; padding: 15px 0 16px; }
+  .cr-silence-src { margin-top: 4px; }
+  /* The bar stops being one bar and becomes two stacked rows: at 390px the
+     empty segment is 130px wide and "57 with none" does not fit in it. The
+     proportion is lost, and on a phone the two numbers read as a list, which
+     is the honest thing for them to do. */
+  .cr-split {
+    display: block;
+    height: auto;
+    margin-top: 34px;
+  }
+  .cr-split-on,
+  .cr-split-none {
+    padding: 12px 16px;
+  }
+  .cr-split-none { border-top: 1px solid rgba(244,246,242,.26); }
+  .cr-wall { margin-top: 32px; gap: 5px; max-width: none; }
+  .cr-wall .cr-mark { flex: 0 0 18px; max-width: 18px; height: 18px; }
   .cr-empty-grid { grid-template-columns: 1fr; gap: 22px; }
   .cr-empty-count { font-size: 84px; }
   .cr-empty-cap { max-width: none; }
@@ -1317,6 +1591,8 @@ a{text-decoration:none;color:inherit}
         <p class="cr-lede">Roofing contractors across Phoenix, AZ. One pass, one file &mdash; and every business in the market is in it, including the ones that gave nothing back.</p>
         <ol class="cr-figures"><li class="cr-figure cr-figure-red"><b>148</b><span class="cr-figure-label">Identity</span><span class="cr-figure-note">Who they are, on the register</span></li><li class="cr-figure cr-figure-amber"><b>91</b><span class="cr-figure-label">Contact</span><span class="cr-figure-note">Read at the source, with the page</span></li><li class="cr-figure cr-figure-green"><b>63</b><span class="cr-figure-label">Verified</span><span class="cr-figure-note">Mailbox answers, number is real</span></li><li class="cr-figure cr-figure-blue"><b>44</b><span class="cr-figure-label">History</span><span class="cr-figure-note">What they filed, and when</span></li><li class="cr-figure cr-figure-grey"><b>57</b><span class="cr-figure-label">Not on file</span><span class="cr-figure-note">No source could reach them</span></li></ol>
         <p class="cr-figure-foot">The figures are the file itself, not a summary of it. 148 businesses were found and 148 were filed &mdash; none were dropped for being incomplete.</p>
+        <dl class="cr-columns"><div class="cr-column cr-column-red"><dt class="cr-column-count">148</dt><dd class="cr-column-name">Identity<small>Who they are, on the register</small></dd><dd class="cr-column-line">The register is the spine of the file. Every later fact hangs off this record, and nothing here is guessed at.</dd></div><div class="cr-column cr-column-amber"><dt class="cr-column-count">91</dt><dd class="cr-column-name">Contact<small>Read at the source, with the page</small></dd><dd class="cr-column-line">Twelve pages read looking for a way in. Eleven had no public address. The twelfth did, and that is the only reason this file has a number to call.</dd></div><div class="cr-column cr-column-green"><dt class="cr-column-count">63</dt><dd class="cr-column-name">Verified<small>Mailbox answers, number is real</small></dd><dd class="cr-column-line">Verified means the mailbox answered. A server that accepts anything and everything is filed as risky, never as verified — not knowing is a result, not a pass.</dd></div><div class="cr-column cr-column-blue"><dt class="cr-column-count">44</dt><dd class="cr-column-name">History<small>What they filed, and when</small></dd><dd class="cr-column-line">Fifteen years of filings, newest first. A year with nothing in it is shown as a year with nothing in it.</dd></div><div class="cr-column cr-column-grey"><dt class="cr-column-count">57</dt><dd class="cr-column-name">Not on file<small>No source could reach them</small></dd><dd class="cr-column-line">Twelve pages read. Not one of them returned a way to make contact. The record is still here, still counted, and the reason it is empty is written down.</dd></div></dl>
+        <p class="cr-figure-foot">Five columns, five counts. A business can be in all five, in one, or &mdash; as 57 of them are &mdash; in the file with nothing behind the contact column but the reason it is empty.</p>
       </div>
     </section>
 
