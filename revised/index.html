@@ -734,27 +734,70 @@ a{text-decoration:none;color:inherit}
 }
 .cr-sheet-alt { background: var(--cr-card); }
 
-.cr-worked {
-  display: grid;
-  grid-template-columns: 372px minmax(0, 1fr);
-  gap: 46px;
-  margin-top: 46px;
-  align-items: start;
+/* ── The rail: how it reads ────────────────────────────────────────────────
+   This is the one page whose subject is a sequence, so it is the one page laid
+   out as one: four stations down a dark log, each carrying the exhibit that move
+   produced. It is also the only page that is entirely one ground — a log is read
+   in the dark, and a page that opens and closes on buff like the other three
+   would be the same envelope with different contents, which is exactly the
+   criticism this pass exists to answer.
+
+   Every exhibit is paper. The blocks inside them are the same .cr-src, .cr-facts
+   and .cr-ledger the card uses, unchanged — restyling them for a dark ground
+   would fork the one component this design leans on hardest, and a fact lives on
+   paper in this world anyway. So: a dark log, four paper slips pinned down its
+   right side. */
+.cr-rail {
+  margin-top: 56px;
+  padding: 0;
+  /* The one list on the site whose marker is kept. Every other list suppresses
+     it because order there is carried by the wording; this list is the one whose
+     meaning is its order. */
+  list-style: none;
+  border-top: 1px solid rgba(244,246,242,.22);
 }
-.cr-worked-aside { position: sticky; top: 106px; }
-.cr-worked-note {
-  margin-top: 18px;
+.cr-station {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr) 452px;
+  gap: 0 36px;
+  padding: 34px 0 36px;
+  border-bottom: 1px solid rgba(244,246,242,.22);
+}
+/* The number is the page's spine, so it is larger than the paper-scale numerals
+   elsewhere and set at On Ground rather than the dim tone — a rail you have to
+   squint for is a marker, not a structure. It stays subordinate to the label
+   because it is a numeral and the label is a sentence. */
+.cr-station-n {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: .9;
+  letter-spacing: -.04em;
+  color: var(--cr-on-ground);
+}
+.cr-station-label {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--cr-white);
+}
+.cr-station-body {
+  margin-top: 10px;
+  max-width: 56ch;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 14.5px;
+  font-size: 15.5px;
   line-height: 1.6;
-  color: var(--cr-ink-body);
+  color: var(--cr-on-ground);
 }
-.cr-worked-sources {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(344px, 1fr));
-  gap: 27px 30px;
-  align-content: start;
+.cr-station-ev {
+  background: var(--cr-sheet);
+  color: var(--cr-ink);
+  padding: 20px 22px 18px;
+  box-shadow: 0 14px 30px rgba(0,0,0,.4);
 }
+/* The ledger inside an exhibit is the block, not a step under something. */
+.cr-station-ev .cr-ledger { margin-top: 0; }
 
 /* The empty band. This is the section the product is really about, so it gets
    the darkest ground on the page and its own oversized count. */
@@ -913,6 +956,15 @@ a{text-decoration:none;color:inherit}
   letter-spacing: -.01em;
 }
 .cr-contents-row:hover .cr-contents-name { color: var(--cr-red); }
+/* The contents row on the dark ground. Same component, its own ink: the rule and
+   both text tones have to come off the paper scale, and Action Red at 2.4:1 is
+   not a hover state — this lifted red is 5.2:1 on --cr-ground-2. */
+.cr-contents-on { border-top-color: rgba(244,246,242,.22); }
+.cr-contents-on .cr-contents-row { border-bottom-color: rgba(244,246,242,.22); }
+.cr-contents-on .cr-contents-name { color: var(--cr-white); }
+.cr-contents-on .cr-contents-row:hover .cr-contents-name { color: #e06a5e; }
+.cr-contents-on .cr-contents-kind,
+.cr-contents-on .cr-contents-blurb { color: var(--cr-on-ground-dim); }
 .cr-contents-kind {
   align-self: center;
   font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
@@ -1181,11 +1233,20 @@ a{text-decoration:none;color:inherit}
   .cr-figure b { font-size: 40px; }
   .cr-figure-label { font-size: 13.5px; }
   .cr-figure-note { font-size: 12.5px; }
-  .cr-worked { grid-template-columns: 1fr; gap: 26px; margin-top: 30px; }
-  /* The aside stops being sticky: on a phone it would cover the sources it is
-     introducing. */
-  .cr-worked-aside { position: static; }
-  .cr-worked-sources { grid-template-columns: 1fr; gap: 22px; }
+  /* The rail: the number keeps its own column beside the label, so the order
+     still reads down the left edge, and the exhibit drops below both and takes
+     the full width. Stacking the number onto its own row would cost a line per
+     station and say nothing. */
+  .cr-rail { margin-top: 34px; }
+  .cr-station {
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 12px 14px;
+    padding: 24px 0 26px;
+  }
+  .cr-station-n { font-size: 22px; }
+  .cr-station-label { font-size: 19px; }
+  .cr-station-body { font-size: 15px; }
+  .cr-station-ev { grid-column: 1 / -1; padding: 16px 16px 14px; }
   .cr-empty-grid { grid-template-columns: 1fr; gap: 22px; }
   .cr-empty-count { font-size: 84px; }
   .cr-empty-cap { max-width: none; }

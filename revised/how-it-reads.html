@@ -734,27 +734,70 @@ a{text-decoration:none;color:inherit}
 }
 .cr-sheet-alt { background: var(--cr-card); }
 
-.cr-worked {
-  display: grid;
-  grid-template-columns: 372px minmax(0, 1fr);
-  gap: 46px;
-  margin-top: 46px;
-  align-items: start;
+/* ── The rail: how it reads ────────────────────────────────────────────────
+   This is the one page whose subject is a sequence, so it is the one page laid
+   out as one: four stations down a dark log, each carrying the exhibit that move
+   produced. It is also the only page that is entirely one ground — a log is read
+   in the dark, and a page that opens and closes on buff like the other three
+   would be the same envelope with different contents, which is exactly the
+   criticism this pass exists to answer.
+
+   Every exhibit is paper. The blocks inside them are the same .cr-src, .cr-facts
+   and .cr-ledger the card uses, unchanged — restyling them for a dark ground
+   would fork the one component this design leans on hardest, and a fact lives on
+   paper in this world anyway. So: a dark log, four paper slips pinned down its
+   right side. */
+.cr-rail {
+  margin-top: 56px;
+  padding: 0;
+  /* The one list on the site whose marker is kept. Every other list suppresses
+     it because order there is carried by the wording; this list is the one whose
+     meaning is its order. */
+  list-style: none;
+  border-top: 1px solid rgba(244,246,242,.22);
 }
-.cr-worked-aside { position: sticky; top: 106px; }
-.cr-worked-note {
-  margin-top: 18px;
+.cr-station {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr) 452px;
+  gap: 0 36px;
+  padding: 34px 0 36px;
+  border-bottom: 1px solid rgba(244,246,242,.22);
+}
+/* The number is the page's spine, so it is larger than the paper-scale numerals
+   elsewhere and set at On Ground rather than the dim tone — a rail you have to
+   squint for is a marker, not a structure. It stays subordinate to the label
+   because it is a numeral and the label is a sentence. */
+.cr-station-n {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: .9;
+  letter-spacing: -.04em;
+  color: var(--cr-on-ground);
+}
+.cr-station-label {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--cr-white);
+}
+.cr-station-body {
+  margin-top: 10px;
+  max-width: 56ch;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 14.5px;
+  font-size: 15.5px;
   line-height: 1.6;
-  color: var(--cr-ink-body);
+  color: var(--cr-on-ground);
 }
-.cr-worked-sources {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(344px, 1fr));
-  gap: 27px 30px;
-  align-content: start;
+.cr-station-ev {
+  background: var(--cr-sheet);
+  color: var(--cr-ink);
+  padding: 20px 22px 18px;
+  box-shadow: 0 14px 30px rgba(0,0,0,.4);
 }
+/* The ledger inside an exhibit is the block, not a step under something. */
+.cr-station-ev .cr-ledger { margin-top: 0; }
 
 /* The empty band. This is the section the product is really about, so it gets
    the darkest ground on the page and its own oversized count. */
@@ -913,6 +956,15 @@ a{text-decoration:none;color:inherit}
   letter-spacing: -.01em;
 }
 .cr-contents-row:hover .cr-contents-name { color: var(--cr-red); }
+/* The contents row on the dark ground. Same component, its own ink: the rule and
+   both text tones have to come off the paper scale, and Action Red at 2.4:1 is
+   not a hover state — this lifted red is 5.2:1 on --cr-ground-2. */
+.cr-contents-on { border-top-color: rgba(244,246,242,.22); }
+.cr-contents-on .cr-contents-row { border-bottom-color: rgba(244,246,242,.22); }
+.cr-contents-on .cr-contents-name { color: var(--cr-white); }
+.cr-contents-on .cr-contents-row:hover .cr-contents-name { color: #e06a5e; }
+.cr-contents-on .cr-contents-kind,
+.cr-contents-on .cr-contents-blurb { color: var(--cr-on-ground-dim); }
 .cr-contents-kind {
   align-self: center;
   font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
@@ -1181,11 +1233,20 @@ a{text-decoration:none;color:inherit}
   .cr-figure b { font-size: 40px; }
   .cr-figure-label { font-size: 13.5px; }
   .cr-figure-note { font-size: 12.5px; }
-  .cr-worked { grid-template-columns: 1fr; gap: 26px; margin-top: 30px; }
-  /* The aside stops being sticky: on a phone it would cover the sources it is
-     introducing. */
-  .cr-worked-aside { position: static; }
-  .cr-worked-sources { grid-template-columns: 1fr; gap: 22px; }
+  /* The rail: the number keeps its own column beside the label, so the order
+     still reads down the left edge, and the exhibit drops below both and takes
+     the full width. Stacking the number onto its own row would cost a line per
+     station and say nothing. */
+  .cr-rail { margin-top: 34px; }
+  .cr-station {
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 12px 14px;
+    padding: 24px 0 26px;
+  }
+  .cr-station-n { font-size: 22px; }
+  .cr-station-label { font-size: 19px; }
+  .cr-station-body { font-size: 15px; }
+  .cr-station-ev { grid-column: 1 / -1; padding: 16px 16px 14px; }
   .cr-empty-grid { grid-template-columns: 1fr; gap: 22px; }
   .cr-empty-count { font-size: 84px; }
   .cr-empty-cap { max-width: none; }
@@ -1239,38 +1300,14 @@ a{text-decoration:none;color:inherit}
   </header>
 
   <main class="cr-body" id="page">
-    <section class="cr-sheet">
-      <div class="cr-wrap">
-        <p class="cr-eyebrow cr-eyebrow-ink">The method</p>
-        <h1 class="cr-h1 cr-h1-ink">A fact is only worth what it is attached to.</h1>
-        <p class="cr-lede cr-lede-ink">We do not hand you a row of numbers and ask you to trust them. Every value is filed under the page it was read from, so you can go and look at it yourself. Where a page gave nothing, the record says that too.</p>
-        <div class="cr-worked">
-          <div class="cr-worked-aside">
-            <p class="cr-eyebrow cr-eyebrow-ink">The search for a way in</p>
-            <div class="cr-ledger"><div class="cr-marks" aria-hidden="true"><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark on"></i></div><p class="cr-ledger-cap"><b>12 pages read</b> for a way in · 11 came back with nothing · <b>the last one did</b></p></div>
-            <p class="cr-worked-note">Twelve pages were opened for this one business. Eleven of them had no public address on them at all. The twelfth is below, marked in red &mdash; it is the only reason this record has a number to call.</p>
-          </div>
-          <div class="cr-worked-sources"><article class="cr-src cr-src-hit"><header class="cr-src-head"><h3 class="cr-src-url">apexroofingaz.com/contact</h3><span class="cr-src-kind">the page that answered</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Telephone</dt><dd>+1 602 555 0148<span class="cr-hint">one dialable format, E.164</span></dd></div><div class="cr-fact"><dt>Mailbox</dt><dd>office@apexroofingaz.com<span class="cr-hint">first address on the page</span></dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">mx1.apexroofingaz.com</h3><span class="cr-src-kind">mail server</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Mailbox checked</dt><dd>Accepts mail<span class="cr-hint">the server answered for this address</span></dd></div><div class="cr-fact"><dt>Checked</dt><dd>2026-11-11</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">apexroofingaz.com/about</h3><span class="cr-src-kind">team page</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Named person</dt><dd>R. Delgado · estimator</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">state register</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Started from</dt><dd>4120 W Buckeye Rd, Phoenix AZ 85009</dd></div></dl></article></div>
-        </div>
-      </div>
-    </section>
-
     <section class="cr-runband">
       <div class="cr-wrap">
-        <p class="cr-eyebrow">The read</p>
-        <h2 class="cr-h2">What a read does, in order.</h2>
-        <p class="cr-lede">The worked example above is one business. This is the same work every business in the run gets, and the order it happens in.</p>
-        <ol class="cr-steps cr-steps-2col"><li class="cr-step"><h3 class="cr-step-label">Open the pages</h3><p class="cr-step-body">The register first, then the business's own site — contact, about, team, in that order. Six pages a site at most. A search result is never a source; a page is.</p></li><li class="cr-step"><h3 class="cr-step-label">Read the value, keep the page</h3><p class="cr-step-body">Addresses are taken from mailto and tel links before any pattern matching, because a link is a claim the page made about itself. Whatever is read is filed under the URL it was read from, not under the business.</p></li><li class="cr-step"><h3 class="cr-step-label">Test the claim</h3><p class="cr-step-body">The mailbox is checked against its mail server, and the number against a real dialling range. Before either, a made-up address is offered to the server. A server that accepts that one accepts anything, so it is filed as risky — never as verified.</p></li><li class="cr-step"><h3 class="cr-step-label">Record what was not there</h3><p class="cr-step-body">A page with no phone number, a year with no filing, a team page naming nobody: each is written down as an empty result with the page that was silent. Silence is a finding, and it is kept.</p></li></ol>
-        <p class="cr-figure-foot">A run of 148 businesses is that sequence 148 times over. Nothing in it is skipped for being slow, and nothing that came back empty is thrown away.</p>
-      </div>
-    </section>
-
-    <section class="cr-sheet cr-sheet-alt">
-      <div class="cr-wrap">
-        <p class="cr-eyebrow cr-eyebrow-ink">Where it lands</p>
-        <h2 class="cr-h2 cr-h2-ink">Every value the read produced goes into one record.</h2>
-        <p class="cr-lede cr-lede-ink">Twelve fields, one row per business, and the page each value was read from sitting beside it.</p>
-        <nav class="cr-contents" aria-label="Next page"><a class="cr-contents-row" href="what-is-on-file.html"><span class="cr-contents-name">What is on file</span><span class="cr-contents-kind">the record</span><span class="cr-contents-blurb">The twelve fields of a record — and the page standing behind every value on it.</span></a></nav>
+        <p class="cr-eyebrow">The method</p>
+        <h1 class="cr-h1">A fact is only worth what it is attached to.</h1>
+        <p class="cr-lede">We do not hand you a row of numbers and ask you to trust them. Every value is filed under the page it was read from, so you can go and look at it yourself. Below is the whole sequence, run once on one business &mdash; APEX ROOFING CO. in Phoenix, AZ &mdash; with what each move produced pinned beside it. Four moves, in order, four exhibits.</p>
+        <ol class="cr-rail"><li class="cr-station"><span class="cr-station-n" aria-hidden="true">01</span><div class="cr-station-main"><h2 class="cr-station-label">Open the pages</h2><p class="cr-station-body">The register first, then the business's own site — contact, about, team, in that order. Six pages a site at most. A search result is never a source; a page is.</p></div><div class="cr-station-ev"><div class="cr-ledger"><div class="cr-marks" aria-hidden="true"><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark on"></i></div><p class="cr-ledger-cap"><b>12 pages read</b> for a way in · 11 came back with nothing · <b>the last one did</b></p></div></div></li><li class="cr-station"><span class="cr-station-n" aria-hidden="true">02</span><div class="cr-station-main"><h2 class="cr-station-label">Read the value, keep the page</h2><p class="cr-station-body">Addresses are taken from mailto and tel links before any pattern matching, because a link is a claim the page made about itself. Whatever is read is filed under the URL it was read from, not under the business.</p></div><div class="cr-station-ev"><article class="cr-src cr-src-hit"><header class="cr-src-head"><h3 class="cr-src-url">apexroofingaz.com/contact</h3><span class="cr-src-kind">the page that answered</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Telephone</dt><dd>+1 602 555 0148<span class="cr-hint">one dialable format, E.164</span></dd></div><div class="cr-fact"><dt>Mailbox</dt><dd>office@apexroofingaz.com<span class="cr-hint">first address on the page</span></dd></div></dl></article></div></li><li class="cr-station"><span class="cr-station-n" aria-hidden="true">03</span><div class="cr-station-main"><h2 class="cr-station-label">Test the claim</h2><p class="cr-station-body">The mailbox is checked against its mail server, and the number against a real dialling range. Before either, a made-up address is offered to the server. A server that accepts that one accepts anything, so it is filed as risky — never as verified.</p></div><div class="cr-station-ev"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">mx1.apexroofingaz.com</h3><span class="cr-src-kind">mail server</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Mailbox checked</dt><dd>Accepts mail<span class="cr-hint">the server answered for this address</span></dd></div><div class="cr-fact"><dt>Checked</dt><dd>2026-11-11</dd></div></dl></article></div></li><li class="cr-station"><span class="cr-station-n" aria-hidden="true">04</span><div class="cr-station-main"><h2 class="cr-station-label">Record what was not there</h2><p class="cr-station-body">A page with no phone number, a year with no filing, a team page naming nobody: each is written down as an empty result with the page that was silent. Silence is a finding, and it is kept.</p></div><div class="cr-station-ev"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">no page behind these</h3><span class="cr-src-kind">this record</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Socials</dt><dd class="cr-none">None linked from its own pages</dd></div><div class="cr-fact"><dt>Empty results</dt><dd>No second number, no socials</dd></div></dl></article></div></li></ol>
+        <p class="cr-figure-foot">Move one opened twelve pages for this one business. Eleven had no public address on them at all, and the twelfth is the exhibit against move two &mdash; the only reason this record has a number to call. A run of 148 businesses is that sequence 148 times over, and nothing that came back empty is thrown away.</p>
+        <nav class="cr-contents cr-contents-on" aria-label="Next page"><a class="cr-contents-row" href="what-is-on-file.html"><span class="cr-contents-name">What is on file</span><span class="cr-contents-kind">the record</span><span class="cr-contents-blurb">The twelve fields of a record — and the page standing behind every value on it.</span></a></nav>
       </div>
     </section>
   </main>
