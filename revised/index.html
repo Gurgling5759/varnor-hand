@@ -157,11 +157,17 @@ body{background:#1d3a2e}
   padding-bottom: 14px;
   border-bottom: 3px double var(--cr-ink);
 }
+/* 15px/700 is NOT large text — WCAG's floor for it is 4.5:1, not 3:1, so the
+   ink here stays at full strength rather than being softened.
+   Tracking down from .2em: on a card whose loudest element is now a 54px
+   subject, a wide-tracked caps line up here read as a second competing voice
+   rather than a masthead. .08em still separates the letters without
+   performing "editorial". */
 .cr-head h1 {
   font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
   font-size: 15px;
   font-weight: 700;
-  letter-spacing: .2em;
+  letter-spacing: .08em;
   text-transform: uppercase;
   line-height: 1.25;
 }
@@ -212,9 +218,19 @@ body{background:#1d3a2e}
   letter-spacing: .02em;
   color: var(--cr-ink-soft);
 }
+/* 54px at 1440, not 36. At 36 the card had no element at scale — every other
+   thing on the page is 12–15px, so the page read as a well-set form rather
+   than an event.
+   It is not a flat 54px. The card's inner width is (viewport - 578): 862px at
+   1440, but only 446px at 1024, and "SUN VALLEY GUTTERS LLC." at 54px needs
+   ~778px. Holding 54 fixed pushed the subject past the card and wrapped it to
+   two lines on a laptop. Dividing the card's own width by 16 keeps the longest
+   subject in the data (24 chars, ~14.4em at mono advance) on one line at every
+   width where the index is still a 392px column: 862/16 = 53.9 at 1440 and
+   446/16 = 27.9 at 1024. Below 980 the media query takes over. */
 .cr-subject-name {
   font-family: "Courier New", Courier, monospace;
-  font-size: 36px;
+  font-size: min(54px, calc((100vw - 578px) / 16));
   font-weight: 700;
   line-height: 1;
   letter-spacing: -.03em;
@@ -243,17 +259,29 @@ body{background:#1d3a2e}
 
 /* The contact hunt, drawn: one page in twelve answered. This is the whole
    argument of the page as a single line of marks, so it is not described. */
+/* Stacked, not side-by-side: the strip of marks takes the card's full width
+   and the counts sit under it. The hunt is the page's thesis, so it is set as
+   a chart across the card rather than as a caption beside a row of chips. */
 .cr-ledger {
   display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-top: 14px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 16px;
 }
-.cr-marks { display: flex; gap: 5px; flex: 0 0 auto; }
+/* The strip spans the card and its twelve marks divide that width, each capped
+   at 40px. Hard 40px marks overflowed the card's right edge below ~1440 — at
+   1024 the card's inner width is 446px and twelve 40px marks plus gaps need
+   546px, so the last three printed on the baize. Dividing the available width
+   instead means the chart can never be wider than the paper it is drawn on,
+   and at 1440 it is pixel-identical to the fixed version (12x40 + 11x6 = 546). */
+.cr-marks { display: flex; gap: 6px; align-self: stretch; max-width: 546px; }
 .cr-mark {
   display: block;
-  width: 30px;
-  height: 24px;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 40px;
+  height: 32px;
   background: rgba(26,23,18,.09);
   box-shadow: inset 0 0 0 1px rgba(26,23,18,.24);
 }
@@ -289,17 +317,28 @@ body{background:#1d3a2e}
   flex: 1;
   margin-top: 20px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* Not a fixed 1fr 1fr. The column has to be wide enough to hold its
+     longest unavoidable token: 118px label + 10px gap + 216px for
+     office@apexroofingaz.com at 14.5px mono. Below 344px a block cannot
+     hold that address, so it drops to one column instead of shattering
+     the address across three lines — which is what a fixed two-column
+     grid did between 981px and ~1300px viewport. */
+  grid-template-columns: repeat(auto-fit, minmax(344px, 1fr));
   align-content: start;
-  gap: 22px 30px;
+  /* Row gap up from 22 to 27: with the heading underline gone, vertical space
+     is now the only thing separating one source block from the next. */
+  gap: 27px 30px;
 }
 .cr-src:only-child { grid-column: 1 / -1; }
+/* No rule under the URL. A 1px line here was editorial habit — the block edge
+   is carried by the URL's own weight instead: 15px bold mono against 13px
+   Archivo labels and 12.5px notes, plus the grid's row gap. That is the
+   No-Hairline Rule with no exception carved out for it, and it is also what
+   keeps the card from reading as a ruled table. */
 .cr-src-head {
   display: flex;
   align-items: baseline;
   gap: 12px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid rgba(26,23,18,.2);
 }
 .cr-src-url {
   min-width: 0;
@@ -332,7 +371,7 @@ body{background:#1d3a2e}
 .cr-src-hit .cr-src-url { color: var(--cr-red-deep); }
 .cr-src-hit .cr-src-kind { color: var(--cr-red-deep); }
 
-.cr-facts { margin-top: 7px; }
+.cr-facts { margin-top: 9px; }
 /* Label and value share a line. There is no label stacked above a value
    anywhere in this card, and no rule between rows. */
 .cr-fact {
@@ -364,10 +403,11 @@ body{background:#1d3a2e}
   line-height: 1.3;
   color: var(--cr-ink-note);
 }
+/* No rule above the closing line. There is a hundred pixels of blank paper
+   doing that work already, and the rule was only editorial habit. */
 .cr-blank {
   margin-top: auto;
   padding-top: 11px;
-  border-top: 1px solid rgba(26,23,18,.14);
   text-align: center;
   font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
   font-size: 12.5px;
@@ -543,7 +583,7 @@ body{background:#1d3a2e}
   .cr-file { min-height: 0; padding: 20px 20px 18px; }
   .cr-head { flex-wrap: wrap; gap: 10px; }
   .cr-head > div:first-child { flex: 1 1 100%; }
-  .cr-head h1 { font-size: 13px; letter-spacing: .16em; }
+  .cr-head h1 { font-size: 13px; letter-spacing: .07em; }
   .cr-run { font-size: 11.5px; }
   .cr-docket { margin-left: 0; padding: 7px 11px; }
   .cr-docket b { font-size: 12px; }
@@ -551,16 +591,18 @@ body{background:#1d3a2e}
   .cr-subject h2 { gap: 10px; }
   .cr-subject-name { font-size: 26px; letter-spacing: -.02em; }
   .cr-subject-line { font-size: 14px; }
-  .cr-ledger { flex-direction: column; align-items: flex-start; gap: 9px; }
-  /* 26px marks would need 356px and wrap on a 358px column, so the drawn
-     ledger steps down rather than breaking into two ragged rows. */
-  .cr-mark { width: 21px; height: 17px; }
+  /* The cap, not the width: the marks divide the card's 318px column, giving
+     ~21px each. Capping at 21 stops them stretching into slabs on a tablet
+     that is still under the breakpoint. */
+  .cr-mark { max-width: 21px; height: 17px; }
   .cr-sources { grid-template-columns: 1fr; gap: 15px; }
-  .cr-fact { grid-template-columns: 104px minmax(0, 1fr); gap: 8px; }
-  /* 14.5px mono needed 209px for "office@apexroofingaz.com" in a 206px column,
-     so the address broke mid-word. A step down and it holds, unbroken, which
-     is the one thing an address has to do. */
-  .cr-fact dd { font-size: 13.5px; }
+  .cr-fact { grid-template-columns: 92px minmax(0, 1fr); gap: 8px; }
+  /* The label column drops to 92px and the value to 13px. At 390 the card's
+     inner width is 318px, so the value column is 318 - 100 = 218px; the longest
+     unavoidable token, office@apexroofingaz.com, is 24 mono characters — 187px
+     at 13px against 194px at 13.5px, which is the 1px by which the address was
+     still breaking mid-word. An address that wraps is not an address. */
+  .cr-fact dd { font-size: 13px; }
   /* At 390 the kind ("the page that answered") took half the line and broke
      the URL mid-word. The URL gets the row to itself and the kind falls under
      it, flush left where it reads as the source's own descriptor. */
@@ -641,7 +683,7 @@ body{background:#1d3a2e}
             <p class="cr-subject-line">Twelve pages read looking for a way in. Eleven had no public address. The twelfth did, and that is the only reason this file has a number to call.</p>
             <p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer’s data</p>
             </div>
-            <div class="cr-ledger"><div class="cr-marks" aria-hidden="true"><i class="cr-mark on"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i></div><p class="cr-ledger-cap"><b>12 pages read</b> for a way in · 11 came back with nothing · <b>the last one did</b></p></div>
+            <div class="cr-ledger"><div class="cr-marks" aria-hidden="true"><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark on"></i></div><p class="cr-ledger-cap"><b>12 pages read</b> for a way in · 11 came back with nothing · <b>the last one did</b></p></div>
             <div class="cr-sources">
             <article class="cr-src cr-src-hit">
             <header class="cr-src-head"><h3 class="cr-src-url">apexroofingaz.com/contact</h3><span class="cr-src-kind">the page that answered</span></header>
@@ -769,12 +811,12 @@ body{background:#1d3a2e}
             <div class="cr-fact"><dt>Telephone</dt><dd class="cr-none">Not on the page</dd></div>
             </dl></article>
             <article class="cr-src">
-            <header class="cr-src-head"><h3 class="cr-src-url">three directory listings</h3><span class="cr-src-kind">directories</span></header>
+            <header class="cr-src-head"><h3 class="cr-src-url">yelp.com/biz/sun-valley-gutters</h3><span class="cr-src-kind">directory</span></header>
             <dl class="cr-facts">
             <div class="cr-fact"><dt>Contact details</dt><dd class="cr-none">Placeholder numbers only</dd></div>
             </dl></article>
             <article class="cr-src">
-            <header class="cr-src-head"><h3 class="cr-src-url">the other seven pages</h3><span class="cr-src-kind">read, empty</span></header>
+            <header class="cr-src-head"><h3 class="cr-src-url">sunvalleygutters.com/about</h3><span class="cr-src-kind">team page</span></header>
             <dl class="cr-facts">
             <div class="cr-fact"><dt>Anything usable</dt><dd class="cr-none">Nothing</dd></div>
             </dl></article>
