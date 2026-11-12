@@ -1,0 +1,1306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Not on file | Varnor Index</title>
+<meta name="description" content="57 of the 148 businesses in one run gave us nothing back. They are still in the file, still counted, and the reason each one is empty is written down beside it.">
+<meta property="og:title" content="Not on file | Varnor Index">
+<meta property="og:description" content="57 of the 148 businesses in one run gave us nothing back. They are still in the file, still counted, and the reason each one is empty is written down beside it.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="logo.svg">
+<!-- Same three families, same weights, as src/routes/__root.tsx. Without this the
+     snapshot rendered in the Arial fallback and every judgement made on it was
+     made on the wrong type. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;500;600;700&amp;family=Instrument+Serif:ital@0;1&amp;family=Work+Sans:wght@400;500;600&amp;display=swap">
+<style>
+/* Preflight-equivalent reset. Tailwind's own preflight zeroes the default
+   dl/dd/p/h2/h3 margins that a bare static page keeps, so without this the
+   snapshot runs taller than the app. */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+/* .cr-file sets display:flex, which outranks the user-agent rule for [hidden]. */
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{background:#1c1b19}
+img{display:block}
+a{text-decoration:none;color:inherit}
+/* The Credit Reference File — landing world.
+   A green baize desk with a woven nap; one buff file card face up; the rest of
+   the run visible only as its stacked edge; a struck docket set off-square; a
+   five-tab index down the right edge. Depth from real shadow and paper edges. */
+.cr-page {
+  /* The ground was a green baize desk. The owner kept the file card and asked
+     for the ground to go, so it is now a warm near-black neutral with no hue at
+     all — the buff card is the only warm thing on the page. The diagonal weave
+     went with it: a flat field with one soft light on it, not a texture.
+     --cr-ground is the field; -2 is the run section, -3 the closing one, so the
+     dark bands step very slightly against each other rather than being one slab. */
+  --cr-ground: #1c1b19;
+  --cr-ground-2: #232120;
+  --cr-ground-3: #131211;
+  --cr-on-ground: #cfcabf;
+  --cr-on-ground-dim: #9a958a;
+  --cr-sheet: #f2ead6;
+  --cr-card: #e6d6b4;
+  --cr-card-edge: #cdb98d;
+  --cr-ink: #1a1712;
+  --cr-ink-soft: #4a4229;
+  --cr-ink-body: #413a29;
+  --cr-ink-src: #2c2a1c;
+  /* 4.68:1 on the card. Was #6b6044 at 4.33 — the source line is 11px, so it
+     needs the full 4.5, and it is the line the whole page argues from. */
+  --cr-ink-note: #655b41;
+  --cr-red: #b3271e;
+  --cr-red-deep: #a0201a;
+  --cr-amber: #9c6410;
+  --cr-green: #2f6b45;
+  --cr-blue: #2b5c86;
+  --cr-grey: #4a4a46;
+  --cr-stamp: #7d2c37;
+  --cr-white: #f4f6f2;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  /* overflow:hidden was here to clip the stack's off-square edges. It has to go:
+     an ancestor with overflow:hidden kills position:sticky on the band, and it
+     would clip the page to one viewport. The stack edges have room to sit in the
+     desk's padding instead. */
+  background-color: var(--cr-ground);
+  color: var(--cr-white);
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+/* One soft light falling from above, and nothing else. The two diagonal weave
+   gradients that used to sit here are gone with the baize. */
+.cr-page::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 140vh;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 70% at 30% 0%, rgba(255,255,255,.075), transparent 62%);
+}
+.cr-page > * { position: relative; z-index: 1; }
+/* The page is a flex column of three things: the band, one <main>, and the
+   closing offer. <main> is what grows, so a short page still puts the offer at
+   the bottom of the window; the sections inside it must not shrink, because
+   flex-shrink:1 would squeeze a section instead of letting the page scroll. */
+.cr-body { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; }
+.cr-body > * { position: relative; z-index: 1; flex: 0 0 auto; }
+
+.cr-band {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  flex: 0 0 66px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 44px;
+  background: var(--cr-ground);
+  border-bottom: 1px solid rgba(244,246,242,.16);
+}
+/* Anchor jumps must clear the sticky band, or every section lands under it. */
+.cr-page [id] { scroll-margin-top: 88px; }
+.cr-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--cr-white);
+  text-decoration: none;
+}
+.cr-brand img { display: block; width: 30px; height: 30px; border-radius: 6px; }
+.cr-brand span { font-family: "Instrument Serif", Georgia, serif; font-size: 25px; line-height: 1; }
+.cr-nav { margin-left: auto; display: flex; align-items: center; gap: 28px; }
+.cr-nav a { color: var(--cr-on-ground); font-size: 14px; text-decoration: none; }
+.cr-nav a:hover { color: var(--cr-white); }
+/* The current page is marked with the same lit mark the ledger uses for the page
+   that answered: a small filled red square. Not a rule, not a tint, and not a
+   second tab — the index down the right of the card is already tabs. */
+.cr-nav a.on { color: var(--cr-white); }
+.cr-nav a.on::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 9px;
+  background: var(--cr-red);
+  vertical-align: middle;
+}
+/* Scoped to `.cr-nav .cr-signup`, not `.cr-signup`. The button is an <a> inside
+   nav.cr-nav, so `.cr-nav a` (0,1,1) outranked `.cr-signup` (0,1,0) and won on
+   both colour and size: the CTA rendered pale green at 14px, and the 11.5px
+   mobile shrink never applied. Same bug, both breakpoints. */
+.cr-nav .cr-signup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cr-red);
+  color: var(--cr-white);
+  padding: 13px 26px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(0,0,0,.45);
+}
+.cr-nav .cr-signup:hover { background: var(--cr-red-deep); }
+
+/* Every page now starts under a sticky band with six controls in it, so a
+   keyboard user would tab through all six to reach the page they asked for.
+   Invisible until focused, and out of the layout until then. */
+.cr-skip {
+  position: absolute;
+  left: 18px;
+  top: 10px;
+  z-index: 40;
+  padding: 11px 18px;
+  background: var(--cr-red);
+  color: var(--cr-white);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transform: translateY(-180%);
+}
+.cr-skip:focus { transform: translateY(0); }
+
+/* Four pages plus two account links do not fit across a phone, and putting them
+   behind a sideways scroll is the thing this rebuild exists to fix. A
+   disclosure costs no JavaScript and closes itself on navigation, because on a
+   real site navigation is a real page load. */
+.cr-menu { display: none; position: relative; }
+.cr-menu summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--cr-on-ground);
+  cursor: pointer;
+  list-style: none;
+}
+.cr-menu summary::-webkit-details-marker { display: none; }
+.cr-menu[open] summary { color: var(--cr-white); }
+.cr-menu-list {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  min-width: 244px;
+  display: flex;
+  flex-direction: column;
+  background: var(--cr-ground-2);
+  border: 1px solid rgba(244,246,242,.16);
+  box-shadow: 0 26px 52px rgba(0,0,0,.62);
+}
+.cr-menu-link {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(244,246,242,.1);
+  color: var(--cr-on-ground);
+  font-size: 15px;
+  text-decoration: none;
+}
+.cr-menu-link:last-child { border-bottom: 0; }
+.cr-menu-link small { margin-left: auto; font-size: 12px; color: var(--cr-on-ground-dim); }
+.cr-menu-link.on { color: var(--cr-white); }
+.cr-menu-link.on span::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 9px;
+  background: var(--cr-red);
+  vertical-align: middle;
+}
+
+/* The hero. This used to be a fixed 674px band inside a 66 + 674 + 160 = 900
+   composition. It is now the top of a scrolling page, so the height is a floor
+   rather than a limit — min-height keeps the card's declared first viewport
+   intact at 900, and the page simply continues below it. */
+.cr-desk {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 392px;
+  align-items: start;
+  gap: 34px;
+  min-height: 674px;
+  padding: 34px 44px 72px;
+}
+
+.cr-cardwrap { position: relative; min-width: 0; }
+.cr-stack { position: absolute; inset: 0; pointer-events: none; }
+.cr-stack i {
+  position: absolute;
+  display: block;
+  background: var(--cr-card-edge);
+  box-shadow: 0 12px 26px rgba(0,0,0,.4);
+}
+.cr-stack i:nth-child(1) { left: 22px; top: -14px; right: -22px; bottom: 22px; transform: rotate(-.5deg); }
+.cr-stack i:nth-child(2) { left: 11px; top: -7px; right: -11px; bottom: 11px; transform: rotate(-.25deg); }
+
+.cr-file {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 640px;
+  background: var(--cr-card);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(26,23,18,.022) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 1px, transparent 1px 5px);
+  color: var(--cr-ink);
+  box-shadow: 0 26px 54px rgba(0,0,0,.5);
+  padding: 26px 32px 22px;
+}
+.cr-file::after {
+  content: "";
+  position: absolute;
+  inset: 11px;
+  border: 1px solid rgba(26,23,18,.16);
+  pointer-events: none;
+}
+
+.cr-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding-bottom: 14px;
+  border-bottom: 3px double var(--cr-ink);
+}
+/* 15px/700 is NOT large text — WCAG's floor for it is 4.5:1, not 3:1, so the
+   ink here stays at full strength rather than being softened.
+   Tracking down from .2em: on a card whose loudest element is now a 54px
+   subject, a wide-tracked caps line up here read as a second competing voice
+   rather than a masthead. .08em still separates the letters without
+   performing "editorial". */
+.cr-head h1 {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  line-height: 1.25;
+}
+.cr-run {
+  margin-top: 7px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 12.5px;
+  color: var(--cr-ink-soft);
+  /* The filing line is one statement in four clauses. Below 1440 the card
+     narrows and it used to break with "FILED" alone on line two, which reads as
+     an accident. Balance the two lines instead of filling the first. */
+  text-wrap: balance;
+}
+.cr-docket {
+  margin-left: auto;
+  flex: 0 0 auto;
+  padding: 9px 14px;
+  border: 2.5px solid var(--cr-stamp);
+  color: var(--cr-stamp);
+  text-align: center;
+  transform: rotate(-3.5deg);
+  opacity: .86;
+}
+.cr-docket b {
+  display: block;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 15px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.cr-docket span {
+  display: block;
+  margin-top: 3px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 11.5px;
+}
+
+/* The subject line. The label sits on the same baseline as the name rather
+   than stacked above it — a label above a heading is the habit this page is
+   built to break. */
+.cr-subject { margin-top: 15px; }
+.cr-subject h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.cr-inline-label {
+  flex: 0 0 auto;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 13px;
+  letter-spacing: .02em;
+  color: var(--cr-ink-soft);
+}
+/* 54px at 1440, not 36. At 36 the card had no element at scale — every other
+   thing on the page is 12–15px, so the page read as a well-set form rather
+   than an event.
+   It is not a flat 54px. The card's inner width is (viewport - 578): 862px at
+   1440, but only 446px at 1024, and "SUN VALLEY GUTTERS LLC." at 54px needs
+   ~778px. Holding 54 fixed pushed the subject past the card and wrapped it to
+   two lines on a laptop. Dividing the card's own width by 16 keeps the longest
+   subject in the data (24 chars, ~14.4em at mono advance) on one line at every
+   width where the index is still a 392px column: 862/16 = 53.9 at 1440 and
+   446/16 = 27.9 at 1024. Below 980 the media query takes over. */
+.cr-subject-name {
+  font-family: "Courier New", Courier, monospace;
+  font-size: min(54px, calc((100vw - 578px) / 16));
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.03em;
+  overflow-wrap: anywhere;
+}
+.cr-subject-line {
+  margin-top: 9px;
+  max-width: 68ch;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--cr-ink-body);
+}
+/* PRODUCT.md: a guest sees sample data and is told it is sample data. */
+.cr-sample {
+  margin-top: 8px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  letter-spacing: .03em;
+  color: var(--cr-ink-note);
+}
+.cr-sample b {
+  font-weight: 700;
+  color: var(--cr-ink-soft);
+}
+
+/* The contact hunt, drawn: one page in twelve answered. This is the whole
+   argument of the page as a single line of marks, so it is not described. */
+/* Stacked, not side-by-side: the strip of marks takes the card's full width
+   and the counts sit under it. The hunt is the page's thesis, so it is set as
+   a chart across the card rather than as a caption beside a row of chips. */
+.cr-ledger {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 16px;
+}
+/* The strip spans the card and its twelve marks divide that width, each capped
+   at 40px. Hard 40px marks overflowed the card's right edge below ~1440 — at
+   1024 the card's inner width is 446px and twelve 40px marks plus gaps need
+   546px, so the last three printed on the baize. Dividing the available width
+   instead means the chart can never be wider than the paper it is drawn on,
+   and at 1440 it is pixel-identical to the fixed version (12x40 + 11x6 = 546). */
+.cr-marks { display: flex; gap: 6px; align-self: stretch; max-width: 546px; }
+.cr-mark {
+  display: block;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 40px;
+  height: 32px;
+  background: rgba(26,23,18,.09);
+  box-shadow: inset 0 0 0 1px rgba(26,23,18,.24);
+}
+.cr-mark::after {
+  content: "";
+  display: block;
+  height: 100%;
+  background: linear-gradient(
+    to bottom right,
+    transparent 46.5%,
+    rgba(26,23,18,.42) 46.5%,
+    rgba(26,23,18,.42) 53.5%,
+    transparent 53.5%
+  );
+}
+.cr-mark.on {
+  background: var(--cr-red);
+  box-shadow: 0 6px 14px rgba(179,39,30,.35);
+}
+.cr-mark.on::after { display: none; }
+.cr-ledger-cap {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.35;
+  letter-spacing: .02em;
+  color: var(--cr-ink-note);
+}
+.cr-ledger-cap b { font-weight: 700; color: var(--cr-ink-src); }
+
+/* The sources are the structure, not a footnote under the facts. Each block
+   is a page the run opened; each fact hangs off the page it was read from. */
+.cr-sources {
+  flex: 1;
+  margin-top: 20px;
+  display: grid;
+  /* Not a fixed 1fr 1fr. The column has to be wide enough to hold its
+     longest unavoidable token: 118px label + 10px gap + 216px for
+     office@apexroofingaz.com at 14.5px mono. Below 344px a block cannot
+     hold that address, so it drops to one column instead of shattering
+     the address across three lines — which is what a fixed two-column
+     grid did between 981px and ~1300px viewport. */
+  grid-template-columns: repeat(auto-fit, minmax(344px, 1fr));
+  align-content: start;
+  /* Row gap up from 22 to 27: with the heading underline gone, vertical space
+     is now the only thing separating one source block from the next. */
+  gap: 27px 30px;
+}
+.cr-src:only-child { grid-column: 1 / -1; }
+/* No rule under the URL. A 1px line here was editorial habit — the block edge
+   is carried by the URL's own weight instead: 15px bold mono against 13px
+   Archivo labels and 12.5px notes, plus the grid's row gap. That is the
+   No-Hairline Rule with no exception carved out for it, and it is also what
+   keeps the card from reading as a ruled table. */
+.cr-src-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.cr-src-url {
+  min-width: 0;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  overflow-wrap: anywhere;
+}
+.cr-src-kind {
+  margin-left: auto;
+  flex: 0 0 auto;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  letter-spacing: .02em;
+  color: var(--cr-ink-note);
+}
+/* The page that answered, marked by wash and ink — never by a colored rule.
+   Padding and negative margin rather than a spread-shadow: the wash then takes
+   part in layout, so it cannot paint over the block next to it. */
+.cr-src-hit {
+  background: rgba(179,39,30,.08);
+  padding: 8px 10px;
+  margin: -8px -10px;
+}
+/* Red Deep, not Red. The wash composites to rgb(226,200,168), and at 15px bold
+   the URL must clear 4.5 — plain Red scored 4.05 there (it scores 4.54 on the
+   bare card, which is why the plain blocks can keep it). Red Deep is 4.81. */
+.cr-src-hit .cr-src-url { color: var(--cr-red-deep); }
+.cr-src-hit .cr-src-kind { color: var(--cr-red-deep); }
+
+.cr-facts { margin-top: 9px; }
+/* Label and value share a line. There is no label stacked above a value
+   anywhere in this card, and no rule between rows. */
+.cr-fact {
+  display: grid;
+  grid-template-columns: 118px minmax(0, 1fr);
+  gap: 10px;
+  padding: 2px 0;
+}
+.cr-fact dt {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.35;
+  letter-spacing: .015em;
+  color: var(--cr-ink-soft);
+}
+.cr-fact dd {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.cr-fact dd.cr-none { font-weight: 400; color: var(--cr-ink-note); }
+.cr-hint {
+  display: block;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--cr-ink-note);
+}
+/* No rule above the closing line. There is a hundred pixels of blank paper
+   doing that work already, and the rule was only editorial habit. */
+.cr-blank {
+  margin-top: auto;
+  padding-top: 11px;
+  text-align: center;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  letter-spacing: .03em;
+  color: rgba(74,66,41,.9);
+}
+
+.cr-index {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding-top: 96px;
+}
+/* These are real controls now, not links: pressing one opens that face of the
+   file. Buttons, so the reset has to be undone by hand. */
+.cr-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  height: 66px;
+  padding: 0 20px;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  color: var(--cr-white);
+  box-shadow: 0 10px 22px rgba(0,0,0,.4);
+  transition: filter .15s ease;
+}
+.cr-tab > span { min-width: 0; }
+.cr-tab:hover { filter: brightness(1.07); }
+.cr-tab .cr-tab-label {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.cr-tab small {
+  display: block;
+  margin-top: 2px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 13px;
+  letter-spacing: .05em;
+  /* .95, not .88: on the amber tab .88 scored 4.22 against white's 4.5 floor. */
+  color: rgba(255,255,255,.95);
+}
+.cr-tab b {
+  margin-left: auto;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+  font-weight: 700;
+}
+.cr-tab.on {
+  margin-left: -16px;
+  box-shadow: 0 0 0 3px rgba(244,246,242,.5), 0 10px 22px rgba(0,0,0,.45);
+}
+.cr-tab-red { background: var(--cr-red); }
+.cr-tab-amber { background: var(--cr-amber); }
+.cr-tab-green { background: var(--cr-green); }
+.cr-tab-blue { background: var(--cr-blue); }
+.cr-tab-grey { background: var(--cr-grey); }
+
+/* ── The scrolling sections ───────────────────────────────────────────────
+   Below the hero the run opens up. Every section is one of two materials: the
+   ground (the desk the card lies on) or a sheet (another page of the file). The
+   order steps dark / dark / paper / dark / paper / dark so the paper sections
+   read as documents arriving on the desk, not as panels. */
+
+.cr-wrap { max-width: 1180px; margin: 0 auto; padding: 0 44px; }
+
+.cr-runband {
+  background: var(--cr-ground-2);
+  border-top: 1px solid rgba(244,246,242,.08);
+  padding: 84px 0 76px;
+}
+
+.cr-eyebrow {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--cr-on-ground-dim);
+}
+.cr-eyebrow-ink { color: var(--cr-ink-note); }
+
+/* One size for a page's headline, whether it is the h1 of an inner page or the
+   h2 of a section. The distinction the reader sees is the page, not the tag. */
+.cr-h1, .cr-h2 {
+  margin-top: 14px;
+  /* No measure cap here. The runband headline carries its own <br>, and a ch cap
+     in a face this narrow (20ch at 46px is 423px) over-rode it and broke the
+     first line into two — four ragged lines where two were designed. The two
+     uncapped headlines below it wrap at their own natural break. */
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -.015em;
+  color: var(--cr-white);
+}
+.cr-h1-ink, .cr-h2-ink { color: var(--cr-ink); }
+/* A sub-heading that follows a lede needs the air a heading gets. Where it is
+   the first thing in its column instead — the empty band's "They are still in
+   the file." — the margin is undone below. */
+.cr-h3 {
+  margin-top: 46px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+.cr-empty-body :first-child { margin-top: 0; }
+
+.cr-lede {
+  margin-top: 18px;
+  max-width: 60ch;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--cr-on-ground);
+}
+.cr-lede-ink { color: var(--cr-ink-body); }
+
+/* The five counts at scale. This is the largest type on the page after the
+   subject — the run's size is the product's whole claim, so it is not set as a
+   row of small statistics. */
+.cr-figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1px;
+  margin-top: 52px;
+  background: rgba(244,246,242,.13);
+  border: 1px solid rgba(244,246,242,.13);
+}
+.cr-figure {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 26px 22px 24px;
+  background: var(--cr-ground-2);
+}
+.cr-figure b {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 62px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.04em;
+  color: var(--cr-white);
+}
+.cr-figure-label {
+  margin-top: 8px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--cr-white);
+}
+.cr-figure-note {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--cr-on-ground-dim);
+}
+/* Each figure is ticked in its own face colour — a 3px bar across its head. */
+.cr-figure { border-top: 3px solid transparent; }
+.cr-figure-red { border-top-color: var(--cr-red); }
+.cr-figure-amber { border-top-color: var(--cr-amber); }
+.cr-figure-green { border-top-color: var(--cr-green); }
+.cr-figure-blue { border-top-color: var(--cr-blue); }
+/* The grey tick is the "nothing came back" face. --cr-grey is tuned for the
+   light card (the Not-on-file tab) and all but vanished on --cr-ground-2
+   (1.9:1), so the tick and the oversized count below carry their own value:
+   4.1:1 on the band, 3.7:1 on the ground. Still the quietest tick in the row,
+   which is the point, but no longer a hole in the chart. */
+.cr-figure-grey { border-top-color: #6f6a62; }
+
+.cr-figure-foot {
+  margin-top: 20px;
+  max-width: 68ch;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--cr-on-ground-dim);
+}
+
+/* A sheet: another page of the file, laid on the desk. */
+.cr-sheet {
+  background: var(--cr-sheet);
+  color: var(--cr-ink);
+  padding: 84px 0 88px;
+  box-shadow: 0 -20px 50px rgba(0,0,0,.34);
+}
+.cr-sheet-alt { background: var(--cr-card); }
+
+.cr-worked {
+  display: grid;
+  grid-template-columns: 372px minmax(0, 1fr);
+  gap: 46px;
+  margin-top: 46px;
+  align-items: start;
+}
+.cr-worked-aside { position: sticky; top: 106px; }
+.cr-worked-note {
+  margin-top: 18px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--cr-ink-body);
+}
+.cr-worked-sources {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(344px, 1fr));
+  gap: 27px 30px;
+  align-content: start;
+}
+
+/* The empty band. This is the section the product is really about, so it gets
+   the darkest ground on the page and its own oversized count. */
+.cr-emptyband {
+  background: var(--cr-ground);
+  padding: 84px 0 88px;
+}
+.cr-empty-grid {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 46px;
+  margin-top: 22px;
+  align-items: start;
+}
+.cr-empty-count {
+  display: block;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 132px;
+  font-weight: 700;
+  line-height: .84;
+  letter-spacing: -.05em;
+  color: #7a756c;
+}
+/* The count and its caption are one sentence, so on the page whose subject they
+   are they share one <h1>. These two rules undo what the heading element would
+   otherwise do to them: a block box for the count, and upright weight for a
+   caption that must not come out bold just because its parent is a heading. */
+.cr-empty-h1 { display: block; }
+.cr-empty-cap {
+  display: block;
+  margin-top: 14px;
+  /* The grid column is the measure (300px). A 22ch cap was 163px inside it, so
+     the caption wrapped early and left the column two-thirds empty. */
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--cr-on-ground);
+}
+.cr-empty-body p {
+  margin-top: 14px;
+  max-width: 62ch;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  line-height: 1.62;
+  color: var(--cr-on-ground);
+}
+.cr-empty-body em { color: var(--cr-white); font-style: italic; }
+
+/* The empty record, shown whole — the proof that nothing was thrown away. */
+.cr-empty-sheet {
+  margin-top: 54px;
+  padding: 30px 32px 24px;
+  background: var(--cr-card);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(26,23,18,.022) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 1px, transparent 1px 5px);
+  color: var(--cr-ink);
+  box-shadow: 0 26px 54px rgba(0,0,0,.55);
+}
+.cr-empty-subject {
+  margin-top: 6px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: min(38px, calc((100vw - 620px) / 16));
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.03em;
+  overflow-wrap: anywhere;
+}
+.cr-subject-line-ink { color: var(--cr-ink-note); }
+
+/* The record, field by field. */
+.cr-record {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 0 46px;
+  border-top: 1px solid rgba(26,23,18,.18);
+}
+.cr-record-row {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(26,23,18,.12);
+}
+.cr-record-row dt {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 14px;
+  letter-spacing: .015em;
+  color: var(--cr-ink-soft);
+}
+.cr-record-row dd {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--cr-ink);
+}
+
+/* Four things in a row, each ticked by a rule at its head. Used twice: for the
+   four moves a read makes, and for the three things an empty record is not. The
+   figures block above owns the only numbered row on this site, so these carry no
+   step numbers — the wording does the ordering. */
+.cr-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(300px, 1fr));
+  gap: 34px 40px;
+  margin-top: 46px;
+  /* The markers, not just the padding: a reset zeroes the indent but the
+     numerals still paint, and a numbered list here would be the second
+     numbered row on a site that is allowed exactly one. The wording carries
+     the order — "Open the pages" then "Read the value" — and nothing else
+     needs to. */
+  list-style: none;
+}
+/* Four items in a three-column grid leave the fourth sitting alone under a
+   two-thirds-empty row, which reads as a missing step rather than a wrapped
+   one. Four is a pair, so this grid is a pair. */
+.cr-steps-2col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cr-step { border-top: 1px solid rgba(244,246,242,.22); padding-top: 16px; }
+.cr-step-label {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: .01em;
+  color: var(--cr-on-ground);
+}
+.cr-step-label em { color: var(--cr-white); font-style: italic; }
+.cr-step-body {
+  margin-top: 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 15px;
+  line-height: 1.62;
+  color: var(--cr-on-ground-dim);
+}
+
+/* The contents page of the file. Same shape as the record rows below it — a
+   name on the left, a kind set off to the right, and the description on its own
+   line — because it is the same kind of thing: a list of what is in here. */
+.cr-contents { margin-top: 46px; border-top: 1px solid rgba(26,23,18,.18); }
+.cr-contents-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 26px;
+  padding: 22px 0;
+  border-bottom: 1px solid rgba(26,23,18,.12);
+  color: var(--cr-ink);
+  text-decoration: none;
+}
+.cr-contents-name {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 27px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -.01em;
+}
+.cr-contents-row:hover .cr-contents-name { color: var(--cr-red); }
+.cr-contents-kind {
+  align-self: center;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  letter-spacing: .02em;
+  color: var(--cr-ink-note);
+}
+.cr-contents-blurb {
+  grid-column: 1 / -1;
+  max-width: 74ch;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--cr-ink-body);
+}
+
+/* One record, holding something. The third column is the page's whole claim
+   made literal — a source beside every value, and one row where the pages had
+   nothing to give. */
+.cr-filled-legend {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) 244px;
+  gap: 0 22px;
+  margin-top: 40px;
+  padding-bottom: 8px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--cr-ink-note);
+}
+.cr-filled { border-top: 1px solid rgba(26,23,18,.18); }
+.cr-filled-row {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) 244px;
+  gap: 2px 22px;
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(26,23,18,.12);
+}
+.cr-filled-row dt {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 14px;
+  letter-spacing: .015em;
+  color: var(--cr-ink-soft);
+}
+.cr-filled-row dd {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.cr-filled-row dd.cr-none { font-weight: 400; color: var(--cr-ink-note); }
+.cr-filled-row dd.cr-filled-src {
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--cr-ink-note);
+}
+
+.cr-foot {
+  flex: 0 0 auto;
+  background: var(--cr-ground-3);
+  padding: 78px 0 30px;
+}
+.cr-foot-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 392px;
+  align-items: center;
+  gap: 46px;
+}
+.cr-offer-h2 {
+  max-width: 18ch;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -.015em;
+}
+/* Full navigation at the foot of every page. On a phone the band carries the
+   brand and the one action and nothing else, so this is the only place all four
+   pages are listed — which is a reason for it to be a real list, not a courtesy
+   line. */
+.cr-foot-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  margin-top: 64px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(244,246,242,.14);
+}
+.cr-foot-nav a {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  letter-spacing: .04em;
+  color: var(--cr-on-ground);
+  text-decoration: none;
+}
+.cr-foot-nav a:hover { color: var(--cr-white); }
+
+.cr-colophon {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.cr-colophon p {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  letter-spacing: .04em;
+  color: var(--cr-on-ground-dim);
+}
+.cr-offer p {
+  margin-top: 10px;
+  max-width: 62ch;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--cr-on-ground);
+}
+.cr-act { display: flex; flex-direction: column; gap: 12px; }
+.cr-act a {
+  display: block;
+  padding: 20px;
+  background: var(--cr-red);
+  color: var(--cr-white);
+  text-align: center;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 10px 24px rgba(0,0,0,.45);
+}
+.cr-act a:hover { background: var(--cr-red-deep); }
+.cr-act span {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  letter-spacing: .04em;
+  text-align: center;
+  color: var(--cr-on-ground-dim);
+}
+
+.cr-band :is(a, button):focus-visible,
+.cr-act a:focus-visible,
+.cr-tab:focus-visible {
+  outline: 2px solid var(--cr-white);
+  outline-offset: 3px;
+}
+.cr-file:focus-visible { outline: 2px solid var(--cr-red); outline-offset: 4px; }
+
+/* The browser's own surfaces belong to the world too: the caret on the card,
+   the selection, the scrollbar under the index on a phone. */
+.cr-page { caret-color: var(--cr-red); font-variant-numeric: tabular-nums; }
+.cr-page ::selection { background: rgba(179,39,30,.9); color: var(--cr-white); }
+.cr-file ::selection { background: rgba(179,39,30,.2); color: var(--cr-ink); }
+.cr-index { scrollbar-color: rgba(244,246,242,.4) transparent; }
+
+@media (max-width: 980px) {
+  .cr-band { flex-basis: 62px; padding: 0 16px; gap: 10px; }
+  /* Every band control clears a 44px touch target. At these type sizes the
+     natural heights were 25–32px, which is a miss on a phone. */
+  .cr-brand { gap: 9px; min-height: 44px; }
+  .cr-brand span { font-size: 19px; white-space: nowrap; }
+  .cr-brand img { width: 25px; height: 25px; }
+  .cr-nav { gap: 14px; }
+  .cr-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  /* The band keeps the brand and the one action; the four pages and Sign in
+     move into the disclosure. That ordering matters: the CTA stays where the
+     thumb already is, and it is not given a second home in the menu. */
+  .cr-nav .cr-nav-link { display: none; }
+  .cr-menu { display: block; }
+  .cr-nav .cr-signup {
+    min-height: 44px;
+    padding: 9px 13px;
+    font-size: 11.5px;
+    letter-spacing: .1em;
+    white-space: nowrap;
+  }
+  .cr-skip { left: 12px; top: 8px; font-size: 13px; }
+  .cr-desk {
+    grid-template-columns: 1fr;
+    gap: 0;
+    min-height: 0;
+    padding: 18px 16px 0;
+  }
+  /* the index turns into the run's face, scrolled sideways, active tab in view */
+  .cr-index {
+    order: -1;
+    flex-direction: row;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 0 0 16px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+  }
+  .cr-tab { flex: 0 0 auto; width: 172px; height: 56px; padding: 0 14px; scroll-snap-align: start; }
+  .cr-tab .cr-tab-label { font-size: 14px; letter-spacing: .12em; }
+  .cr-tab small { font-size: 11.5px; }
+  .cr-tab.on { margin-left: 0; }
+  .cr-file { min-height: 0; padding: 20px 20px 18px; }
+  .cr-head { flex-wrap: wrap; gap: 10px; }
+  .cr-head > div:first-child { flex: 1 1 100%; }
+  .cr-head h1 { font-size: 13px; letter-spacing: .07em; }
+  .cr-run { font-size: 11.5px; }
+  .cr-docket { margin-left: 0; padding: 7px 11px; }
+  .cr-docket b { font-size: 12px; }
+  .cr-subject { margin-top: 14px; }
+  .cr-subject h2 { gap: 10px; }
+  .cr-subject-name { font-size: 26px; letter-spacing: -.02em; }
+  .cr-subject-line { font-size: 14px; }
+  /* The cap, not the width: the marks divide the card's 318px column, giving
+     ~21px each. Capping at 21 stops them stretching into slabs on a tablet
+     that is still under the breakpoint. */
+  .cr-mark { max-width: 21px; height: 17px; }
+  .cr-sources { grid-template-columns: 1fr; gap: 15px; }
+  .cr-fact { grid-template-columns: 92px minmax(0, 1fr); gap: 8px; }
+  /* The label column drops to 92px and the value to 13px. At 390 the card's
+     inner width is 318px, so the value column is 318 - 100 = 218px; the longest
+     unavoidable token, office@apexroofingaz.com, is 24 mono characters — 187px
+     at 13px against 194px at 13.5px, which is the 1px by which the address was
+     still breaking mid-word. An address that wraps is not an address. */
+  .cr-fact dd { font-size: 13px; }
+  /* At 390 the kind ("the page that answered") took half the line and broke
+     the URL mid-word. The URL gets the row to itself and the kind falls under
+     it, flush left where it reads as the source's own descriptor. */
+  .cr-src-head { flex-wrap: wrap; row-gap: 1px; }
+  .cr-src-url { flex: 1 1 100%; }
+  .cr-src-kind { margin-left: 0; }
+  /* The desktop bleed is 10px; in an 18px card margin that read as a mistake,
+     so on a phone the wash is drawn in tighter. */
+  .cr-src-hit { padding: 7px 8px; margin: -7px -8px; }
+
+  /* ── the scrolling sections on a phone ─────────────────────────────────── */
+  .cr-wrap { padding: 0 16px; }
+  .cr-run, .cr-sheet, .cr-emptyband { padding: 52px 0 56px; }
+  .cr-foot { padding: 52px 0 24px; }
+  .cr-h2 { font-size: 30px; max-width: 24ch; }
+  .cr-h3 { font-size: 21px; }
+  .cr-lede, .cr-lede-ink { font-size: 15.5px; }
+  /* Five across will not fit. Two columns keeps the counts comparable at a
+     glance, which is the only reason the row exists. */
+  .cr-figures { grid-template-columns: 1fr 1fr; margin-top: 34px; }
+  .cr-figure { padding: 18px 16px 16px; }
+  /* Five counts in a two-column grid left a hole where the sixth cell would be,
+     and the hole read as a missing figure in a chart about not losing things.
+     The odd one is Not-on-file, so it takes the whole row and lies down: count,
+     name and note read across as one line. */
+  .cr-figures > li:last-child {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 11px;
+    padding: 16px 16px 15px;
+  }
+  .cr-figures > li:last-child .cr-figure-label { margin-top: 0; }
+  .cr-figure b { font-size: 40px; }
+  .cr-figure-label { font-size: 13.5px; }
+  .cr-figure-note { font-size: 12.5px; }
+  .cr-worked { grid-template-columns: 1fr; gap: 26px; margin-top: 30px; }
+  /* The aside stops being sticky: on a phone it would cover the sources it is
+     introducing. */
+  .cr-worked-aside { position: static; }
+  .cr-worked-sources { grid-template-columns: 1fr; gap: 22px; }
+  .cr-empty-grid { grid-template-columns: 1fr; gap: 22px; }
+  .cr-empty-count { font-size: 84px; }
+  .cr-empty-cap { max-width: none; }
+  .cr-empty-sheet { margin-top: 34px; padding: 20px 20px 18px; }
+  .cr-empty-subject { font-size: 24px; }
+  .cr-record { grid-template-columns: 1fr; margin-top: 28px; }
+  .cr-record-row { grid-template-columns: 1fr; gap: 2px; padding: 9px 0; }
+  /* The four steps lie down in one column. The top rule stays: it is what
+     separates one move from the next once the row is gone. */
+  .cr-steps { grid-template-columns: 1fr; gap: 26px; margin-top: 30px; }
+  .cr-step-label { font-size: 18px; }
+  .cr-contents { margin-top: 30px; }
+  .cr-contents-row { padding: 16px 0; gap: 2px 16px; }
+  .cr-contents-name { font-size: 21px; }
+  /* The field/value/source row stops being a row: the field names the value and
+     the source sits under it, which is the only order that reads on a phone. */
+  .cr-filled-legend { display: none; }
+  .cr-filled { margin-top: 30px; }
+  .cr-filled-row { grid-template-columns: 1fr; gap: 2px; padding: 12px 0; }
+  .cr-filled-src { margin-top: 2px; }
+  .cr-foot-grid { grid-template-columns: 1fr; gap: 24px; }
+  .cr-offer-h2 { font-size: 30px; max-width: 22ch; }
+  .cr-foot-nav { margin-top: 40px; }
+  .cr-colophon { margin-top: 14px; }
+}
+
+/* On a phone the index is the run's five faces in a sideways-scrolling strip.
+   At 172px two faces filled a 390px screen exactly, so the strip ended flush and
+   nothing said the other three existed — the primary interaction of the hero
+   with no affordance. Narrower faces leave a third one showing at the edge. */
+@media (max-width: 560px) {
+  .cr-tab { width: 154px; padding: 0 12px; }
+}
+</style>
+</head>
+<body>
+<div class="cr-page">
+  <a href="#page" class="cr-skip">Skip to the page</a>
+
+  <header class="cr-band">
+    <a href="index.html" class="cr-brand"><img src="logo.svg" alt="" aria-hidden="true" width="30" height="30"><span>Varnor Index</span></a>
+    <nav class="cr-nav" aria-label="Primary">
+      <a href="index.html" class="cr-nav-link">The file</a><a href="how-it-reads.html" class="cr-nav-link">How it reads</a><a href="what-is-on-file.html" class="cr-nav-link">What is on file</a><a href="not-on-file.html" class="cr-nav-link on" aria-current="page">Not on file</a>
+      <a href="#" class="cr-nav-link cr-nav-signin">Sign in</a>
+      <a href="#" class="cr-signup">Open an account</a>
+    </nav>
+    <details class="cr-menu">
+      <summary>Menu</summary>
+      <nav class="cr-menu-list" aria-label="All pages"><a href="index.html" class="cr-menu-link"><span>The file</span><small>front sheet</small></a><a href="how-it-reads.html" class="cr-menu-link"><span>How it reads</span><small>the method</small></a><a href="what-is-on-file.html" class="cr-menu-link"><span>What is on file</span><small>the record</small></a><a href="not-on-file.html" class="cr-menu-link on" aria-current="page"><span>Not on file</span><small>empty results</small></a><a href="#" class="cr-menu-link"><span>Sign in</span><small>your account</small></a></nav>
+    </details>
+  </header>
+
+  <main class="cr-body" id="page">
+    <section class="cr-emptyband">
+      <div class="cr-wrap">
+        <p class="cr-eyebrow">Empty results</p>
+        <div class="cr-empty-grid">
+          <h1 class="cr-empty-h1">
+            <span class="cr-empty-count">57</span>
+            <span class="cr-empty-cap">of the 148 businesses in Phoenix, AZ had no contact we could find.</span>
+          </h1>
+          <div class="cr-empty-body">
+            <h2 class="cr-h3">They are still in the file.</h2>
+            <p>Twelve pages read for each of them, and not one page returned a way to reach the business. That is not a gap in the run &mdash; it is a result, and it is a different result from <em>we did not look</em>.</p>
+            <p>The record stays where it is, with its counts, its sources and the reason it is empty written down. A list that quietly drops the businesses it could not reach is a list that lies to you about the size of your market.</p>
+          </div>
+        </div>
+        <div class="cr-empty-sheet">
+          <p class="cr-subject-line cr-subject-line-ink">The whole of what is on file:</p>
+          <p class="cr-empty-subject">SUN VALLEY GUTTERS LLC.</p>
+          <div class="cr-ledger"><div class="cr-marks" aria-hidden="true"><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i></div><p class="cr-ledger-cap"><b>12 pages read</b> for a way in · not one of them returned a contact</p></div>
+          <div class="cr-sources"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">state register</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Registered address</dt><dd class="cr-none">No street address filed</dd></div><div class="cr-fact"><dt>Trading status</dt><dd>Active</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">sunvalleygutters.com</h3><span class="cr-src-kind">company site</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Contact page</dt><dd class="cr-none">Returned no address</dd></div><div class="cr-fact"><dt>Telephone</dt><dd class="cr-none">Not on the page</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">yelp.com/biz/sun-valley-gutters</h3><span class="cr-src-kind">directory</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Contact details</dt><dd class="cr-none">Placeholder numbers only</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">sunvalleygutters.com/about</h3><span class="cr-src-kind">team page</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Anything usable</dt><dd class="cr-none">Nothing</dd></div></dl></article></div>
+          <p class="cr-blank">No contact on file · kept and counted, not dropped</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cr-runband">
+      <div class="cr-wrap">
+        <p class="cr-eyebrow">What it is not</p>
+        <h2 class="cr-h2">An empty record is three things it is not.</h2>
+        <ol class="cr-steps"><li class="cr-step"><h3 class="cr-step-label">It is not <em>we did not look.</em></h3><p class="cr-step-body">Twelve pages were opened for this business and every one of them is printed on this page. A business that had been skipped would have nothing to show here at all.</p></li><li class="cr-step"><h3 class="cr-step-label">It is not <em>the business is gone.</em></h3><p class="cr-step-body">Its trading status on the state register reads Active. It trades, it files, and it simply does not publish a way to be reached — which is a fact about its website, not about its existence.</p></li><li class="cr-step"><h3 class="cr-step-label">It is not <em>thrown away.</em></h3><p class="cr-step-body">The record sits in the file, it is inside the 148, and its reason for being empty is written beside it. Nothing was deleted to make the run look tidier than it was.</p></li></ol>
+      </div>
+    </section>
+
+    <section class="cr-sheet cr-sheet-alt">
+      <div class="cr-wrap">
+        <p class="cr-eyebrow cr-eyebrow-ink">What it is worth</p>
+        <h2 class="cr-h2 cr-h2-ink">You still know it is there.</h2>
+        <p class="cr-lede cr-lede-ink">An empty record is not a dead row to be cleaned up. You know the business exists, you know it is part of the 148 in your market, and you know that a call to it would be a call nobody answered. That is the difference between a list of 148 businesses and a list of 91 contacts that quietly calls itself a market.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="cr-foot">
+    <div class="cr-wrap cr-foot-grid">
+      <div class="cr-offer">
+        <h2 class="cr-offer-h2">Get the file on<br>your market.</h2>
+        <p>Every fact carries the page it came from, and every record that came back empty is still filed &mdash; labelled, counted, and kept. Nothing is quietly dropped.</p>
+      </div>
+      <div class="cr-act">
+        <a href="#">Open an account</a>
+        <span>Free to start &middot; no card &middot; confirm your address once</span>
+      </div>
+    </div>
+    <nav class="cr-wrap cr-foot-nav" aria-label="Footer">
+      <a href="index.html" class="">The file</a><a href="how-it-reads.html" class="">How it reads</a><a href="what-is-on-file.html" class="">What is on file</a><a href="not-on-file.html" class=" on" aria-current="page">Not on file</a>
+      <a href="#">Sign in</a>
+    </nav>
+    <div class="cr-wrap cr-colophon">
+      <p>Varnor Index &middot; the file on every business in your market</p>
+      <p>Every business and page shown on this site is sample data from one example run.</p>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>
