@@ -227,6 +227,89 @@ a{text-decoration:none;color:inherit}
   vertical-align: middle;
 }
 
+/* ── The hero ──────────────────────────────────────────────────────────────
+   The page used to open on the card. That is right for a file and wrong for a
+   front page: the reader met a document before they met a claim. The hero sets
+   the claim at display scale — the first type on the site that is sized to be
+   an event rather than a label — with the one action in the same breath, and
+   then hands over to the card, which is the product's real output shown as the
+   table it is. Centred, because the sections below it are documents and the
+   change of alignment is what makes the opening read as an opening. */
+.cr-hero {
+  background: var(--cr-ground);
+  padding: 104px 0 60px;
+  text-align: center;
+}
+.cr-hero-inner { display: flex; flex-direction: column; align-items: center; }
+
+.cr-hero-eyebrow {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--cr-on-ground-dim);
+}
+/* The designed break is a <br>, so the cap holds the two lines rather than
+   letting a ch measure re-break them. 98px is the ceiling at 1440; the vw term
+   carries it down the viewport and the floor keeps it an event on a phone. */
+.cr-display {
+  margin-top: 26px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: clamp(46px, 7.2vw, 98px);
+  font-weight: 700;
+  line-height: .98;
+  letter-spacing: -.025em;
+  color: var(--cr-white);
+}
+.cr-hero-lede {
+  margin-top: 30px;
+  max-width: 54ch;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--cr-on-ground);
+}
+.cr-hero-act {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+.cr-hero-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cr-red);
+  color: var(--cr-white);
+  padding: 19px 44px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 14px 32px rgba(0,0,0,.5);
+}
+.cr-hero-cta:hover { background: var(--cr-red-deep); }
+.cr-hero-act span {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 13px;
+  letter-spacing: .02em;
+  color: var(--cr-on-ground-dim);
+}
+/* The sample note sits above the card, not only inside it: a reader should know
+   what they are looking at before they read the first value, not after. */
+.cr-hero-sample {
+  margin-top: 44px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  letter-spacing: .02em;
+  color: var(--cr-on-ground-dim);
+}
+.cr-hero-sample b { color: var(--cr-on-ground); }
+
 /* The hero. This used to be a fixed 674px band inside a 66 + 674 + 160 = 900
    composition. It is now the top of a scrolling page, so the height is a floor
    rather than a limit — min-height keeps the card's declared first viewport
@@ -286,7 +369,7 @@ a{text-decoration:none;color:inherit}
    subject, a wide-tracked caps line up here read as a second competing voice
    rather than a masthead. .08em still separates the letters without
    performing "editorial". */
-.cr-head h1 {
+.cr-head .cr-card-title {
   font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
   font-size: 15px;
   font-weight: 700;
@@ -1363,6 +1446,22 @@ a{text-decoration:none;color:inherit}
 .cr-index { scrollbar-color: rgba(244,246,242,.4) transparent; }
 
 @media (max-width: 980px) {
+  /* The display type carries its own scale, but the 7.2vw term is tuned for a
+     wide window. Narrower, the hero gets less air and the button reaches the
+     thumb: a full-width tap target beats a centred centred one at this size. */
+  .cr-hero { padding: 64px 0 44px; }
+  .cr-display { font-size: clamp(34px, 10vw, 64px); }
+  /* display:none on a <br> removes the break, so the headline wraps to the
+     window instead of to a design made for a 1440 screen. */
+  .cr-br-desk { display: none; }
+  .cr-hero-eyebrow { font-size: 11px; letter-spacing: .13em; }
+  .cr-hero-lede { font-size: 16.5px; }
+  /* align-items:center on the hero column shrinks .cr-hero-act to its content,
+     so width:100% on the button measured against the button. The act row takes
+     the full column first, then the button takes the row. */
+  .cr-hero-act { width: 100%; }
+  .cr-hero-cta { width: 100%; max-width: 340px; padding: 17px 24px; }
+
   .cr-band { flex-basis: 62px; padding: 0 16px; gap: 10px; }
   /* Every band control clears a 44px touch target. At these type sizes the
      natural heights were 25–32px, which is a miss on a phone. */
@@ -1413,7 +1512,7 @@ a{text-decoration:none;color:inherit}
   .cr-file { min-height: 0; padding: 20px 20px 18px; }
   .cr-head { flex-wrap: wrap; gap: 10px; }
   .cr-head > div:first-child { flex: 1 1 100%; }
-  .cr-head h1 { font-size: 13px; letter-spacing: .07em; }
+  .cr-head .cr-card-title { font-size: 13px; letter-spacing: .07em; }
   .cr-run { font-size: 11.5px; }
   .cr-docket { margin-left: 0; padding: 7px 11px; }
   .cr-docket b { font-size: 12px; }
@@ -1577,10 +1676,26 @@ a{text-decoration:none;color:inherit}
   </header>
 
   <main class="cr-body" id="page">
+    <section class="cr-hero">
+      <div class="cr-wrap cr-hero-inner">
+        <p class="cr-hero-eyebrow">RUN 0083 &middot; Roofing contractors &middot; Phoenix, AZ</p>
+        <h1 class="cr-display">Every business in your <br class="cr-br-desk">market, read at the source.</h1>
+        <p class="cr-hero-lede">Name a trade and a place. Varnor Index opens the register and each
+        business&rsquo;s own pages, and files every business it finds &mdash; every
+        contact carrying the page it was read from, and every empty result
+        still written down on the record.</p>
+        <div class="cr-hero-act">
+          <a href="signup.html" class="cr-hero-cta">Open an account</a>
+          <span>Free to start &middot; no card &middot; confirm your address once</span>
+        </div>
+        <p class="cr-hero-sample"><b>Sample file</b> &mdash; the run below is one example, not a customer&rsquo;s data.</p>
+      </div>
+    </section>
+
     <div class="cr-desk">
       <div class="cr-cardwrap">
         <div class="cr-stack" aria-hidden="true"><i></i><i></i></div>
-        <section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-identity" tabindex="-1" data-face="identity" hidden><header class="cr-head"><div><h1>Business reference — filed from the source</h1><p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p></div><div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div></header><div class="cr-subject"><h2><span class="cr-inline-label">Subject</span><span class="cr-subject-name">APEX ROOFING CO.</span></h2><p class="cr-subject-line">The register is the spine of the file. Every later fact hangs off this record, and nothing here is guessed at.</p><p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer&rsquo;s data</p></div><div class="cr-sources"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">state register</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Registered address</dt><dd>4120 W Buckeye Rd, Phoenix AZ 85009</dd></div><div class="cr-fact"><dt>Trading status</dt><dd>Active</dd></div><div class="cr-fact"><dt>Register number</dt><dd>14823017<span class="cr-hint">the entity id the state issues</span></dd></div><div class="cr-fact"><dt>Registered agent</dt><dd>R. Delgado</dd></div></dl></article></div><p class="cr-blank">Nothing else on file for this subject</p></section><section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-contact" tabindex="-1" data-face="contact"><header class="cr-head"><div><h1>Business reference — filed from the source</h1><p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p></div><div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div></header><div class="cr-subject"><h2><span class="cr-inline-label">Subject</span><span class="cr-subject-name">APEX ROOFING CO.</span></h2><p class="cr-subject-line">Twelve pages read looking for a way in. Eleven had no public address. The twelfth did, and that is the only reason this file has a number to call.</p><p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer&rsquo;s data</p></div><div class="cr-ledger"><div class="cr-marks" aria-hidden="true"><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark on"></i></div><p class="cr-ledger-cap"><b>12 pages read</b> for a way in · 11 came back with nothing · <b>the last one did</b></p></div><div class="cr-sources"><article class="cr-src cr-src-hit"><header class="cr-src-head"><h3 class="cr-src-url">apexroofingaz.com/contact</h3><span class="cr-src-kind">the page that answered</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Telephone</dt><dd>+1 602 555 0148<span class="cr-hint">one dialable format, E.164</span></dd></div><div class="cr-fact"><dt>Mailbox</dt><dd>office@apexroofingaz.com<span class="cr-hint">first address on the page</span></dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">mx1.apexroofingaz.com</h3><span class="cr-src-kind">mail server</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Mailbox checked</dt><dd>Accepts mail<span class="cr-hint">the server answered for this address</span></dd></div><div class="cr-fact"><dt>Checked</dt><dd>2026-11-11</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">apexroofingaz.com/about</h3><span class="cr-src-kind">team page</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Named person</dt><dd>R. Delgado · estimator</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">state register</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Started from</dt><dd>4120 W Buckeye Rd, Phoenix AZ 85009</dd></div></dl></article></div><p class="cr-blank">Nothing else on file for this subject</p></section><section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-verified" tabindex="-1" data-face="verified" hidden><header class="cr-head"><div><h1>Business reference — filed from the source</h1><p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p></div><div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div></header><div class="cr-subject"><h2><span class="cr-inline-label">Subject</span><span class="cr-subject-name">APEX ROOFING CO.</span></h2><p class="cr-subject-line">Verified means the mailbox answered. A server that accepts anything and everything is filed as risky, never as verified — not knowing is a result, not a pass.</p><p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer&rsquo;s data</p></div><div class="cr-sources"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">mx1.apexroofingaz.com</h3><span class="cr-src-kind">mail server</span></header><dl class="cr-facts"><div class="cr-fact"><dt>MX record</dt><dd>Live<span class="cr-hint">a named server is ready to take the mail</span></dd></div><div class="cr-fact"><dt>Probe address</dt><dd>Rejected<span class="cr-hint">a made-up address was refused, so this is not a catch-all</span></dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">smtp.mx1.apexroofingaz.com</h3><span class="cr-src-kind">live check</span></header><dl class="cr-facts"><div class="cr-fact"><dt>office@apexroofingaz.com</dt><dd>Accepted</dd></div><div class="cr-fact"><dt>Checked</dt><dd>2026-11-11</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">libphonenumber</h3><span class="cr-src-kind">number check</span></header><dl class="cr-facts"><div class="cr-fact"><dt>+1 602 555 0148</dt><dd>Valid<span class="cr-hint">a real number, in a real range</span></dd></div><div class="cr-fact"><dt>Kind</dt><dd>Landline</dd></div></dl></article></div><p class="cr-blank">Every claim above was checked on the date shown</p></section><section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-history" tabindex="-1" data-face="history" hidden><header class="cr-head"><div><h1>Business reference — filed from the source</h1><p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p></div><div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div></header><div class="cr-subject"><h2><span class="cr-inline-label">Subject</span><span class="cr-subject-name">APEX ROOFING CO.</span></h2><p class="cr-subject-line">Fifteen years of filings, newest first. A year with nothing in it is shown as a year with nothing in it.</p><p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer&rsquo;s data</p></div><div class="cr-sources"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">filings</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Renewed</dt><dd>2024</dd></div><div class="cr-fact"><dt>Filed</dt><dd>2011</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">city of phoenix</h3><span class="cr-src-kind">permits</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Roofing permit</dt><dd>2019</dd></div><div class="cr-fact"><dt>Between 2012 and 2018</dt><dd class="cr-none">Nothing filed</dd></div></dl></article></div><p class="cr-blank">Nothing else on file for this subject</p></section><section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-empty" tabindex="-1" data-face="empty" hidden><header class="cr-head"><div><h1>Business reference — filed from the source</h1><p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p></div><div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div></header><div class="cr-subject"><h2><span class="cr-inline-label">Subject</span><span class="cr-subject-name">SUN VALLEY GUTTERS LLC.</span></h2><p class="cr-subject-line">Twelve pages read. Not one of them returned a way to make contact. The record is still here, still counted, and the reason it is empty is written down.</p><p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer&rsquo;s data</p></div><div class="cr-ledger"><div class="cr-marks" aria-hidden="true"><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i></div><p class="cr-ledger-cap"><b>12 pages read</b> for a way in · not one of them returned a contact</p></div><div class="cr-sources"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">state register</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Registered address</dt><dd class="cr-none">No street address filed</dd></div><div class="cr-fact"><dt>Trading status</dt><dd>Active</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">sunvalleygutters.com</h3><span class="cr-src-kind">company site</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Contact page</dt><dd class="cr-none">Returned no address</dd></div><div class="cr-fact"><dt>Telephone</dt><dd class="cr-none">Not on the page</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">yelp.com/biz/sun-valley-gutters</h3><span class="cr-src-kind">directory</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Contact details</dt><dd class="cr-none">Placeholder numbers only</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">sunvalleygutters.com/about</h3><span class="cr-src-kind">team page</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Anything usable</dt><dd class="cr-none">Nothing</dd></div></dl></article></div><p class="cr-blank">No contact on file · kept and counted, not dropped</p></section>
+        <section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-identity" tabindex="-1" data-face="identity" hidden><header class="cr-head"><div><p class="cr-card-title">Business reference — filed from the source</p><p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p></div><div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div></header><div class="cr-subject"><h2><span class="cr-inline-label">Subject</span><span class="cr-subject-name">APEX ROOFING CO.</span></h2><p class="cr-subject-line">The register is the spine of the file. Every later fact hangs off this record, and nothing here is guessed at.</p><p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer&rsquo;s data</p></div><div class="cr-sources"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">state register</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Registered address</dt><dd>4120 W Buckeye Rd, Phoenix AZ 85009</dd></div><div class="cr-fact"><dt>Trading status</dt><dd>Active</dd></div><div class="cr-fact"><dt>Register number</dt><dd>14823017<span class="cr-hint">the entity id the state issues</span></dd></div><div class="cr-fact"><dt>Registered agent</dt><dd>R. Delgado</dd></div></dl></article></div><p class="cr-blank">Nothing else on file for this subject</p></section><section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-contact" tabindex="-1" data-face="contact"><header class="cr-head"><div><p class="cr-card-title">Business reference — filed from the source</p><p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p></div><div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div></header><div class="cr-subject"><h2><span class="cr-inline-label">Subject</span><span class="cr-subject-name">APEX ROOFING CO.</span></h2><p class="cr-subject-line">Twelve pages read looking for a way in. Eleven had no public address. The twelfth did, and that is the only reason this file has a number to call.</p><p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer&rsquo;s data</p></div><div class="cr-ledger"><div class="cr-marks" aria-hidden="true"><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark on"></i></div><p class="cr-ledger-cap"><b>12 pages read</b> for a way in · 11 came back with nothing · <b>the last one did</b></p></div><div class="cr-sources"><article class="cr-src cr-src-hit"><header class="cr-src-head"><h3 class="cr-src-url">apexroofingaz.com/contact</h3><span class="cr-src-kind">the page that answered</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Telephone</dt><dd>+1 602 555 0148<span class="cr-hint">one dialable format, E.164</span></dd></div><div class="cr-fact"><dt>Mailbox</dt><dd>office@apexroofingaz.com<span class="cr-hint">first address on the page</span></dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">mx1.apexroofingaz.com</h3><span class="cr-src-kind">mail server</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Mailbox checked</dt><dd>Accepts mail<span class="cr-hint">the server answered for this address</span></dd></div><div class="cr-fact"><dt>Checked</dt><dd>2026-11-11</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">apexroofingaz.com/about</h3><span class="cr-src-kind">team page</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Named person</dt><dd>R. Delgado · estimator</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">state register</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Started from</dt><dd>4120 W Buckeye Rd, Phoenix AZ 85009</dd></div></dl></article></div><p class="cr-blank">Nothing else on file for this subject</p></section><section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-verified" tabindex="-1" data-face="verified" hidden><header class="cr-head"><div><p class="cr-card-title">Business reference — filed from the source</p><p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p></div><div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div></header><div class="cr-subject"><h2><span class="cr-inline-label">Subject</span><span class="cr-subject-name">APEX ROOFING CO.</span></h2><p class="cr-subject-line">Verified means the mailbox answered. A server that accepts anything and everything is filed as risky, never as verified — not knowing is a result, not a pass.</p><p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer&rsquo;s data</p></div><div class="cr-sources"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">mx1.apexroofingaz.com</h3><span class="cr-src-kind">mail server</span></header><dl class="cr-facts"><div class="cr-fact"><dt>MX record</dt><dd>Live<span class="cr-hint">a named server is ready to take the mail</span></dd></div><div class="cr-fact"><dt>Probe address</dt><dd>Rejected<span class="cr-hint">a made-up address was refused, so this is not a catch-all</span></dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">smtp.mx1.apexroofingaz.com</h3><span class="cr-src-kind">live check</span></header><dl class="cr-facts"><div class="cr-fact"><dt>office@apexroofingaz.com</dt><dd>Accepted</dd></div><div class="cr-fact"><dt>Checked</dt><dd>2026-11-11</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">libphonenumber</h3><span class="cr-src-kind">number check</span></header><dl class="cr-facts"><div class="cr-fact"><dt>+1 602 555 0148</dt><dd>Valid<span class="cr-hint">a real number, in a real range</span></dd></div><div class="cr-fact"><dt>Kind</dt><dd>Landline</dd></div></dl></article></div><p class="cr-blank">Every claim above was checked on the date shown</p></section><section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-history" tabindex="-1" data-face="history" hidden><header class="cr-head"><div><p class="cr-card-title">Business reference — filed from the source</p><p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p></div><div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div></header><div class="cr-subject"><h2><span class="cr-inline-label">Subject</span><span class="cr-subject-name">APEX ROOFING CO.</span></h2><p class="cr-subject-line">Fifteen years of filings, newest first. A year with nothing in it is shown as a year with nothing in it.</p><p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer&rsquo;s data</p></div><div class="cr-sources"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">filings</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Renewed</dt><dd>2024</dd></div><div class="cr-fact"><dt>Filed</dt><dd>2011</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">city of phoenix</h3><span class="cr-src-kind">permits</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Roofing permit</dt><dd>2019</dd></div><div class="cr-fact"><dt>Between 2012 and 2018</dt><dd class="cr-none">Nothing filed</dd></div></dl></article></div><p class="cr-blank">Nothing else on file for this subject</p></section><section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-empty" tabindex="-1" data-face="empty" hidden><header class="cr-head"><div><p class="cr-card-title">Business reference — filed from the source</p><p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p></div><div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div></header><div class="cr-subject"><h2><span class="cr-inline-label">Subject</span><span class="cr-subject-name">SUN VALLEY GUTTERS LLC.</span></h2><p class="cr-subject-line">Twelve pages read. Not one of them returned a way to make contact. The record is still here, still counted, and the reason it is empty is written down.</p><p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer&rsquo;s data</p></div><div class="cr-ledger"><div class="cr-marks" aria-hidden="true"><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i></div><p class="cr-ledger-cap"><b>12 pages read</b> for a way in · not one of them returned a contact</p></div><div class="cr-sources"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">state register</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Registered address</dt><dd class="cr-none">No street address filed</dd></div><div class="cr-fact"><dt>Trading status</dt><dd>Active</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">sunvalleygutters.com</h3><span class="cr-src-kind">company site</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Contact page</dt><dd class="cr-none">Returned no address</dd></div><div class="cr-fact"><dt>Telephone</dt><dd class="cr-none">Not on the page</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">yelp.com/biz/sun-valley-gutters</h3><span class="cr-src-kind">directory</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Contact details</dt><dd class="cr-none">Placeholder numbers only</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">sunvalleygutters.com/about</h3><span class="cr-src-kind">team page</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Anything usable</dt><dd class="cr-none">Nothing</dd></div></dl></article></div><p class="cr-blank">No contact on file · kept and counted, not dropped</p></section>
       </div>
       <nav class="cr-index" role="tablist" aria-label="The run, by face" aria-orientation="vertical">
         <button type="button" role="tab" id="cr-tab-identity" data-face="identity" aria-selected="false" aria-controls="read" tabindex="-1" class="cr-tab cr-tab-red"><span><span class="cr-tab-label">Identity</span><small>Who they are, on the register</small></span><b>148</b></button><button type="button" role="tab" id="cr-tab-contact" data-face="contact" aria-selected="true" aria-controls="read" tabindex="0" class="cr-tab cr-tab-amber on"><span><span class="cr-tab-label">Contact</span><small>Read at the source, with the page</small></span><b>91</b></button><button type="button" role="tab" id="cr-tab-verified" data-face="verified" aria-selected="false" aria-controls="read" tabindex="-1" class="cr-tab cr-tab-green"><span><span class="cr-tab-label">Verified</span><small>Mailbox answers, number is real</small></span><b>63</b></button><button type="button" role="tab" id="cr-tab-history" data-face="history" aria-selected="false" aria-controls="read" tabindex="-1" class="cr-tab cr-tab-blue"><span><span class="cr-tab-label">History</span><small>What they filed, and when</small></span><b>44</b></button><button type="button" role="tab" id="cr-tab-empty" data-face="empty" aria-selected="false" aria-controls="read" tabindex="-1" class="cr-tab cr-tab-grey"><span><span class="cr-tab-label">Not on file</span><small>No source could reach them</small></span><b>57</b></button>
