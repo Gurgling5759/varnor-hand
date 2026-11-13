@@ -236,11 +236,48 @@ a{text-decoration:none;color:inherit}
    table it is. Centred, because the sections below it are documents and the
    change of alignment is what makes the opening read as an opening. */
 .cr-hero {
+  position: relative;
+  /* Clips the drifting photograph, which is scaled past its own box. This is
+     safe here and is NOT safe on .cr-page: an ancestor with overflow:hidden
+     kills position:sticky on the band, and .cr-hero is not an ancestor of it. */
+  overflow: hidden;
   background: var(--cr-ground);
   padding: 104px 0 60px;
   text-align: center;
 }
-.cr-hero-inner { display: flex; flex-direction: column; align-items: center; }
+.cr-hero-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
+
+/* The market, from above at night. Held well below the type: the photograph is
+   the room the claim is said in, not a subject competing with it. The two veils
+   are the page's own ground closing over it — the top so the band reads as one
+   surface, the bottom so the photograph never ends on a hard edge. */
+.cr-hero-ground { position: absolute; inset: 0; z-index: 0; }
+.cr-hero-ground img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 1;
+  /* LIFTED, not darkened. The source is a night aerial whose mean luminance is
+     13/255 — 90% of its pixels sit below 20 — so any veil on top of it produced
+     a black rectangle twice in a row. brightness(2.9) brings the lit streets to
+     roughly 60/255 and the brightest glimmers near the top of the range, which
+     is what a city at night actually looks like to a camera that has exposed
+     for the streets. */
+  filter: saturate(.45) brightness(2.9) contrast(1.06);
+}
+/* The first version of this darkened the EDGES and left the centre clear,
+   which is precisely backwards — the centre is where the claim and the lede
+   sit — and it cost the page its photograph entirely. The pool goes where the
+   copy is; the market is allowed to show around it. */
+.cr-hero-ground::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(60% 56% at 50% 45%, rgba(28,27,25,.9) 0%, rgba(28,27,25,.62) 55%, rgba(28,27,25,.14) 100%),
+    linear-gradient(to bottom, rgba(28,27,25,.92) 0%, rgba(28,27,25,.2) 13%, rgba(28,27,25,.36) 52%, rgba(28,27,25,.82) 84%, rgba(28,27,25,.98) 100%);
+}
 
 .cr-hero-eyebrow {
   font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
@@ -309,6 +346,41 @@ a{text-decoration:none;color:inherit}
   color: var(--cr-on-ground-dim);
 }
 .cr-hero-sample b { color: var(--cr-on-ground); }
+
+/* Motion, declared only where it has been asked for. Everything below simply
+   does not exist under `prefers-reduced-motion: reduce`, so the hero is fully
+   composed at rest for anyone who wants stillness — no override needed, and no
+   chance of a rule being forgotten. The entrance is a staggered rise, not a
+   fade-up on every element: the order is eyebrow → claim → lede → action →
+   note, which is the order they should be read in. */
+@media (prefers-reduced-motion: no-preference) {
+  .cr-hero-eyebrow,
+  .cr-display,
+  .cr-hero-lede,
+  .cr-hero-act,
+  .cr-hero-sample {
+    animation: cr-rise .9s cubic-bezier(.22, 1, .36, 1) both;
+  }
+  .cr-hero-eyebrow { animation-delay: .08s; }
+  .cr-display { animation-delay: .18s; }
+  .cr-hero-lede { animation-delay: .32s; }
+  .cr-hero-act { animation-delay: .44s; }
+  .cr-hero-sample { animation-delay: .58s; }
+
+  /* 44s alternate is slow enough to read as a living frame rather than as a
+     slideshow, and 7% is enough to be felt and not enough to be watched. */
+  .cr-hero-ground img {
+    animation: cr-drift 44s ease-in-out infinite alternate;
+  }
+}
+@keyframes cr-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes cr-drift {
+  from { transform: scale(1.002) translate3d(0, 0, 0); }
+  to { transform: scale(1.07) translate3d(0, -1.4%, 0); }
+}
 
 /* The hero. This used to be a fixed 674px band inside a 66 + 674 + 160 = 900
    composition. It is now the top of a scrolling page, so the height is a floor
@@ -814,6 +886,67 @@ a{text-decoration:none;color:inherit}
   line-height: 1.6;
   color: var(--cr-on-ground-dim);
 }
+
+/* ── Plates ────────────────────────────────────────────────────────────────
+   A photograph mounted in the file, not floated on the page. One image per
+   page plus the hero's ground, and every one of them is material — the market,
+   the registers, the paper, the empty drawer — never a customer, because
+   PRODUCT.md forbids inventing one and a stock face under a made-up business
+   name is the exact fabrication this whole design argues against.
+
+   The mount is a hairline inset like the card's own inner rule, so a plate on
+   paper reads as a picture pasted onto the sheet, and the same component on the
+   dark ground reads as a picture pinned to the file. */
+.cr-plate {
+  margin: 44px 0 0;
+  max-width: 720px;
+}
+.cr-plate img {
+  display: block;
+  width: 100%;
+  height: auto;
+  box-shadow: 0 18px 40px rgba(0,0,0,.55);
+}
+.cr-plate figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 13px 0 0;
+  border-top: 1px solid rgba(244,246,242,.22);
+  margin-top: 14px;
+}
+.cr-plate figcaption b {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--cr-white);
+}
+.cr-plate figcaption span {
+  max-width: 58ch;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--cr-on-ground-dim);
+}
+/* On paper the same plate inverts: ink rule, ink caption, and no drop shadow —
+   a photograph pasted to a sheet does not cast one, it sits in the paper. */
+.cr-plate-ink img { box-shadow: none; border: 1px solid rgba(26,23,18,.28); }
+.cr-plate-ink figcaption { border-top-color: rgba(26,23,18,.22); }
+.cr-plate-ink figcaption b { color: var(--cr-ink); }
+.cr-plate-ink figcaption span { color: var(--cr-ink-note); }
+
+/* The home page's closing sheet: the contents on the left, the plate on the
+   right. It is the only two-column section on the site, and it is the one that
+   has a picture in it, so the split is doing work rather than decorating. */
+.cr-sheet-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, .78fr);
+  gap: 0 56px;
+  align-items: start;
+}
+.cr-sheet-split .cr-plate { margin-top: 0; max-width: none; }
 
 /* A sheet: another page of the file, laid on the desk. */
 .cr-sheet {
@@ -1461,6 +1594,13 @@ a{text-decoration:none;color:inherit}
      the full column first, then the button takes the row. */
   .cr-hero-act { width: 100%; }
   .cr-hero-cta { width: 100%; max-width: 340px; padding: 17px 24px; }
+  /* The photograph is a 21:9 band on a wide screen and a tall crop on a phone,
+     where the same veils would leave almost nothing visible. Lift it slightly
+     and keep the ground doing the work of holding the type up. */
+  .cr-hero-ground img { opacity: .5; }
+  .cr-sheet-split { grid-template-columns: 1fr; gap: 0; }
+  .cr-plate { max-width: none; margin-top: 36px; }
+  .cr-sheet-split .cr-plate { margin-top: 40px; }
 
   .cr-band { flex-basis: 62px; padding: 0 16px; gap: 10px; }
   /* Every band control clears a 44px touch target. At these type sizes the
@@ -1677,6 +1817,7 @@ a{text-decoration:none;color:inherit}
 
   <main class="cr-body" id="page">
     <section class="cr-hero">
+      <div class="cr-hero-ground" aria-hidden="true"><img src="img/market-night.jpg" alt="" width="1344" height="576"></div>
       <div class="cr-wrap cr-hero-inner">
         <p class="cr-hero-eyebrow">RUN 0083 &middot; Roofing contractors &middot; Phoenix, AZ</p>
         <h1 class="cr-display">Every business in your <br class="cr-br-desk">market, read at the source.</h1>
@@ -1719,7 +1860,10 @@ a{text-decoration:none;color:inherit}
         <p class="cr-eyebrow cr-eyebrow-ink">Contents</p>
         <h2 class="cr-h2 cr-h2-ink">The rest of the file.</h2>
         <p class="cr-lede cr-lede-ink">One business is on the card above. Three more pages say where its facts came from, what a record holds, and what happens to the businesses this run could not reach.</p>
-        <nav class="cr-contents" aria-label="The rest of this site"><a class="cr-contents-row" href="how-it-reads.html"><span class="cr-contents-name">How it reads</span><span class="cr-contents-kind">the method</span><span class="cr-contents-blurb">Twelve pages opened for one business, the page that answered, and how a value comes to have a source.</span></a><a class="cr-contents-row" href="what-is-on-file.html"><span class="cr-contents-name">What is on file</span><span class="cr-contents-kind">the record</span><span class="cr-contents-blurb">The twelve fields of a record — and the page standing behind every value on it.</span></a><a class="cr-contents-row" href="not-on-file.html"><span class="cr-contents-name">Not on file</span><span class="cr-contents-kind">empty results</span><span class="cr-contents-blurb">The 57 businesses that gave us nothing back, and why they stay in the file anyway.</span></a></nav>
+        <div class="cr-sheet-split">
+          <nav class="cr-contents" aria-label="The rest of this site"><a class="cr-contents-row" href="how-it-reads.html"><span class="cr-contents-name">How it reads</span><span class="cr-contents-kind">the method</span><span class="cr-contents-blurb">Twelve pages opened for one business, the page that answered, and how a value comes to have a source.</span></a><a class="cr-contents-row" href="what-is-on-file.html"><span class="cr-contents-name">What is on file</span><span class="cr-contents-kind">the record</span><span class="cr-contents-blurb">The twelve fields of a record — and the page standing behind every value on it.</span></a><a class="cr-contents-row" href="not-on-file.html"><span class="cr-contents-name">Not on file</span><span class="cr-contents-kind">empty results</span><span class="cr-contents-blurb">The 57 businesses that gave us nothing back, and why they stay in the file anyway.</span></a></nav>
+          <figure class="cr-plate cr-plate-ink"><img src="img/records-stack.jpg" alt="" width="1248" height="832" loading="lazy" decoding="async"><figcaption><b>The file, in the hand.</b><span>One run in one market. Every business it found is in here, including the ones that gave nothing back.</span></figcaption></figure>
+        </div>
       </div>
     </section>
   </main>
