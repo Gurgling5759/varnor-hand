@@ -252,31 +252,59 @@ a{text-decoration:none;color:inherit}
    are the page's own ground closing over it — the top so the band reads as one
    surface, the bottom so the photograph never ends on a hard edge. */
 .cr-hero-ground { position: absolute; inset: 0; z-index: 0; }
-.cr-hero-ground img {
+
+/* LIFTED, not darkened. The source is a night aerial whose mean luminance is
+   13/255 — 90% of its pixels sit below 20 — so any veil on top of it produced
+   a black rectangle twice in a row. brightness(2.9) brings the lit streets to
+   roughly 60/255 and the brightest glimmers near the top of the range, which
+   is what a city at night actually looks like to a camera that has exposed
+   for the streets. The film is generated from that same source, so it takes
+   the same correction, and the poster it shows at rest takes it too — one
+   rule, one grade, whether the ground is moving or not.
+   `:is()` because the still and the film are the same picture and a second
+   copy of this filter is a second thing to forget. */
+.cr-hero-ground :is(video, img) {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
   opacity: 1;
-  /* LIFTED, not darkened. The source is a night aerial whose mean luminance is
-     13/255 — 90% of its pixels sit below 20 — so any veil on top of it produced
-     a black rectangle twice in a row. brightness(2.9) brings the lit streets to
-     roughly 60/255 and the brightest glimmers near the top of the range, which
-     is what a city at night actually looks like to a camera that has exposed
-     for the streets. */
   filter: saturate(.45) brightness(2.9) contrast(1.06);
 }
+
+/* There is deliberately no reduced-motion rule here, and its absence is the
+   mechanism: this element is never hidden, never swapped, and never replaced by
+   a second still. It shows its poster — the film's own first frame — until
+   something calls play(), and the only thing that does is the effect in
+   `_site/index.tsx`, which returns early unless the reader has asked for motion.
+   With `preload="none"` the 308 KB is then never fetched at all. The failure
+   mode is a still hero, which is the composed hero. A `display:none` here would
+   have been the obvious move and the wrong one: Chrome downloads video inside a
+   hidden element anyway, so it hides the motion without saving the bytes. */
 /* The first version of this darkened the EDGES and left the centre clear,
    which is precisely backwards — the centre is where the claim and the lede
    sit — and it cost the page its photograph entirely. The pool goes where the
-   copy is; the market is allowed to show around it. */
+   copy is; the market is allowed to show around it.
+
+   Retuned once, when the ground became footage, for one measured reason: the
+   film opens dark and ends lit (mean luminance 13 → 16 over its five seconds),
+   so the veils stopped grading a night photograph and started grading whatever
+   the clip happened to be showing. Behind the run slug the gap pixels sat at a
+   median of 84/255 at the end of the clip, on a #9a958a label — 2.5:1, on a
+   12.5px line, permanently. That was fixed at the label, which is where the
+   fault was (see .cr-hero-eyebrow), so the veils stay as they were tuned.
+
+   The one change here is the top of the vertical gradient: it dipped to .2 at
+   13%, and a dip that deep right where the city's brightest band crosses the
+   page draws a visible seam across the top. .34 at 14% holds the same
+   composition without the hard edge. */
 .cr-hero-ground::after {
   content: "";
   position: absolute;
   inset: 0;
   background:
     radial-gradient(60% 56% at 50% 45%, rgba(28,27,25,.9) 0%, rgba(28,27,25,.62) 55%, rgba(28,27,25,.14) 100%),
-    linear-gradient(to bottom, rgba(28,27,25,.92) 0%, rgba(28,27,25,.2) 13%, rgba(28,27,25,.36) 52%, rgba(28,27,25,.82) 84%, rgba(28,27,25,.98) 100%);
+    linear-gradient(to bottom, rgba(28,27,25,.92) 0%, rgba(28,27,25,.34) 14%, rgba(28,27,25,.36) 52%, rgba(28,27,25,.82) 84%, rgba(28,27,25,.98) 100%);
 }
 
 .cr-hero-eyebrow {
@@ -285,7 +313,10 @@ a{text-decoration:none;color:inherit}
   font-weight: 700;
   letter-spacing: .2em;
   text-transform: uppercase;
-  color: var(--cr-on-ground-dim);
+  /* Not the dim token, and not a matter of taste: this is the one line of type
+     on the site that sits over photography rather than over the ground. Every
+     other use of `--cr-on-ground-dim` is on flat ground, where 9a is right. */
+  color: var(--cr-on-ground);
 }
 /* The designed break is a <br>, so the cap holds the two lines rather than
    letting a ch measure re-break them. 98px is the ceiling at 1440; the vw term
@@ -504,8 +535,14 @@ a{text-decoration:none;color:inherit}
   /* 44s was the wrong instinct twice over: too slow to be seen at all, and the
      wrong idea besides — a hero whose only motion is a drift is a hero with no
      event in it. The drift stays as the room breathing, faster and shallower,
-     but the sweep above is what the hero is actually doing. */
-  .cr-hero-ground img {
+     but the sweep above is what the hero is actually doing.
+
+     The drift now rides on top of footage that is already moving: 26s for two
+     points of travel is a breath under a moving camera, not a second camera,
+     and the two do not fight. It carries on after the film ends, which is what
+     keeps a hero that has stopped moving from reading as a hero that has
+     frozen. */
+  .cr-hero-ground :is(video, img) {
     animation: cr-drift 26s ease-in-out infinite alternate;
   }
 }
@@ -1103,6 +1140,16 @@ a{text-decoration:none;color:inherit}
 .cr-plate-ink figcaption { border-top-color: rgba(26,23,18,.22); }
 .cr-plate-ink figcaption b { color: var(--cr-ink); }
 .cr-plate-ink figcaption span { color: var(--cr-ink-note); }
+
+/* A screenshot of the running app is not a photograph of a desk, so it does not
+   sit at the house plate width: 720px would put a 1440px workspace at half
+   scale, where the register's own type is no longer legible and the thing the
+   plate exists to show is the layout. */
+.cr-plate-wide { max-width: 1000px; }
+/* And the phone plate cannot simply take the house width either. `img` is
+   `width:100%`, so a 390px screenshot in a 720px box is *upscaled* — a soft,
+   resampled phone. It is capped at its own pixel width so it renders 1:1. */
+.cr-plate-phone { max-width: 302px; }
 
 /* A sheet: another page of the file, laid on the desk. */
 .cr-sheet {
@@ -1784,7 +1831,7 @@ a{text-decoration:none;color:inherit}
   /* The photograph is a 21:9 band on a wide screen and a tall crop on a phone,
      where the same veils would leave almost nothing visible. Lift it slightly
      and keep the ground doing the work of holding the type up. */
-  .cr-hero-ground img { opacity: .5; }
+  .cr-hero-ground :is(video, img) { opacity: .5; }
   /* 148 marks cannot hold a 30px height in a strip that wraps to three rows on a
      phone, so the strip gets shorter and the counters stack rather than sitting
      in a row of three that would each be under 100px wide. */
@@ -1794,6 +1841,9 @@ a{text-decoration:none;color:inherit}
   .cr-read-counts { margin-top: 22px; gap: 18px 0; flex-direction: column; }
   .cr-read-count dd { font-size: 28px; }
   .cr-plate { max-width: none; margin-top: 36px; }
+  /* Restated, because the rule above is the same specificity and comes later.
+     The wide plate should lose its cap here; the phone plate must keep one. */
+  .cr-plate-phone { max-width: 302px; }
 
   .cr-band { flex-basis: 62px; padding: 0 16px; gap: 10px; }
   /* Every band control clears a 44px touch target. At these type sizes the
@@ -1999,12 +2049,12 @@ a{text-decoration:none;color:inherit}
     <a href="index.html" class="cr-brand"><img src="logo.svg" alt="" aria-hidden="true" width="30" height="30"><span>Varnor Index</span></a>
     <nav class="cr-nav" aria-label="Primary">
       <a href="index.html#the-file" class="cr-nav-link">The file</a><a href="index.html#how-it-reads" class="cr-nav-link on" aria-current="page">How it reads</a><a href="index.html#what-is-on-file" class="cr-nav-link">What is on file</a><a href="index.html#not-on-file" class="cr-nav-link">Not on file</a>
-      <a href="#" class="cr-nav-link cr-nav-signin">Sign in</a>
-      <a href="#" class="cr-signup">Open an account</a>
+      <a href="app.html#the-register" class="cr-nav-link cr-nav-signin">Sign in</a>
+      <a href="app.html#open-an-account" class="cr-signup">Open an account</a>
     </nav>
     <details class="cr-menu">
       <summary>Menu</summary>
-      <nav class="cr-menu-list" aria-label="All pages"><a href="index.html#the-file" class="cr-menu-link"><span>The file</span><small>front sheet</small></a><a href="index.html#how-it-reads" class="cr-menu-link on" aria-current="page"><span>How it reads</span><small>the method</small></a><a href="index.html#what-is-on-file" class="cr-menu-link"><span>What is on file</span><small>the record</small></a><a href="index.html#not-on-file" class="cr-menu-link"><span>Not on file</span><small>empty results</small></a><a href="#" class="cr-menu-link"><span>Sign in</span><small>your account</small></a></nav>
+      <nav class="cr-menu-list" aria-label="All pages"><a href="index.html#the-file" class="cr-menu-link"><span>The file</span><small>front sheet</small></a><a href="index.html#how-it-reads" class="cr-menu-link on" aria-current="page"><span>How it reads</span><small>the method</small></a><a href="index.html#what-is-on-file" class="cr-menu-link"><span>What is on file</span><small>the record</small></a><a href="index.html#not-on-file" class="cr-menu-link"><span>Not on file</span><small>empty results</small></a><a href="app.html#the-register" class="cr-menu-link"><span>Sign in</span><small>your account</small></a></nav>
     </details>
   </header>
 
@@ -2037,13 +2087,13 @@ a{text-decoration:none;color:inherit}
         <p>Every fact carries the page it came from, and every record that came back empty is still filed &mdash; labelled, counted, and kept. Nothing is quietly dropped.</p>
       </div>
       <div class="cr-act">
-        <a href="#">Open an account</a>
+        <a href="app.html#open-an-account">Open an account</a>
         <span>Free to start &middot; no card &middot; confirm your address once</span>
       </div>
     </div>
     <nav class="cr-wrap cr-foot-nav" aria-label="Footer">
       <a href="index.html#the-file" class="">The file</a><a href="index.html#how-it-reads" class=" on" aria-current="page">How it reads</a><a href="index.html#what-is-on-file" class="">What is on file</a><a href="index.html#not-on-file" class="">Not on file</a>
-      <a href="#">Sign in</a>
+      <a href="app.html#the-register">Sign in</a>
     </nav>
     <div class="cr-wrap cr-colophon">
       <p>Varnor Index &middot; the file on every business in your market</p>
