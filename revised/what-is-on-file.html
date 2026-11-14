@@ -1038,6 +1038,19 @@ a{text-decoration:none;color:inherit}
 }
 .cr-lede-ink { color: var(--cr-ink-body); }
 
+/* A link inside a paragraph of prose, which is the only place on this site a
+   link sits in running text. It is underlined rather than coloured: the file's
+   red is the one action, and a second red in a paragraph would spend it on a
+   navigation. The underline carries the affordance instead, with an offset so
+   it does not collide with the descenders of a serif face. */
+.cr-inline-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.cr-inline-link:hover { color: var(--cr-red); }
+
 /* The five counts at scale. This is the largest type on the page after the
    subject — the run's size is the product's whole claim, so it is not set as a
    row of small statistics. */
