@@ -277,22 +277,32 @@ a{text-decoration:none;color:inherit}
    a second still. It shows its poster — the film's own first frame — until
    something calls play(), and the only thing that does is the effect in
    `_site/index.tsx`, which returns early unless the reader has asked for motion.
-   With `preload="none"` the 308 KB is then never fetched at all. The failure
+   With `preload="none"` the 342 KB is then never fetched at all. The failure
    mode is a still hero, which is the composed hero. A `display:none` here would
    have been the obvious move and the wrong one: Chrome downloads video inside a
-   hidden element anyway, so it hides the motion without saving the bytes. */
+   hidden element anyway, so it hides the motion without saving the bytes.
+
+   The same effect is also the only thing that pauses it: an IntersectionObserver
+   stops the loop once the hero is off screen, so an ambient film does not run
+   behind a reader who is four screens further down. */
 /* The first version of this darkened the EDGES and left the centre clear,
    which is precisely backwards — the centre is where the claim and the lede
    sit — and it cost the page its photograph entirely. The pool goes where the
    copy is; the market is allowed to show around it.
 
    Retuned once, when the ground became footage, for one measured reason: the
-   film opens dark and ends lit (mean luminance 13 → 16 over its five seconds),
-   so the veils stopped grading a night photograph and started grading whatever
-   the clip happened to be showing. Behind the run slug the gap pixels sat at a
-   median of 84/255 at the end of the clip, on a #9a958a label — 2.5:1, on a
-   12.5px line, permanently. That was fixed at the label, which is where the
+   film opens dark and ends lit (mean luminance 13 → 16 over its first five
+   seconds), so the veils stopped grading a night photograph and started grading
+   whatever the clip happened to be showing. Behind the run slug the gap pixels
+   sat at a median of 84/255 at the end of the clip, on a #9a958a label — 2.5:1,
+   on a 12.5px line, permanently. That was fixed at the label, which is where the
    fault was (see .cr-hero-eyebrow), so the veils stay as they were tuned.
+
+   That 84/255 is now a *passing* value rather than the one the hero rests on:
+   the film loops through itself in reverse, so the brightest frame is a moment
+   in the middle of the cycle instead of the frame it stops at. The label still
+   has to clear it, which is why it is still on `--cr-on-ground` and not the
+   dim token.
 
    The one change here is the top of the vertical gradient: it dipped to .2 at
    13%, and a dip that deep right where the city's brightest band crosses the
