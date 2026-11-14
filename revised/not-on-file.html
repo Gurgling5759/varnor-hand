@@ -1104,17 +1104,6 @@ a{text-decoration:none;color:inherit}
 .cr-plate-ink figcaption b { color: var(--cr-ink); }
 .cr-plate-ink figcaption span { color: var(--cr-ink-note); }
 
-/* The home page's closing sheet: the contents on the left, the plate on the
-   right. It is the only two-column section on the site, and it is the one that
-   has a picture in it, so the split is doing work rather than decorating. */
-.cr-sheet-split {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, .78fr);
-  gap: 0 56px;
-  align-items: start;
-}
-.cr-sheet-split .cr-plate { margin-top: 0; max-width: none; }
-
 /* A sheet: another page of the file, laid on the desk. */
 .cr-sheet {
   background: var(--cr-sheet);
@@ -1796,17 +1785,15 @@ a{text-decoration:none;color:inherit}
      where the same veils would leave almost nothing visible. Lift it slightly
      and keep the ground doing the work of holding the type up. */
   .cr-hero-ground img { opacity: .5; }
-  /* 148 marks cannot hold a 30px height in a row that wraps to five, so the
-     strip gets shorter and the counters stack rather than sitting in a row of
-     three that would each be under 100px wide. */
+  /* 148 marks cannot hold a 30px height in a strip that wraps to three rows on a
+     phone, so the strip gets shorter and the counters stack rather than sitting
+     in a row of three that would each be under 100px wide. */
   .cr-read { margin-top: 40px; }
   .cr-read-mark { width: 3px; height: 20px; }
   .cr-read-strip { gap: 2px; }
   .cr-read-counts { margin-top: 22px; gap: 18px 0; flex-direction: column; }
   .cr-read-count dd { font-size: 28px; }
-  .cr-sheet-split { grid-template-columns: 1fr; gap: 0; }
   .cr-plate { max-width: none; margin-top: 36px; }
-  .cr-sheet-split .cr-plate { margin-top: 40px; }
 
   .cr-band { flex-basis: 62px; padding: 0 16px; gap: 10px; }
   /* Every band control clears a 44px touch target. At these type sizes the
