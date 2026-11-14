@@ -347,17 +347,119 @@ a{text-decoration:none;color:inherit}
 }
 .cr-hero-sample b { color: var(--cr-on-ground); }
 
+/* The run, performing itself. One mark per business, laid edge to edge across
+   the measure, and they light in filing order. This is the hero's move; the
+   photograph behind it is only the room it happens in. */
+/* 900px, not the full 1092 measure: 148 marks at 4px with a 2px gap need 886px,
+   and the strip is centred inside that rather than stretched to the column. The
+   first version used `flex: 1 1 0` with a 3px floor, and 143 of the 148 fit on
+   one line — so the last five wrapped into a row of their own and grew to fill
+   it, printing as five enormous chips across the bottom of the chart. A chart
+   with five misfiled bars in it is not a chart. Fixed width, no grow, and the
+   row count is whatever the window allows. */
+.cr-read { margin-top: 52px; width: 100%; max-width: 900px; }
+.cr-read-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+}
+/* Fixed, never grown, so every mark in every row is the same size and a wrapped
+   last row is ragged rather than stretched. Wrapping is the honest fallback: a
+   strip that quietly showed 90 of the 148 because 148 would not fit would be
+   the exact dishonesty this whole site is an argument against. */
+.cr-read-mark {
+  display: block;
+  flex: 0 0 auto;
+  width: 4px;
+  height: 30px;
+  background: rgba(207, 202, 191, .10);
+  box-shadow: inset 0 0 0 1px rgba(207, 202, 191, .22);
+}
+/* The same struck chip the ledger and the wall of 57 use, at hero scale. */
+.cr-read-mark::after {
+  content: "";
+  display: block;
+  height: 100%;
+  background: linear-gradient(
+    to bottom right,
+    transparent 46.5%,
+    rgba(207, 202, 191, .26) 46.5%,
+    rgba(207, 202, 191, .26) 53.5%,
+    transparent 53.5%
+  );
+}
+.cr-read-mark.on {
+  background: var(--cr-red);
+  box-shadow: 0 6px 14px rgba(179, 39, 30, .4);
+}
+.cr-read-mark.on::after { display: none; }
+
+.cr-read-counts {
+  margin-top: 26px;
+  display: flex;
+  justify-content: center;
+  gap: 0 58px;
+}
+.cr-read-count { text-align: center; }
+.cr-read-count dt {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--cr-on-ground-dim);
+}
+.cr-read-count dd {
+  margin-top: 4px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.02em;
+  color: var(--cr-white);
+}
+/* The digit string is painted by the ::after counter, so the only thing in the
+   <b> itself is a custom property. */
+.cr-read-count b { display: block; }
+.cr-read-count b::after { content: counter(cr-n); }
+.cr-read-count-empty dd { color: var(--cr-on-ground-dim); }
+
+.cr-read-cap {
+  margin-top: 22px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  letter-spacing: .02em;
+  color: var(--cr-on-ground-dim);
+}
+
+/* Not `display: none` and not `visibility: hidden` — both take the text out of
+   the accessibility tree along with the layout, and this text exists only for it. */
+.cr-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Motion, declared only where it has been asked for. Everything below simply
    does not exist under `prefers-reduced-motion: reduce`, so the hero is fully
    composed at rest for anyone who wants stillness — no override needed, and no
    chance of a rule being forgotten. The entrance is a staggered rise, not a
    fade-up on every element: the order is eyebrow → claim → lede → action →
-   note, which is the order they should be read in. */
+   strip → note, which is the order they should be read in. */
 @media (prefers-reduced-motion: no-preference) {
   .cr-hero-eyebrow,
   .cr-display,
   .cr-hero-lede,
   .cr-hero-act,
+  .cr-read,
   .cr-hero-sample {
     animation: cr-rise .9s cubic-bezier(.22, 1, .36, 1) both;
   }
@@ -365,21 +467,86 @@ a{text-decoration:none;color:inherit}
   .cr-display { animation-delay: .18s; }
   .cr-hero-lede { animation-delay: .32s; }
   .cr-hero-act { animation-delay: .44s; }
-  .cr-hero-sample { animation-delay: .58s; }
+  .cr-read { animation-delay: .58s; }
+  .cr-hero-sample { animation-delay: .7s; }
 
-  /* 44s alternate is slow enough to read as a living frame rather than as a
-     slideshow, and 7% is enough to be felt and not enough to be watched. */
+  /* The sweep. `--i` is the mark's index in the run, set inline by React, so the
+     whole thing is one delay calculation and there is no timer to drift.
+     19ms apart means the run takes 2.8s, plus .5s for the last mark to settle:
+     long enough to watch, short enough not to be waiting for. */
+  .cr-read-mark {
+    animation: cr-read-gave-nothing .5s ease-out both;
+    animation-delay: calc(var(--i) * 19ms);
+  }
+  /* The ones that answered stay lit. This is the whole argument of the strip:
+     the lit marks do not go out, and the struck ones do. */
+  .cr-read-mark.on {
+    animation-name: cr-read-read-at-source;
+    animation-delay: calc(var(--i) * 19ms);
+  }
+
+  /* The counters run with their own group of marks, not with the whole strip:
+     each one lands on its final value at the moment the sweep reaches its own
+     last mark. "Read at the source" finishes when mark 91 lights (91 x 19ms),
+     "filed" when the run ends at mark 148, and "gave nothing back" only starts
+     once the run has actually reached the businesses that gave nothing back. */
+  .cr-read-count b {
+    animation: cr-count 2.81s cubic-bezier(.4, 0, .2, 1) both;
+  }
+  .cr-read-count-contacted b {
+    animation-duration: 1.73s;
+  }
+  .cr-read-count-empty b {
+    animation-duration: 1.08s;
+    animation-delay: 1.73s;
+  }
+
+  /* 44s was the wrong instinct twice over: too slow to be seen at all, and the
+     wrong idea besides — a hero whose only motion is a drift is a hero with no
+     event in it. The drift stays as the room breathing, faster and shallower,
+     but the sweep above is what the hero is actually doing. */
   .cr-hero-ground img {
-    animation: cr-drift 44s ease-in-out infinite alternate;
+    animation: cr-drift 26s ease-in-out infinite alternate;
   }
 }
 @keyframes cr-rise {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: none; }
 }
+/* Read, and a way in was found: the chip fills and holds. */
+@keyframes cr-read-read-at-source {
+  from { background: rgba(207, 202, 191, .10); box-shadow: inset 0 0 0 1px rgba(207, 202, 191, .22); }
+  to { background: var(--cr-red); box-shadow: 0 6px 14px rgba(179, 39, 30, .4); }
+}
+/* Read, and nothing came back: the chip lights under the reader and goes out
+   again. It ends in exactly the state the wall of 57 draws on /not-on-file. */
+@keyframes cr-read-gave-nothing {
+  0% { background: rgba(207, 202, 191, .10); }
+  34% { background: var(--cr-red); box-shadow: 0 6px 14px rgba(179, 39, 30, .4); }
+  100% { background: rgba(207, 202, 191, .10); box-shadow: inset 0 0 0 1px rgba(207, 202, 191, .22); }
+}
 @keyframes cr-drift {
-  from { transform: scale(1.002) translate3d(0, 0, 0); }
-  to { transform: scale(1.07) translate3d(0, -1.4%, 0); }
+  from { transform: scale(1.02) translate3d(0, 0, 0); }
+  to { transform: scale(1.1) translate3d(0, -2%, 0); }
+}
+
+/* A counting digit string. `@property` is what makes `--cr-n` interpolable —
+   an unregistered custom property animates discretely, which would make the
+   numbers snap rather than count. Where it is unsupported the `from` frame is
+   simply skipped and the base value below shows the final number, which is the
+   right answer for a reader who never sees the count happen. */
+@property --cr-n {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: false;
+}
+.cr-read-count b {
+  --cr-n: var(--to);
+  counter-reset: cr-n var(--cr-n);
+}
+@keyframes cr-count {
+  from { --cr-n: 0; }
+  to { --cr-n: var(--to); }
 }
 
 /* The hero. This used to be a fixed 674px band inside a 66 + 674 + 160 = 900
@@ -956,6 +1123,37 @@ a{text-decoration:none;color:inherit}
   box-shadow: 0 -20px 50px rgba(0,0,0,.34);
 }
 .cr-sheet-alt { background: var(--cr-card); }
+
+/* The chapter divider — the tab card between one chapter of the file and the
+   next. Short on purpose: the chapter's own title is the next thing down the
+   page, so this is the tab and not a second title. The red rule down its left
+   edge is the tab itself, the same red the ledger uses for the page that
+   answered — on a sheet of dividers, this is the one standing proud. */
+.cr-divider {
+  background: var(--cr-sheet);
+  color: var(--cr-ink);
+  padding: 46px 0 48px;
+  box-shadow: 0 -18px 44px rgba(0,0,0,.32);
+}
+.cr-divider-inner { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 26px; }
+.cr-divider-tab { background: var(--cr-red); }
+.cr-divider-label {
+  margin-top: 10px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: clamp(30px, 3.4vw, 44px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.02em;
+  color: var(--cr-ink);
+}
+.cr-divider-blurb {
+  margin-top: 12px;
+  max-width: 62ch;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--cr-ink-note);
+}
 
 /* ── The rail: how it reads ────────────────────────────────────────────────
    This is the one page whose subject is a sequence, so it is the one page laid
@@ -1598,6 +1796,14 @@ a{text-decoration:none;color:inherit}
      where the same veils would leave almost nothing visible. Lift it slightly
      and keep the ground doing the work of holding the type up. */
   .cr-hero-ground img { opacity: .5; }
+  /* 148 marks cannot hold a 30px height in a row that wraps to five, so the
+     strip gets shorter and the counters stack rather than sitting in a row of
+     three that would each be under 100px wide. */
+  .cr-read { margin-top: 40px; }
+  .cr-read-mark { width: 3px; height: 20px; }
+  .cr-read-strip { gap: 2px; }
+  .cr-read-counts { margin-top: 22px; gap: 18px 0; flex-direction: column; }
+  .cr-read-count dd { font-size: 28px; }
   .cr-sheet-split { grid-template-columns: 1fr; gap: 0; }
   .cr-plate { max-width: none; margin-top: 36px; }
   .cr-sheet-split .cr-plate { margin-top: 40px; }
@@ -1805,13 +2011,13 @@ a{text-decoration:none;color:inherit}
   <header class="cr-band">
     <a href="index.html" class="cr-brand"><img src="logo.svg" alt="" aria-hidden="true" width="30" height="30"><span>Varnor Index</span></a>
     <nav class="cr-nav" aria-label="Primary">
-      <a href="index.html" class="cr-nav-link">The file</a><a href="how-it-reads.html" class="cr-nav-link">How it reads</a><a href="what-is-on-file.html" class="cr-nav-link on" aria-current="page">What is on file</a><a href="not-on-file.html" class="cr-nav-link">Not on file</a>
+      <a href="index.html#the-file" class="cr-nav-link">The file</a><a href="index.html#how-it-reads" class="cr-nav-link">How it reads</a><a href="index.html#what-is-on-file" class="cr-nav-link on" aria-current="page">What is on file</a><a href="index.html#not-on-file" class="cr-nav-link">Not on file</a>
       <a href="#" class="cr-nav-link cr-nav-signin">Sign in</a>
       <a href="#" class="cr-signup">Open an account</a>
     </nav>
     <details class="cr-menu">
       <summary>Menu</summary>
-      <nav class="cr-menu-list" aria-label="All pages"><a href="index.html" class="cr-menu-link"><span>The file</span><small>front sheet</small></a><a href="how-it-reads.html" class="cr-menu-link"><span>How it reads</span><small>the method</small></a><a href="what-is-on-file.html" class="cr-menu-link on" aria-current="page"><span>What is on file</span><small>the record</small></a><a href="not-on-file.html" class="cr-menu-link"><span>Not on file</span><small>empty results</small></a><a href="#" class="cr-menu-link"><span>Sign in</span><small>your account</small></a></nav>
+      <nav class="cr-menu-list" aria-label="All pages"><a href="index.html#the-file" class="cr-menu-link"><span>The file</span><small>front sheet</small></a><a href="index.html#how-it-reads" class="cr-menu-link"><span>How it reads</span><small>the method</small></a><a href="index.html#what-is-on-file" class="cr-menu-link on" aria-current="page"><span>What is on file</span><small>the record</small></a><a href="index.html#not-on-file" class="cr-menu-link"><span>Not on file</span><small>empty results</small></a><a href="#" class="cr-menu-link"><span>Sign in</span><small>your account</small></a></nav>
     </details>
   </header>
 
@@ -1822,7 +2028,7 @@ a{text-decoration:none;color:inherit}
         <h1 class="cr-h1 cr-h1-ink">One record per business, and everything on it has a page behind it.</h1>
         <p class="cr-lede cr-lede-ink">A run does not hand you a table of columns and let you work out what filled them. Every business gets the same twelve fields, and every value in them was read off a page that is named next to it.</p>
         <figure class="cr-plate cr-plate-ink"><img src="img/paper-raking.jpg" alt="" width="1248" height="832" loading="lazy" decoding="async"><figcaption><b>A record is paper.</b><span>Twelve fields on every business, and a page standing behind every value that fills one.</span></figcaption></figure>
-        <h2 class="cr-h3">The twelve fields a record holds.</h2>
+        <h3 class="cr-h3">The twelve fields a record holds.</h3>
         <dl class="cr-record"><div class="cr-record-row"><dt>Business</dt><dd>Trading name, as the register has it</dd></div><div class="cr-record-row"><dt>Trade</dt><dd>The trade you asked for</dd></div><div class="cr-record-row"><dt>Market</dt><dd>The city and state it trades in</dd></div><div class="cr-record-row"><dt>Address</dt><dd>Registered address, with the page it came from</dd></div><div class="cr-record-row"><dt>Register number</dt><dd>The entity id the state issues</dd></div><div class="cr-record-row"><dt>Telephone</dt><dd>One dialable format, checked against a real range</dd></div><div class="cr-record-row"><dt>Mailbox</dt><dd>The first public address, and whether the server took it</dd></div><div class="cr-record-row"><dt>Named person</dt><dd>Only when a page names one against a role</dd></div><div class="cr-record-row"><dt>Socials</dt><dd>The profiles a page links to for itself</dd></div><div class="cr-record-row"><dt>Sources</dt><dd>Every page the run opened for this business</dd></div><div class="cr-record-row"><dt>Empty results</dt><dd>What was looked for and not found</dd></div><div class="cr-record-row"><dt>Checked on</dt><dd>The date each claim above was tested</dd></div></dl>
       </div>
     </section>
@@ -1830,7 +2036,7 @@ a{text-decoration:none;color:inherit}
     <section class="cr-runband">
       <div class="cr-wrap">
         <p class="cr-eyebrow">How to read one</p>
-        <h2 class="cr-h2">A blank in the record is a finding, not a gap.</h2>
+        <h3 class="cr-h2">A blank in the record is a finding, not a gap.</h3>
         <p class="cr-lede">Four of the twelve are filled for every business without exception: the name, the trade you asked for, the market it trades in, and the date every claim on the record was tested. The other eight hold whatever the pages had to give, and a business that publishes nothing gets nothing in them. There are no dashes and no placeholders standing in for a fact nobody found &mdash; an empty field always has a page behind it that was opened, read, and came back with nothing. The business below happens to be one of the fuller records this run produced, and even it has a row with nothing in it, because four pages were read and not one of them linked an account.</p>
         <dl class="cr-silence"><div class="cr-silence-row"><dt>Registered address</dt><dd class="cr-silence-none">No street address filed</dd><dd class="cr-silence-src">arizona corporation commission<small>state register</small></dd></div><div class="cr-silence-row"><dt>Contact page</dt><dd class="cr-silence-none">Returned no address</dd><dd class="cr-silence-src">sunvalleygutters.com<small>company site</small></dd></div><div class="cr-silence-row"><dt>Telephone</dt><dd class="cr-silence-none">Not on the page</dd><dd class="cr-silence-src">sunvalleygutters.com<small>company site</small></dd></div><div class="cr-silence-row"><dt>Contact details</dt><dd class="cr-silence-none">Placeholder numbers only</dd><dd class="cr-silence-src">yelp.com/biz/sun-valley-gutters<small>directory</small></dd></div><div class="cr-silence-row"><dt>Anything usable</dt><dd class="cr-silence-none">Nothing</dd><dd class="cr-silence-src">sunvalleygutters.com/about<small>team page</small></dd></div></dl>
         <p class="cr-figure-foot">Those are the five empty results on SUN VALLEY GUTTERS LLC. &mdash; one of the 57 businesses this run could not reach, and the only one of them shown in full anywhere on this site. Four pages were opened for it and read to the end; five things the record looked for came back with nothing; each one is written down beside the page that was silent. That is a filled record, not an empty one.</p>
@@ -1840,7 +2046,7 @@ a{text-decoration:none;color:inherit}
     <section class="cr-sheet cr-sheet-alt">
       <div class="cr-wrap">
         <p class="cr-eyebrow cr-eyebrow-ink">Filled in</p>
-        <h2 class="cr-h2 cr-h2-ink">The same twelve, for one business.</h2>
+        <h3 class="cr-h2 cr-h2-ink">The same twelve, for one business.</h3>
         <p class="cr-lede cr-lede-ink">Roofing contractors in Phoenix, AZ, from RUN 0083, read on 2026-11-11. Two of the twelve rows below are the record describing itself &mdash; how many pages it rests on, and what those pages did not give &mdash; and they say so rather than pointing at a page that does not exist.</p>
         <div class="cr-filled-legend" aria-hidden="true"><span>Field</span><span>Value</span><span>Read from</span></div>
         <dl class="cr-filled"><div class="cr-filled-row"><dt>Business</dt><dd>APEX ROOFING CO.</dd><dd class="cr-filled-src">arizona corporation commission</dd></div><div class="cr-filled-row"><dt>Trade</dt><dd>Roofing contractors</dd><dd class="cr-filled-src">the search you filed</dd></div><div class="cr-filled-row"><dt>Market</dt><dd>Phoenix, AZ</dd><dd class="cr-filled-src">the search you filed</dd></div><div class="cr-filled-row"><dt>Address</dt><dd>4120 W Buckeye Rd, Phoenix AZ 85009</dd><dd class="cr-filled-src">arizona corporation commission</dd></div><div class="cr-filled-row"><dt>Register number</dt><dd>14823017</dd><dd class="cr-filled-src">arizona corporation commission</dd></div><div class="cr-filled-row"><dt>Telephone</dt><dd>+1 602 555 0148</dd><dd class="cr-filled-src">apexroofingaz.com/contact</dd></div><div class="cr-filled-row"><dt>Mailbox</dt><dd>office@apexroofingaz.com</dd><dd class="cr-filled-src">apexroofingaz.com/contact</dd></div><div class="cr-filled-row"><dt>Named person</dt><dd>R. Delgado · estimator</dd><dd class="cr-filled-src">apexroofingaz.com/about</dd></div><div class="cr-filled-row"><dt>Socials</dt><dd class="cr-none">None linked from its own pages</dd><dd class="cr-filled-src">4 pages read</dd></div><div class="cr-filled-row"><dt>Sources</dt><dd>4 pages opened</dd><dd class="cr-filled-src">this record</dd></div><div class="cr-filled-row"><dt>Empty results</dt><dd>No second number, no socials</dd><dd class="cr-filled-src">this record</dd></div><div class="cr-filled-row"><dt>Checked on</dt><dd>2026-11-11</dd><dd class="cr-filled-src">the run's docket</dd></div></dl>
@@ -1861,7 +2067,7 @@ a{text-decoration:none;color:inherit}
       </div>
     </div>
     <nav class="cr-wrap cr-foot-nav" aria-label="Footer">
-      <a href="index.html" class="">The file</a><a href="how-it-reads.html" class="">How it reads</a><a href="what-is-on-file.html" class=" on" aria-current="page">What is on file</a><a href="not-on-file.html" class="">Not on file</a>
+      <a href="index.html#the-file" class="">The file</a><a href="index.html#how-it-reads" class="">How it reads</a><a href="index.html#what-is-on-file" class=" on" aria-current="page">What is on file</a><a href="index.html#not-on-file" class="">Not on file</a>
       <a href="#">Sign in</a>
     </nav>
     <div class="cr-wrap cr-colophon">

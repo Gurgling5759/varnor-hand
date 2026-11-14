@@ -347,17 +347,119 @@ a{text-decoration:none;color:inherit}
 }
 .cr-hero-sample b { color: var(--cr-on-ground); }
 
+/* The run, performing itself. One mark per business, laid edge to edge across
+   the measure, and they light in filing order. This is the hero's move; the
+   photograph behind it is only the room it happens in. */
+/* 900px, not the full 1092 measure: 148 marks at 4px with a 2px gap need 886px,
+   and the strip is centred inside that rather than stretched to the column. The
+   first version used `flex: 1 1 0` with a 3px floor, and 143 of the 148 fit on
+   one line — so the last five wrapped into a row of their own and grew to fill
+   it, printing as five enormous chips across the bottom of the chart. A chart
+   with five misfiled bars in it is not a chart. Fixed width, no grow, and the
+   row count is whatever the window allows. */
+.cr-read { margin-top: 52px; width: 100%; max-width: 900px; }
+.cr-read-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+}
+/* Fixed, never grown, so every mark in every row is the same size and a wrapped
+   last row is ragged rather than stretched. Wrapping is the honest fallback: a
+   strip that quietly showed 90 of the 148 because 148 would not fit would be
+   the exact dishonesty this whole site is an argument against. */
+.cr-read-mark {
+  display: block;
+  flex: 0 0 auto;
+  width: 4px;
+  height: 30px;
+  background: rgba(207, 202, 191, .10);
+  box-shadow: inset 0 0 0 1px rgba(207, 202, 191, .22);
+}
+/* The same struck chip the ledger and the wall of 57 use, at hero scale. */
+.cr-read-mark::after {
+  content: "";
+  display: block;
+  height: 100%;
+  background: linear-gradient(
+    to bottom right,
+    transparent 46.5%,
+    rgba(207, 202, 191, .26) 46.5%,
+    rgba(207, 202, 191, .26) 53.5%,
+    transparent 53.5%
+  );
+}
+.cr-read-mark.on {
+  background: var(--cr-red);
+  box-shadow: 0 6px 14px rgba(179, 39, 30, .4);
+}
+.cr-read-mark.on::after { display: none; }
+
+.cr-read-counts {
+  margin-top: 26px;
+  display: flex;
+  justify-content: center;
+  gap: 0 58px;
+}
+.cr-read-count { text-align: center; }
+.cr-read-count dt {
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--cr-on-ground-dim);
+}
+.cr-read-count dd {
+  margin-top: 4px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.02em;
+  color: var(--cr-white);
+}
+/* The digit string is painted by the ::after counter, so the only thing in the
+   <b> itself is a custom property. */
+.cr-read-count b { display: block; }
+.cr-read-count b::after { content: counter(cr-n); }
+.cr-read-count-empty dd { color: var(--cr-on-ground-dim); }
+
+.cr-read-cap {
+  margin-top: 22px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: 12.5px;
+  letter-spacing: .02em;
+  color: var(--cr-on-ground-dim);
+}
+
+/* Not `display: none` and not `visibility: hidden` — both take the text out of
+   the accessibility tree along with the layout, and this text exists only for it. */
+.cr-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Motion, declared only where it has been asked for. Everything below simply
    does not exist under `prefers-reduced-motion: reduce`, so the hero is fully
    composed at rest for anyone who wants stillness — no override needed, and no
    chance of a rule being forgotten. The entrance is a staggered rise, not a
    fade-up on every element: the order is eyebrow → claim → lede → action →
-   note, which is the order they should be read in. */
+   strip → note, which is the order they should be read in. */
 @media (prefers-reduced-motion: no-preference) {
   .cr-hero-eyebrow,
   .cr-display,
   .cr-hero-lede,
   .cr-hero-act,
+  .cr-read,
   .cr-hero-sample {
     animation: cr-rise .9s cubic-bezier(.22, 1, .36, 1) both;
   }
@@ -365,21 +467,86 @@ a{text-decoration:none;color:inherit}
   .cr-display { animation-delay: .18s; }
   .cr-hero-lede { animation-delay: .32s; }
   .cr-hero-act { animation-delay: .44s; }
-  .cr-hero-sample { animation-delay: .58s; }
+  .cr-read { animation-delay: .58s; }
+  .cr-hero-sample { animation-delay: .7s; }
 
-  /* 44s alternate is slow enough to read as a living frame rather than as a
-     slideshow, and 7% is enough to be felt and not enough to be watched. */
+  /* The sweep. `--i` is the mark's index in the run, set inline by React, so the
+     whole thing is one delay calculation and there is no timer to drift.
+     19ms apart means the run takes 2.8s, plus .5s for the last mark to settle:
+     long enough to watch, short enough not to be waiting for. */
+  .cr-read-mark {
+    animation: cr-read-gave-nothing .5s ease-out both;
+    animation-delay: calc(var(--i) * 19ms);
+  }
+  /* The ones that answered stay lit. This is the whole argument of the strip:
+     the lit marks do not go out, and the struck ones do. */
+  .cr-read-mark.on {
+    animation-name: cr-read-read-at-source;
+    animation-delay: calc(var(--i) * 19ms);
+  }
+
+  /* The counters run with their own group of marks, not with the whole strip:
+     each one lands on its final value at the moment the sweep reaches its own
+     last mark. "Read at the source" finishes when mark 91 lights (91 x 19ms),
+     "filed" when the run ends at mark 148, and "gave nothing back" only starts
+     once the run has actually reached the businesses that gave nothing back. */
+  .cr-read-count b {
+    animation: cr-count 2.81s cubic-bezier(.4, 0, .2, 1) both;
+  }
+  .cr-read-count-contacted b {
+    animation-duration: 1.73s;
+  }
+  .cr-read-count-empty b {
+    animation-duration: 1.08s;
+    animation-delay: 1.73s;
+  }
+
+  /* 44s was the wrong instinct twice over: too slow to be seen at all, and the
+     wrong idea besides — a hero whose only motion is a drift is a hero with no
+     event in it. The drift stays as the room breathing, faster and shallower,
+     but the sweep above is what the hero is actually doing. */
   .cr-hero-ground img {
-    animation: cr-drift 44s ease-in-out infinite alternate;
+    animation: cr-drift 26s ease-in-out infinite alternate;
   }
 }
 @keyframes cr-rise {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: none; }
 }
+/* Read, and a way in was found: the chip fills and holds. */
+@keyframes cr-read-read-at-source {
+  from { background: rgba(207, 202, 191, .10); box-shadow: inset 0 0 0 1px rgba(207, 202, 191, .22); }
+  to { background: var(--cr-red); box-shadow: 0 6px 14px rgba(179, 39, 30, .4); }
+}
+/* Read, and nothing came back: the chip lights under the reader and goes out
+   again. It ends in exactly the state the wall of 57 draws on /not-on-file. */
+@keyframes cr-read-gave-nothing {
+  0% { background: rgba(207, 202, 191, .10); }
+  34% { background: var(--cr-red); box-shadow: 0 6px 14px rgba(179, 39, 30, .4); }
+  100% { background: rgba(207, 202, 191, .10); box-shadow: inset 0 0 0 1px rgba(207, 202, 191, .22); }
+}
 @keyframes cr-drift {
-  from { transform: scale(1.002) translate3d(0, 0, 0); }
-  to { transform: scale(1.07) translate3d(0, -1.4%, 0); }
+  from { transform: scale(1.02) translate3d(0, 0, 0); }
+  to { transform: scale(1.1) translate3d(0, -2%, 0); }
+}
+
+/* A counting digit string. `@property` is what makes `--cr-n` interpolable —
+   an unregistered custom property animates discretely, which would make the
+   numbers snap rather than count. Where it is unsupported the `from` frame is
+   simply skipped and the base value below shows the final number, which is the
+   right answer for a reader who never sees the count happen. */
+@property --cr-n {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: false;
+}
+.cr-read-count b {
+  --cr-n: var(--to);
+  counter-reset: cr-n var(--cr-n);
+}
+@keyframes cr-count {
+  from { --cr-n: 0; }
+  to { --cr-n: var(--to); }
 }
 
 /* The hero. This used to be a fixed 674px band inside a 66 + 674 + 160 = 900
@@ -956,6 +1123,37 @@ a{text-decoration:none;color:inherit}
   box-shadow: 0 -20px 50px rgba(0,0,0,.34);
 }
 .cr-sheet-alt { background: var(--cr-card); }
+
+/* The chapter divider — the tab card between one chapter of the file and the
+   next. Short on purpose: the chapter's own title is the next thing down the
+   page, so this is the tab and not a second title. The red rule down its left
+   edge is the tab itself, the same red the ledger uses for the page that
+   answered — on a sheet of dividers, this is the one standing proud. */
+.cr-divider {
+  background: var(--cr-sheet);
+  color: var(--cr-ink);
+  padding: 46px 0 48px;
+  box-shadow: 0 -18px 44px rgba(0,0,0,.32);
+}
+.cr-divider-inner { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 26px; }
+.cr-divider-tab { background: var(--cr-red); }
+.cr-divider-label {
+  margin-top: 10px;
+  font-family: "Archivo Narrow", "Arial Narrow", Arial, sans-serif;
+  font-size: clamp(30px, 3.4vw, 44px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.02em;
+  color: var(--cr-ink);
+}
+.cr-divider-blurb {
+  margin-top: 12px;
+  max-width: 62ch;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--cr-ink-note);
+}
 
 /* ── The rail: how it reads ────────────────────────────────────────────────
    This is the one page whose subject is a sequence, so it is the one page laid
@@ -1598,6 +1796,14 @@ a{text-decoration:none;color:inherit}
      where the same veils would leave almost nothing visible. Lift it slightly
      and keep the ground doing the work of holding the type up. */
   .cr-hero-ground img { opacity: .5; }
+  /* 148 marks cannot hold a 30px height in a row that wraps to five, so the
+     strip gets shorter and the counters stack rather than sitting in a row of
+     three that would each be under 100px wide. */
+  .cr-read { margin-top: 40px; }
+  .cr-read-mark { width: 3px; height: 20px; }
+  .cr-read-strip { gap: 2px; }
+  .cr-read-counts { margin-top: 22px; gap: 18px 0; flex-direction: column; }
+  .cr-read-count dd { font-size: 28px; }
   .cr-sheet-split { grid-template-columns: 1fr; gap: 0; }
   .cr-plate { max-width: none; margin-top: 36px; }
   .cr-sheet-split .cr-plate { margin-top: 40px; }
@@ -1805,13 +2011,13 @@ a{text-decoration:none;color:inherit}
   <header class="cr-band">
     <a href="index.html" class="cr-brand"><img src="logo.svg" alt="" aria-hidden="true" width="30" height="30"><span>Varnor Index</span></a>
     <nav class="cr-nav" aria-label="Primary">
-      <a href="index.html" class="cr-nav-link on" aria-current="page">The file</a><a href="how-it-reads.html" class="cr-nav-link">How it reads</a><a href="what-is-on-file.html" class="cr-nav-link">What is on file</a><a href="not-on-file.html" class="cr-nav-link">Not on file</a>
+      <a href="index.html#the-file" class="cr-nav-link">The file</a><a href="index.html#how-it-reads" class="cr-nav-link">How it reads</a><a href="index.html#what-is-on-file" class="cr-nav-link">What is on file</a><a href="index.html#not-on-file" class="cr-nav-link">Not on file</a>
       <a href="#" class="cr-nav-link cr-nav-signin">Sign in</a>
       <a href="#" class="cr-signup">Open an account</a>
     </nav>
     <details class="cr-menu">
       <summary>Menu</summary>
-      <nav class="cr-menu-list" aria-label="All pages"><a href="index.html" class="cr-menu-link on" aria-current="page"><span>The file</span><small>front sheet</small></a><a href="how-it-reads.html" class="cr-menu-link"><span>How it reads</span><small>the method</small></a><a href="what-is-on-file.html" class="cr-menu-link"><span>What is on file</span><small>the record</small></a><a href="not-on-file.html" class="cr-menu-link"><span>Not on file</span><small>empty results</small></a><a href="#" class="cr-menu-link"><span>Sign in</span><small>your account</small></a></nav>
+      <nav class="cr-menu-list" aria-label="All pages"><a href="index.html#the-file" class="cr-menu-link"><span>The file</span><small>front sheet</small></a><a href="index.html#how-it-reads" class="cr-menu-link"><span>How it reads</span><small>the method</small></a><a href="index.html#what-is-on-file" class="cr-menu-link"><span>What is on file</span><small>the record</small></a><a href="index.html#not-on-file" class="cr-menu-link"><span>Not on file</span><small>empty results</small></a><a href="#" class="cr-menu-link"><span>Sign in</span><small>your account</small></a></nav>
     </details>
   </header>
 
@@ -1829,11 +2035,18 @@ a{text-decoration:none;color:inherit}
           <a href="signup.html" class="cr-hero-cta">Open an account</a>
           <span>Free to start &middot; no card &middot; confirm your address once</span>
         </div>
+        
+    <div class="cr-read">
+      <div class="cr-read-strip" aria-hidden="true"><i class="cr-read-mark on" style="--i:0"></i><i class="cr-read-mark on" style="--i:1"></i><i class="cr-read-mark on" style="--i:2"></i><i class="cr-read-mark on" style="--i:3"></i><i class="cr-read-mark on" style="--i:4"></i><i class="cr-read-mark on" style="--i:5"></i><i class="cr-read-mark on" style="--i:6"></i><i class="cr-read-mark on" style="--i:7"></i><i class="cr-read-mark on" style="--i:8"></i><i class="cr-read-mark on" style="--i:9"></i><i class="cr-read-mark on" style="--i:10"></i><i class="cr-read-mark on" style="--i:11"></i><i class="cr-read-mark on" style="--i:12"></i><i class="cr-read-mark on" style="--i:13"></i><i class="cr-read-mark on" style="--i:14"></i><i class="cr-read-mark on" style="--i:15"></i><i class="cr-read-mark on" style="--i:16"></i><i class="cr-read-mark on" style="--i:17"></i><i class="cr-read-mark on" style="--i:18"></i><i class="cr-read-mark on" style="--i:19"></i><i class="cr-read-mark on" style="--i:20"></i><i class="cr-read-mark on" style="--i:21"></i><i class="cr-read-mark on" style="--i:22"></i><i class="cr-read-mark on" style="--i:23"></i><i class="cr-read-mark on" style="--i:24"></i><i class="cr-read-mark on" style="--i:25"></i><i class="cr-read-mark on" style="--i:26"></i><i class="cr-read-mark on" style="--i:27"></i><i class="cr-read-mark on" style="--i:28"></i><i class="cr-read-mark on" style="--i:29"></i><i class="cr-read-mark on" style="--i:30"></i><i class="cr-read-mark on" style="--i:31"></i><i class="cr-read-mark on" style="--i:32"></i><i class="cr-read-mark on" style="--i:33"></i><i class="cr-read-mark on" style="--i:34"></i><i class="cr-read-mark on" style="--i:35"></i><i class="cr-read-mark on" style="--i:36"></i><i class="cr-read-mark on" style="--i:37"></i><i class="cr-read-mark on" style="--i:38"></i><i class="cr-read-mark on" style="--i:39"></i><i class="cr-read-mark on" style="--i:40"></i><i class="cr-read-mark on" style="--i:41"></i><i class="cr-read-mark on" style="--i:42"></i><i class="cr-read-mark on" style="--i:43"></i><i class="cr-read-mark on" style="--i:44"></i><i class="cr-read-mark on" style="--i:45"></i><i class="cr-read-mark on" style="--i:46"></i><i class="cr-read-mark on" style="--i:47"></i><i class="cr-read-mark on" style="--i:48"></i><i class="cr-read-mark on" style="--i:49"></i><i class="cr-read-mark on" style="--i:50"></i><i class="cr-read-mark on" style="--i:51"></i><i class="cr-read-mark on" style="--i:52"></i><i class="cr-read-mark on" style="--i:53"></i><i class="cr-read-mark on" style="--i:54"></i><i class="cr-read-mark on" style="--i:55"></i><i class="cr-read-mark on" style="--i:56"></i><i class="cr-read-mark on" style="--i:57"></i><i class="cr-read-mark on" style="--i:58"></i><i class="cr-read-mark on" style="--i:59"></i><i class="cr-read-mark on" style="--i:60"></i><i class="cr-read-mark on" style="--i:61"></i><i class="cr-read-mark on" style="--i:62"></i><i class="cr-read-mark on" style="--i:63"></i><i class="cr-read-mark on" style="--i:64"></i><i class="cr-read-mark on" style="--i:65"></i><i class="cr-read-mark on" style="--i:66"></i><i class="cr-read-mark on" style="--i:67"></i><i class="cr-read-mark on" style="--i:68"></i><i class="cr-read-mark on" style="--i:69"></i><i class="cr-read-mark on" style="--i:70"></i><i class="cr-read-mark on" style="--i:71"></i><i class="cr-read-mark on" style="--i:72"></i><i class="cr-read-mark on" style="--i:73"></i><i class="cr-read-mark on" style="--i:74"></i><i class="cr-read-mark on" style="--i:75"></i><i class="cr-read-mark on" style="--i:76"></i><i class="cr-read-mark on" style="--i:77"></i><i class="cr-read-mark on" style="--i:78"></i><i class="cr-read-mark on" style="--i:79"></i><i class="cr-read-mark on" style="--i:80"></i><i class="cr-read-mark on" style="--i:81"></i><i class="cr-read-mark on" style="--i:82"></i><i class="cr-read-mark on" style="--i:83"></i><i class="cr-read-mark on" style="--i:84"></i><i class="cr-read-mark on" style="--i:85"></i><i class="cr-read-mark on" style="--i:86"></i><i class="cr-read-mark on" style="--i:87"></i><i class="cr-read-mark on" style="--i:88"></i><i class="cr-read-mark on" style="--i:89"></i><i class="cr-read-mark on" style="--i:90"></i><i class="cr-read-mark" style="--i:91"></i><i class="cr-read-mark" style="--i:92"></i><i class="cr-read-mark" style="--i:93"></i><i class="cr-read-mark" style="--i:94"></i><i class="cr-read-mark" style="--i:95"></i><i class="cr-read-mark" style="--i:96"></i><i class="cr-read-mark" style="--i:97"></i><i class="cr-read-mark" style="--i:98"></i><i class="cr-read-mark" style="--i:99"></i><i class="cr-read-mark" style="--i:100"></i><i class="cr-read-mark" style="--i:101"></i><i class="cr-read-mark" style="--i:102"></i><i class="cr-read-mark" style="--i:103"></i><i class="cr-read-mark" style="--i:104"></i><i class="cr-read-mark" style="--i:105"></i><i class="cr-read-mark" style="--i:106"></i><i class="cr-read-mark" style="--i:107"></i><i class="cr-read-mark" style="--i:108"></i><i class="cr-read-mark" style="--i:109"></i><i class="cr-read-mark" style="--i:110"></i><i class="cr-read-mark" style="--i:111"></i><i class="cr-read-mark" style="--i:112"></i><i class="cr-read-mark" style="--i:113"></i><i class="cr-read-mark" style="--i:114"></i><i class="cr-read-mark" style="--i:115"></i><i class="cr-read-mark" style="--i:116"></i><i class="cr-read-mark" style="--i:117"></i><i class="cr-read-mark" style="--i:118"></i><i class="cr-read-mark" style="--i:119"></i><i class="cr-read-mark" style="--i:120"></i><i class="cr-read-mark" style="--i:121"></i><i class="cr-read-mark" style="--i:122"></i><i class="cr-read-mark" style="--i:123"></i><i class="cr-read-mark" style="--i:124"></i><i class="cr-read-mark" style="--i:125"></i><i class="cr-read-mark" style="--i:126"></i><i class="cr-read-mark" style="--i:127"></i><i class="cr-read-mark" style="--i:128"></i><i class="cr-read-mark" style="--i:129"></i><i class="cr-read-mark" style="--i:130"></i><i class="cr-read-mark" style="--i:131"></i><i class="cr-read-mark" style="--i:132"></i><i class="cr-read-mark" style="--i:133"></i><i class="cr-read-mark" style="--i:134"></i><i class="cr-read-mark" style="--i:135"></i><i class="cr-read-mark" style="--i:136"></i><i class="cr-read-mark" style="--i:137"></i><i class="cr-read-mark" style="--i:138"></i><i class="cr-read-mark" style="--i:139"></i><i class="cr-read-mark" style="--i:140"></i><i class="cr-read-mark" style="--i:141"></i><i class="cr-read-mark" style="--i:142"></i><i class="cr-read-mark" style="--i:143"></i><i class="cr-read-mark" style="--i:144"></i><i class="cr-read-mark" style="--i:145"></i><i class="cr-read-mark" style="--i:146"></i><i class="cr-read-mark" style="--i:147"></i></div>
+      <dl class="cr-read-counts"><div class="cr-read-count"><dt>Filed</dt><dd><b style="--to:148" aria-hidden="true"></b><span class="cr-visually-hidden">148</span></dd></div><div class="cr-read-count cr-read-count-contacted"><dt>Read at the source</dt><dd><b style="--to:91" aria-hidden="true"></b><span class="cr-visually-hidden">91</span></dd></div><div class="cr-read-count cr-read-count-empty"><dt>Gave nothing back</dt><dd><b style="--to:57" aria-hidden="true"></b><span class="cr-visually-hidden">57</span></dd></div></dl>
+      <p class="cr-read-cap">148 businesses, one mark each, in the order the run filed them. The 57 that went out are still on the sheet.</p>
+    </div>
+
         <p class="cr-hero-sample"><b>Sample file</b> &mdash; the run below is one example, not a customer&rsquo;s data.</p>
       </div>
     </section>
 
-    <div class="cr-desk">
+    <div class="cr-desk" id="the-file">
       <div class="cr-cardwrap">
         <div class="cr-stack" aria-hidden="true"><i></i><i></i></div>
         <section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-identity" tabindex="-1" data-face="identity" hidden><header class="cr-head"><div><p class="cr-card-title">Business reference — filed from the source</p><p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p></div><div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div></header><div class="cr-subject"><h2><span class="cr-inline-label">Subject</span><span class="cr-subject-name">APEX ROOFING CO.</span></h2><p class="cr-subject-line">The register is the spine of the file. Every later fact hangs off this record, and nothing here is guessed at.</p><p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer&rsquo;s data</p></div><div class="cr-sources"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">state register</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Registered address</dt><dd>4120 W Buckeye Rd, Phoenix AZ 85009</dd></div><div class="cr-fact"><dt>Trading status</dt><dd>Active</dd></div><div class="cr-fact"><dt>Register number</dt><dd>14823017<span class="cr-hint">the entity id the state issues</span></dd></div><div class="cr-fact"><dt>Registered agent</dt><dd>R. Delgado</dd></div></dl></article></div><p class="cr-blank">Nothing else on file for this subject</p></section><section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-contact" tabindex="-1" data-face="contact"><header class="cr-head"><div><p class="cr-card-title">Business reference — filed from the source</p><p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p></div><div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div></header><div class="cr-subject"><h2><span class="cr-inline-label">Subject</span><span class="cr-subject-name">APEX ROOFING CO.</span></h2><p class="cr-subject-line">Twelve pages read looking for a way in. Eleven had no public address. The twelfth did, and that is the only reason this file has a number to call.</p><p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer&rsquo;s data</p></div><div class="cr-ledger"><div class="cr-marks" aria-hidden="true"><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark on"></i></div><p class="cr-ledger-cap"><b>12 pages read</b> for a way in · 11 came back with nothing · <b>the last one did</b></p></div><div class="cr-sources"><article class="cr-src cr-src-hit"><header class="cr-src-head"><h3 class="cr-src-url">apexroofingaz.com/contact</h3><span class="cr-src-kind">the page that answered</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Telephone</dt><dd>+1 602 555 0148<span class="cr-hint">one dialable format, E.164</span></dd></div><div class="cr-fact"><dt>Mailbox</dt><dd>office@apexroofingaz.com<span class="cr-hint">first address on the page</span></dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">mx1.apexroofingaz.com</h3><span class="cr-src-kind">mail server</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Mailbox checked</dt><dd>Accepts mail<span class="cr-hint">the server answered for this address</span></dd></div><div class="cr-fact"><dt>Checked</dt><dd>2026-11-11</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">apexroofingaz.com/about</h3><span class="cr-src-kind">team page</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Named person</dt><dd>R. Delgado · estimator</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">state register</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Started from</dt><dd>4120 W Buckeye Rd, Phoenix AZ 85009</dd></div></dl></article></div><p class="cr-blank">Nothing else on file for this subject</p></section><section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-verified" tabindex="-1" data-face="verified" hidden><header class="cr-head"><div><p class="cr-card-title">Business reference — filed from the source</p><p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p></div><div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div></header><div class="cr-subject"><h2><span class="cr-inline-label">Subject</span><span class="cr-subject-name">APEX ROOFING CO.</span></h2><p class="cr-subject-line">Verified means the mailbox answered. A server that accepts anything and everything is filed as risky, never as verified — not knowing is a result, not a pass.</p><p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer&rsquo;s data</p></div><div class="cr-sources"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">mx1.apexroofingaz.com</h3><span class="cr-src-kind">mail server</span></header><dl class="cr-facts"><div class="cr-fact"><dt>MX record</dt><dd>Live<span class="cr-hint">a named server is ready to take the mail</span></dd></div><div class="cr-fact"><dt>Probe address</dt><dd>Rejected<span class="cr-hint">a made-up address was refused, so this is not a catch-all</span></dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">smtp.mx1.apexroofingaz.com</h3><span class="cr-src-kind">live check</span></header><dl class="cr-facts"><div class="cr-fact"><dt>office@apexroofingaz.com</dt><dd>Accepted</dd></div><div class="cr-fact"><dt>Checked</dt><dd>2026-11-11</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">libphonenumber</h3><span class="cr-src-kind">number check</span></header><dl class="cr-facts"><div class="cr-fact"><dt>+1 602 555 0148</dt><dd>Valid<span class="cr-hint">a real number, in a real range</span></dd></div><div class="cr-fact"><dt>Kind</dt><dd>Landline</dd></div></dl></article></div><p class="cr-blank">Every claim above was checked on the date shown</p></section><section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-history" tabindex="-1" data-face="history" hidden><header class="cr-head"><div><p class="cr-card-title">Business reference — filed from the source</p><p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p></div><div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div></header><div class="cr-subject"><h2><span class="cr-inline-label">Subject</span><span class="cr-subject-name">APEX ROOFING CO.</span></h2><p class="cr-subject-line">Fifteen years of filings, newest first. A year with nothing in it is shown as a year with nothing in it.</p><p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer&rsquo;s data</p></div><div class="cr-sources"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">filings</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Renewed</dt><dd>2024</dd></div><div class="cr-fact"><dt>Filed</dt><dd>2011</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">city of phoenix</h3><span class="cr-src-kind">permits</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Roofing permit</dt><dd>2019</dd></div><div class="cr-fact"><dt>Between 2012 and 2018</dt><dd class="cr-none">Nothing filed</dd></div></dl></article></div><p class="cr-blank">Nothing else on file for this subject</p></section><section class="cr-file" id="read" role="tabpanel" aria-labelledby="cr-tab-empty" tabindex="-1" data-face="empty" hidden><header class="cr-head"><div><p class="cr-card-title">Business reference — filed from the source</p><p class="cr-run">RUN 0083 · ROOFING CONTRACTORS · PHOENIX, AZ · 148 RECORDS FILED</p></div><div class="cr-docket"><b>Read at source</b><span>2026-11-11</span></div></header><div class="cr-subject"><h2><span class="cr-inline-label">Subject</span><span class="cr-subject-name">SUN VALLEY GUTTERS LLC.</span></h2><p class="cr-subject-line">Twelve pages read. Not one of them returned a way to make contact. The record is still here, still counted, and the reason it is empty is written down.</p><p class="cr-sample"><b>Sample file</b> — one business from one run, not a customer&rsquo;s data</p></div><div class="cr-ledger"><div class="cr-marks" aria-hidden="true"><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i></div><p class="cr-ledger-cap"><b>12 pages read</b> for a way in · not one of them returned a contact</p></div><div class="cr-sources"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">state register</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Registered address</dt><dd class="cr-none">No street address filed</dd></div><div class="cr-fact"><dt>Trading status</dt><dd>Active</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">sunvalleygutters.com</h3><span class="cr-src-kind">company site</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Contact page</dt><dd class="cr-none">Returned no address</dd></div><div class="cr-fact"><dt>Telephone</dt><dd class="cr-none">Not on the page</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">yelp.com/biz/sun-valley-gutters</h3><span class="cr-src-kind">directory</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Contact details</dt><dd class="cr-none">Placeholder numbers only</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">sunvalleygutters.com/about</h3><span class="cr-src-kind">team page</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Anything usable</dt><dd class="cr-none">Nothing</dd></div></dl></article></div><p class="cr-blank">No contact on file · kept and counted, not dropped</p></section>
@@ -1855,15 +2068,117 @@ a{text-decoration:none;color:inherit}
       </div>
     </section>
 
-    <section class="cr-sheet">
-      <div class="cr-wrap">
-        <p class="cr-eyebrow cr-eyebrow-ink">Contents</p>
-        <h2 class="cr-h2 cr-h2-ink">The rest of the file.</h2>
-        <p class="cr-lede cr-lede-ink">One business is on the card above. Three more pages say where its facts came from, what a record holds, and what happens to the businesses this run could not reach.</p>
-        <div class="cr-sheet-split">
-          <nav class="cr-contents" aria-label="The rest of this site"><a class="cr-contents-row" href="how-it-reads.html"><span class="cr-contents-name">How it reads</span><span class="cr-contents-kind">the method</span><span class="cr-contents-blurb">Twelve pages opened for one business, the page that answered, and how a value comes to have a source.</span></a><a class="cr-contents-row" href="what-is-on-file.html"><span class="cr-contents-name">What is on file</span><span class="cr-contents-kind">the record</span><span class="cr-contents-blurb">The twelve fields of a record — and the page standing behind every value on it.</span></a><a class="cr-contents-row" href="not-on-file.html"><span class="cr-contents-name">Not on file</span><span class="cr-contents-kind">empty results</span><span class="cr-contents-blurb">The 57 businesses that gave us nothing back, and why they stay in the file anyway.</span></a></nav>
-          <figure class="cr-plate cr-plate-ink"><img src="img/records-stack.jpg" alt="" width="1248" height="832" loading="lazy" decoding="async"><figcaption><b>The file, in the hand.</b><span>One run in one market. Every business it found is in here, including the ones that gave nothing back.</span></figcaption></figure>
+    <section class="cr-divider" id="how-it-reads">
+      <div class="cr-wrap cr-divider-inner">
+        <span class="cr-divider-tab" aria-hidden="true"></span>
+        <div>
+          <h2 class="cr-divider-label">How it reads</h2>
+          <p class="cr-divider-blurb">Twelve pages opened for one business, the page that answered, and how a value comes to have a source.</p>
         </div>
+      </div>
+    </section>
+
+    <section class="cr-runband">
+      <div class="cr-wrap">
+        <p class="cr-eyebrow">The method</p>
+        <h2 class="cr-h1">A fact is only worth what it is attached to.</h2>
+        <p class="cr-lede">We do not hand you a row of numbers and ask you to trust them. Every value is filed under the page it was read from, so you can go and look at it yourself. Below is the whole sequence, run once on one business &mdash; APEX ROOFING CO. in Phoenix, AZ &mdash; with what each move produced pinned beside it. Four moves, in order, four exhibits.</p>
+        <figure class="cr-plate"><img src="img/register-wall.jpg" alt="" width="1248" height="832" loading="lazy" decoding="async"><figcaption><b>Where the values come from.</b><span>Registers and company pages, opened one at a time. A search result is never a source &mdash; a page is.</span></figcaption></figure>
+        <ol class="cr-rail"><li class="cr-station"><span class="cr-station-n" aria-hidden="true">01</span><div class="cr-station-main"><h3 class="cr-station-label">Open the pages</h3><p class="cr-station-body">The register first, then the business's own site — contact, about, team, in that order. Six pages a site at most. A search result is never a source; a page is.</p></div><div class="cr-station-ev"><div class="cr-ledger"><div class="cr-marks" aria-hidden="true"><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark on"></i></div><p class="cr-ledger-cap"><b>12 pages read</b> for a way in · 11 came back with nothing · <b>the last one did</b></p></div></div></li><li class="cr-station"><span class="cr-station-n" aria-hidden="true">02</span><div class="cr-station-main"><h3 class="cr-station-label">Read the value, keep the page</h3><p class="cr-station-body">Addresses are taken from mailto and tel links before any pattern matching, because a link is a claim the page made about itself. Whatever is read is filed under the URL it was read from, not under the business.</p></div><div class="cr-station-ev"><article class="cr-src cr-src-hit"><header class="cr-src-head"><h3 class="cr-src-url">apexroofingaz.com/contact</h3><span class="cr-src-kind">the page that answered</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Telephone</dt><dd>+1 602 555 0148<span class="cr-hint">one dialable format, E.164</span></dd></div><div class="cr-fact"><dt>Mailbox</dt><dd>office@apexroofingaz.com<span class="cr-hint">first address on the page</span></dd></div></dl></article></div></li><li class="cr-station"><span class="cr-station-n" aria-hidden="true">03</span><div class="cr-station-main"><h3 class="cr-station-label">Test the claim</h3><p class="cr-station-body">The mailbox is checked against its mail server, and the number against a real dialling range. Before either, a made-up address is offered to the server. A server that accepts that one accepts anything, so it is filed as risky — never as verified.</p></div><div class="cr-station-ev"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">mx1.apexroofingaz.com</h3><span class="cr-src-kind">mail server</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Mailbox checked</dt><dd>Accepts mail<span class="cr-hint">the server answered for this address</span></dd></div><div class="cr-fact"><dt>Checked</dt><dd>2026-11-11</dd></div></dl></article></div></li><li class="cr-station"><span class="cr-station-n" aria-hidden="true">04</span><div class="cr-station-main"><h3 class="cr-station-label">Record what was not there</h3><p class="cr-station-body">A page with no phone number, a year with no filing, a team page naming nobody: each is written down as an empty result with the page that was silent. Silence is a finding, and it is kept.</p></div><div class="cr-station-ev"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">no page behind these</h3><span class="cr-src-kind">this record</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Socials</dt><dd class="cr-none">None linked from its own pages</dd></div><div class="cr-fact"><dt>Empty results</dt><dd>No second number, no socials</dd></div></dl></article></div></li></ol>
+        <p class="cr-figure-foot">Move one opened twelve pages for this one business. Eleven had no public address on them at all, and the twelfth is the exhibit against move two &mdash; the only reason this record has a number to call. A run of 148 businesses is that sequence 148 times over, and nothing that came back empty is thrown away.</p>
+      </div>
+
+      <div class="cr-wrap cr-wrap-chapter">
+        <p class="cr-eyebrow">The test</p>
+        <h3 class="cr-h2">A page saying a mailbox exists<br>is not a mailbox answering.</h3>
+        <p class="cr-lede">Move three is the only move that asks a question rather than reading an answer. It runs three checks, and every one of them is built so that it can come back no. What they said about APEX ROOFING CO. is below, in full, as it was said.</p>
+        <div class="cr-exhibits"><div class="cr-exhibit"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">mx1.apexroofingaz.com</h3><span class="cr-src-kind">mail server</span></header><dl class="cr-facts"><div class="cr-fact"><dt>MX record</dt><dd>Live<span class="cr-hint">a named server is ready to take the mail</span></dd></div><div class="cr-fact"><dt>Probe address</dt><dd>Rejected<span class="cr-hint">a made-up address was refused, so this is not a catch-all</span></dd></div></dl></article></div><div class="cr-exhibit"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">smtp.mx1.apexroofingaz.com</h3><span class="cr-src-kind">live check</span></header><dl class="cr-facts"><div class="cr-fact"><dt>office@apexroofingaz.com</dt><dd>Accepted</dd></div><div class="cr-fact"><dt>Checked</dt><dd>2026-11-11</dd></div></dl></article></div><div class="cr-exhibit"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">libphonenumber</h3><span class="cr-src-kind">number check</span></header><dl class="cr-facts"><div class="cr-fact"><dt>+1 602 555 0148</dt><dd>Valid<span class="cr-hint">a real number, in a real range</span></dd></div><div class="cr-fact"><dt>Kind</dt><dd>Landline</dd></div></dl></article></div></div>
+        <p class="cr-figure-foot">The made-up address is the whole design in one line. It went to the same server first, and the server refused it &mdash; so the server is telling the truth about which addresses it holds, and the address that was accepted means something. A server that took both would have been filed as risky, and the record would say so. Not knowing is a result here, not a pass.</p>
+      </div>
+      
+    </section>
+
+    <section class="cr-sheet" id="what-is-on-file">
+      <div class="cr-wrap">
+        <p class="cr-eyebrow cr-eyebrow-ink">The record</p>
+        <h2 class="cr-h1 cr-h1-ink">One record per business, and everything on it has a page behind it.</h2>
+        <p class="cr-lede cr-lede-ink">A run does not hand you a table of columns and let you work out what filled them. Every business gets the same twelve fields, and every value in them was read off a page that is named next to it.</p>
+        <figure class="cr-plate cr-plate-ink"><img src="img/paper-raking.jpg" alt="" width="1248" height="832" loading="lazy" decoding="async"><figcaption><b>A record is paper.</b><span>Twelve fields on every business, and a page standing behind every value that fills one.</span></figcaption></figure>
+        <h3 class="cr-h3">The twelve fields a record holds.</h3>
+        <dl class="cr-record"><div class="cr-record-row"><dt>Business</dt><dd>Trading name, as the register has it</dd></div><div class="cr-record-row"><dt>Trade</dt><dd>The trade you asked for</dd></div><div class="cr-record-row"><dt>Market</dt><dd>The city and state it trades in</dd></div><div class="cr-record-row"><dt>Address</dt><dd>Registered address, with the page it came from</dd></div><div class="cr-record-row"><dt>Register number</dt><dd>The entity id the state issues</dd></div><div class="cr-record-row"><dt>Telephone</dt><dd>One dialable format, checked against a real range</dd></div><div class="cr-record-row"><dt>Mailbox</dt><dd>The first public address, and whether the server took it</dd></div><div class="cr-record-row"><dt>Named person</dt><dd>Only when a page names one against a role</dd></div><div class="cr-record-row"><dt>Socials</dt><dd>The profiles a page links to for itself</dd></div><div class="cr-record-row"><dt>Sources</dt><dd>Every page the run opened for this business</dd></div><div class="cr-record-row"><dt>Empty results</dt><dd>What was looked for and not found</dd></div><div class="cr-record-row"><dt>Checked on</dt><dd>The date each claim above was tested</dd></div></dl>
+      </div>
+    </section>
+
+    <section class="cr-runband">
+      <div class="cr-wrap">
+        <p class="cr-eyebrow">How to read one</p>
+        <h3 class="cr-h2">A blank in the record is a finding, not a gap.</h3>
+        <p class="cr-lede">Four of the twelve are filled for every business without exception: the name, the trade you asked for, the market it trades in, and the date every claim on the record was tested. The other eight hold whatever the pages had to give, and a business that publishes nothing gets nothing in them. There are no dashes and no placeholders standing in for a fact nobody found &mdash; an empty field always has a page behind it that was opened, read, and came back with nothing. The business below happens to be one of the fuller records this run produced, and even it has a row with nothing in it, because four pages were read and not one of them linked an account.</p>
+        <dl class="cr-silence"><div class="cr-silence-row"><dt>Registered address</dt><dd class="cr-silence-none">No street address filed</dd><dd class="cr-silence-src">arizona corporation commission<small>state register</small></dd></div><div class="cr-silence-row"><dt>Contact page</dt><dd class="cr-silence-none">Returned no address</dd><dd class="cr-silence-src">sunvalleygutters.com<small>company site</small></dd></div><div class="cr-silence-row"><dt>Telephone</dt><dd class="cr-silence-none">Not on the page</dd><dd class="cr-silence-src">sunvalleygutters.com<small>company site</small></dd></div><div class="cr-silence-row"><dt>Contact details</dt><dd class="cr-silence-none">Placeholder numbers only</dd><dd class="cr-silence-src">yelp.com/biz/sun-valley-gutters<small>directory</small></dd></div><div class="cr-silence-row"><dt>Anything usable</dt><dd class="cr-silence-none">Nothing</dd><dd class="cr-silence-src">sunvalleygutters.com/about<small>team page</small></dd></div></dl>
+        <p class="cr-figure-foot">Those are the five empty results on SUN VALLEY GUTTERS LLC. &mdash; one of the 57 businesses this run could not reach, and the only one of them shown in full anywhere on this site. Four pages were opened for it and read to the end; five things the record looked for came back with nothing; each one is written down beside the page that was silent. That is a filled record, not an empty one.</p>
+      </div>
+    </section>
+
+    <section class="cr-sheet cr-sheet-alt">
+      <div class="cr-wrap">
+        <p class="cr-eyebrow cr-eyebrow-ink">Filled in</p>
+        <h3 class="cr-h2 cr-h2-ink">The same twelve, for one business.</h3>
+        <p class="cr-lede cr-lede-ink">Roofing contractors in Phoenix, AZ, from RUN 0083, read on 2026-11-11. Two of the twelve rows below are the record describing itself &mdash; how many pages it rests on, and what those pages did not give &mdash; and they say so rather than pointing at a page that does not exist.</p>
+        <div class="cr-filled-legend" aria-hidden="true"><span>Field</span><span>Value</span><span>Read from</span></div>
+        <dl class="cr-filled"><div class="cr-filled-row"><dt>Business</dt><dd>APEX ROOFING CO.</dd><dd class="cr-filled-src">arizona corporation commission</dd></div><div class="cr-filled-row"><dt>Trade</dt><dd>Roofing contractors</dd><dd class="cr-filled-src">the search you filed</dd></div><div class="cr-filled-row"><dt>Market</dt><dd>Phoenix, AZ</dd><dd class="cr-filled-src">the search you filed</dd></div><div class="cr-filled-row"><dt>Address</dt><dd>4120 W Buckeye Rd, Phoenix AZ 85009</dd><dd class="cr-filled-src">arizona corporation commission</dd></div><div class="cr-filled-row"><dt>Register number</dt><dd>14823017</dd><dd class="cr-filled-src">arizona corporation commission</dd></div><div class="cr-filled-row"><dt>Telephone</dt><dd>+1 602 555 0148</dd><dd class="cr-filled-src">apexroofingaz.com/contact</dd></div><div class="cr-filled-row"><dt>Mailbox</dt><dd>office@apexroofingaz.com</dd><dd class="cr-filled-src">apexroofingaz.com/contact</dd></div><div class="cr-filled-row"><dt>Named person</dt><dd>R. Delgado · estimator</dd><dd class="cr-filled-src">apexroofingaz.com/about</dd></div><div class="cr-filled-row"><dt>Socials</dt><dd class="cr-none">None linked from its own pages</dd><dd class="cr-filled-src">4 pages read</dd></div><div class="cr-filled-row"><dt>Sources</dt><dd>4 pages opened</dd><dd class="cr-filled-src">this record</dd></div><div class="cr-filled-row"><dt>Empty results</dt><dd>No second number, no socials</dd><dd class="cr-filled-src">this record</dd></div><div class="cr-filled-row"><dt>Checked on</dt><dd>2026-11-11</dd><dd class="cr-filled-src">the run's docket</dd></div></dl>
+        
+      </div>
+    </section>
+
+    <section class="cr-emptyband" id="not-on-file">
+      <div class="cr-wrap">
+        <p class="cr-eyebrow">Empty results</p>
+        <div class="cr-empty-grid">
+          <h2 class="cr-empty-h1">
+            <span class="cr-empty-count">57</span>
+            <span class="cr-empty-cap">of the 148 businesses in Phoenix, AZ had no contact we could find.</span>
+          </h2>
+          <div class="cr-empty-body">
+            <h3 class="cr-h3">They are still in the file.</h3>
+            <p>Twelve pages read for each of them, and not one page returned a way to reach the business. That is not a gap in the run &mdash; it is a result, and it is a different result from <em>we did not look</em>.</p>
+            <p>The record stays where it is, with its counts, its sources and the reason it is empty written down. A list that quietly drops the businesses it could not reach is a list that lies to you about the size of your market.</p>
+            <figure class="cr-plate"><img src="img/empty-drawer.jpg" alt="" width="1248" height="832" loading="lazy" decoding="async"><figcaption><b>The ones that gave nothing.</b><span>Filed anyway. An empty drawer is still a drawer, and it is still counted.</span></figcaption></figure>
+          </div>
+        </div>
+        <div class="cr-split"><span class="cr-split-on"><b>91</b> with a contact on file</span><span class="cr-split-none"><b>57</b> with none</span></div>
+        <div class="cr-wall" aria-hidden="true"><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark cr-mark-here"></i></div>
+        <p class="cr-wall-cap">Every one of the 57, one mark each. The one in paper is the record below.</p>
+        <div class="cr-empty-sheet">
+          <p class="cr-subject-line cr-subject-line-ink">The whole of what is on file:</p>
+          <p class="cr-empty-subject">SUN VALLEY GUTTERS LLC.</p>
+          <div class="cr-ledger"><div class="cr-marks" aria-hidden="true"><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i><i class="cr-mark"></i></div><p class="cr-ledger-cap"><b>12 pages read</b> for a way in · not one of them returned a contact</p></div>
+          <div class="cr-sources"><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">arizona corporation commission</h3><span class="cr-src-kind">state register</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Registered address</dt><dd class="cr-none">No street address filed</dd></div><div class="cr-fact"><dt>Trading status</dt><dd>Active</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">sunvalleygutters.com</h3><span class="cr-src-kind">company site</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Contact page</dt><dd class="cr-none">Returned no address</dd></div><div class="cr-fact"><dt>Telephone</dt><dd class="cr-none">Not on the page</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">yelp.com/biz/sun-valley-gutters</h3><span class="cr-src-kind">directory</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Contact details</dt><dd class="cr-none">Placeholder numbers only</dd></div></dl></article><article class="cr-src"><header class="cr-src-head"><h3 class="cr-src-url">sunvalleygutters.com/about</h3><span class="cr-src-kind">team page</span></header><dl class="cr-facts"><div class="cr-fact"><dt>Anything usable</dt><dd class="cr-none">Nothing</dd></div></dl></article></div>
+          <p class="cr-blank">No contact on file · kept and counted, not dropped</p>
+        </div>
+        <p class="cr-figure-foot">57 of 148 is just under two in five businesses in this market that nobody can call. That is the number a list is tempted to leave out, and it is the one most worth knowing before you price the work.</p>
+      </div>
+    </section>
+
+    <section class="cr-runband">
+      <div class="cr-wrap">
+        <p class="cr-eyebrow">What it is not</p>
+        <h3 class="cr-h2">An empty record is three things it is not.</h3>
+        <ol class="cr-steps"><li class="cr-step"><h4 class="cr-step-label">It is not <em>we did not look.</em></h4><p class="cr-step-body">Twelve pages were opened for this business and every one of them is printed on this page. A business that had been skipped would have nothing to show here at all.</p></li><li class="cr-step"><h4 class="cr-step-label">It is not <em>the business is gone.</em></h4><p class="cr-step-body">Its trading status on the state register reads Active. It trades, it files, and it simply does not publish a way to be reached — which is a fact about its website, not about its existence.</p></li><li class="cr-step"><h4 class="cr-step-label">It is not <em>thrown away.</em></h4><p class="cr-step-body">The record sits in the file, it is inside the 148, and its reason for being empty is written beside it. Nothing was deleted to make the run look tidier than it was.</p></li></ol>
+      </div>
+    </section>
+
+    <section class="cr-sheet cr-sheet-alt">
+      <div class="cr-wrap">
+        <p class="cr-eyebrow cr-eyebrow-ink">What it is worth</p>
+        <h3 class="cr-h2 cr-h2-ink">You still know it is there.</h3>
+        <p class="cr-lede cr-lede-ink">An empty record is not a dead row to be cleaned up. You know the business exists, you know it is part of the 148 in your market, and you know that a call to it would be a call nobody answered. That is the difference between a list of 148 businesses and a list of 91 contacts that quietly calls itself a market.</p>
+        
+      </div>
+    </section>
+
+    <section class="cr-runband">
+      <div class="cr-wrap">
+        <figure class="cr-plate"><img src="img/records-stack.jpg" alt="" width="1248" height="832" loading="lazy" decoding="async"><figcaption><b>The file, in the hand.</b><span>One run in one market, read front to back. Every business it found is in here, including the ones that gave nothing back.</span></figcaption></figure>
       </div>
     </section>
   </main>
@@ -1880,7 +2195,7 @@ a{text-decoration:none;color:inherit}
       </div>
     </div>
     <nav class="cr-wrap cr-foot-nav" aria-label="Footer">
-      <a href="index.html" class=" on" aria-current="page">The file</a><a href="how-it-reads.html" class="">How it reads</a><a href="what-is-on-file.html" class="">What is on file</a><a href="not-on-file.html" class="">Not on file</a>
+      <a href="index.html#the-file" class="">The file</a><a href="index.html#how-it-reads" class="">How it reads</a><a href="index.html#what-is-on-file" class="">What is on file</a><a href="index.html#not-on-file" class="">Not on file</a>
       <a href="#">Sign in</a>
     </nav>
     <div class="cr-wrap cr-colophon">
