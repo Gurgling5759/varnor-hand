@@ -291,7 +291,7 @@ a{text-decoration:none;color:inherit}
    a second still. It shows its poster — the film's own first frame — until
    something calls play(), and the only thing that does is the effect in
    `_site/index.tsx`, which returns early unless the reader has asked for motion.
-   With `preload="none"` the 342 KB is then never fetched at all. The failure
+   With `preload="none"` the 366 KB is then never fetched at all. The failure
    mode is a still hero, which is the composed hero. A `display:none` here would
    have been the obvious move and the wrong one: Chrome downloads video inside a
    hidden element anyway, so it hides the motion without saving the bytes.
