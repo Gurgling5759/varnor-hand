@@ -92,6 +92,20 @@ a{text-decoration:none;color:inherit}
    flex-shrink:1 would squeeze a section instead of letting the page scroll. */
 .cr-body { display: flex; flex-direction: column; flex: 1 1 auto; min-width: 0; }
 .cr-body > * { position: relative; z-index: 1; flex: 0 0 auto; }
+/* The desk's two stack planes are rotated -0.5 and -0.25 degrees, so their
+   corners reach past their own box. At 1440 the desk's 44px padding holds them;
+   below 980 that padding drops to 16px and the corner landed 10px past the
+   viewport, which is a page that scrolls sideways under a thumb. Measure it,
+   do not eyeball it: at 390 the plane's right edge is 400.3 on a 390 viewport.
+
+   `clip` and not `hidden`, and on <main> and not on `.cr-page`. `hidden` would
+   make this a scroll container and the ancestor that carries the band's
+   `position: sticky` is `.cr-page`, so putting either value there unsticks the
+   band — the reason `.cr-page` documents that `overflow: hidden` must not come
+   back to it. `clip` does not create a scroll container, and <main> is the
+   band's sibling rather than its ancestor, so the band is untouched either way.
+   This is the one clip that is safe in both directions. */
+.cr-body { overflow-x: clip; }
 
 .cr-band {
   position: sticky;
