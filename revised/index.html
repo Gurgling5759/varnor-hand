@@ -1931,12 +1931,21 @@ a{text-decoration:none;color:inherit}
      that is still under the breakpoint. */
   .cr-mark { max-width: 21px; height: 17px; }
   .cr-sources { grid-template-columns: 1fr; gap: 15px; }
-  .cr-fact { grid-template-columns: 92px minmax(0, 1fr); gap: 8px; }
-  /* The label column drops to 92px and the value to 13px. At 390 the card's
-     inner width is 318px, so the value column is 318 - 100 = 218px; the longest
-     unavoidable token, office@apexroofingaz.com, is 24 mono characters — 187px
-     at 13px against 194px at 13.5px, which is the 1px by which the address was
-     still breaking mid-word. An address that wraps is not an address. */
+  /* 92px is the floor here for the same reason 118px is the floor on the
+     desktop, and the floor is all it is. The first version of this line was a
+     hard 92px, which reintroduced the exact defect the desktop rule above was
+     written to fix: office@apexroofingaz.com is 132px as a *label*, so it
+     overflowed its cell by 40px and ran 32px past the value beside it, printing
+     the Verified face's live check as "office@apexroofingaz.comAccepted" at
+     every width below 980. The desktop pass only looked for the address
+     breaking mid-word and so never saw it. max-content on the label column,
+     both sides of the breakpoint. */
+  .cr-fact { grid-template-columns: minmax(92px, max-content) minmax(0, 1fr); gap: 8px; }
+  /* The value drops to 13px. At 390 the card's inner width is 318px, so a
+     label at its 92px floor leaves the value 218px; the longest unavoidable
+     token, office@apexroofingaz.com, is 24 mono characters — 187px at 13px
+     against 194px at 13.5px, which is the 1px by which the address was still
+     breaking mid-word. An address that wraps is not an address. */
   .cr-fact dd { font-size: 13px; }
   /* At 390 the kind ("the page that answered") took half the line and broke
      the URL mid-word. The URL gets the row to itself and the kind falls under
