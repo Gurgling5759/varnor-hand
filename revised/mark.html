@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Varnor Index mark — for review</title>
+<meta name="robots" content="noindex">
+<style>
+  :root {
+    --ink: #1a3e2a;
+    --paper: #f8f6f1;
+    --rule: rgba(26,62,42,.16);
+    --quiet: #5b6b60;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 56px 24px 96px; }
+  h1 { font-size: 15px; letter-spacing: .16em; text-transform: uppercase; color: var(--quiet); font-weight: 600; margin: 0 0 8px; }
+  .lede { font-size: 22px; line-height: 1.45; margin: 0 0 8px; max-width: 30ch; font-weight: 500; }
+  .sub { color: var(--quiet); margin: 0 0 56px; max-width: 62ch; }
+  h2 { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--quiet); font-weight: 600; margin: 64px 0 20px; padding-bottom: 10px; border-bottom: 1px solid var(--rule); }
+  .hero { display: flex; align-items: center; gap: 40px; flex-wrap: wrap; }
+  .hero img { width: 208px; height: 208px; display: block; }
+  .lockup { display: flex; align-items: center; gap: 18px; }
+  .lockup img { width: 60px; height: 60px; display: block; }
+  .lockup .word { font-size: 25px; letter-spacing: .055em; font-weight: 700; }
+  .lockup .word span { display: block; font-size: 12px; letter-spacing: .3em; font-weight: 600; color: var(--quiet); margin-top: 3px; }
+  .sizes { display: flex; align-items: flex-end; gap: 36px; flex-wrap: wrap; }
+  .size { text-align: center; }
+  .size .frame { display: flex; align-items: center; justify-content: center; height: 200px; }
+  .size img { display: block; image-rendering: pixelated; }
+  .size .cap { margin-top: 14px; font-size: 12px; letter-spacing: .1em; color: var(--quiet); text-transform: uppercase; }
+  .size .mag { font-size: 12px; color: var(--quiet); }
+  .dark { background: var(--ink); border-radius: 10px; padding: 44px; display: flex; align-items: center; gap: 34px; flex-wrap: wrap; }
+  .dark img { display: block; }
+  .note { border-left: 3px solid var(--rule); padding: 4px 0 4px 18px; color: var(--quiet); margin-top: 26px; max-width: 62ch; }
+  .note strong { color: var(--ink); }
+  a { color: var(--ink); }
+  .back { display: inline-block; margin-top: 64px; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>For review</h1>
+  <p class="lede">A V cut clean through a block of ruled ledger lines.</p>
+  <p class="sub">The product is a file of records, so the letter is carved out of the ruling rather than sitting on top of it. Drawn as exact geometry, not exported from a design tool — which is what the earlier attempts could not do.</p>
+
+  <div class="hero">
+    <img src="img/mark.svg" alt="The Varnor Index mark" width="208" height="208">
+    <div class="lockup">
+      <img src="img/mark.svg" alt="" width="60" height="60">
+      <div class="word">VARNOR<span>INDEX</span></div>
+    </div>
+  </div>
+
+  <h2>At the sizes it actually ships</h2>
+  <div class="sizes">
+    <div class="size">
+      <div class="frame"><img src="img/mark-16.png" alt="" width="128" height="128"></div>
+      <div class="cap">16px</div><div class="mag">the real raster at 8&times;</div>
+    </div>
+    <div class="size">
+      <div class="frame"><img src="img/mark-32.png" alt="" width="256" height="256"></div>
+      <div class="cap">32px</div><div class="mag">the real raster at 8&times;</div>
+    </div>
+    <div class="size">
+      <div class="frame"><img src="img/mark-48.png" alt="" width="192" height="192"></div>
+      <div class="cap">48px</div><div class="mag">the real raster at 4&times;</div>
+    </div>
+    <div class="size">
+      <div class="frame"><img src="img/mark-180.png" alt="" width="180" height="180"></div>
+      <div class="cap">180px</div><div class="mag">actual size</div>
+    </div>
+  </div>
+
+  <p class="note"><strong>The honest caveat.</strong> At 16px the ruling averages into a soft field and the letter is only just readable — that is unavoidable for a mark made of lines this fine. From 32px up it is crisp. If the favicon matters more than the ruling, the fix is fewer, thicker bars, at the cost of the "ledger" reading.</p>
+
+  <h2>On the workspace ground</h2>
+  <div class="dark">
+    <img src="img/mark-inverse.svg" alt="" width="120" height="120">
+    <div class="lockup">
+      <img src="img/mark-inverse.svg" alt="" width="48" height="48">
+      <div class="word" style="color:var(--paper)">VARNOR<span style="color:#9fb3a6">INDEX</span></div>
+    </div>
+  </div>
+
+  <a class="back" href="index.html">&larr; Back to the file</a>
+</div>
+</body>
+</html>
